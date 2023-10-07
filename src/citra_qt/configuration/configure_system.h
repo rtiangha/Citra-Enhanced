@@ -45,6 +45,9 @@ private:
     void UpdateInitTime(int init_clock);
     void RefreshConsoleID();
 
+    void InstallSecureData(const std::string& from_path, const std::string& to_path);
+    void RefreshSecureDataStatus();
+
     void SetupPerGameUI();
 
     void DownloadFromNUS();

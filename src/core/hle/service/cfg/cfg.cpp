@@ -212,12 +212,39 @@ void Module::Interface::GetRegion(Kernel::HLERequestContext& ctx) {
 void Module::Interface::SecureInfoGetByte101(Kernel::HLERequestContext& ctx) {
     IPC::RequestParser rp(ctx);
 
-    LOG_DEBUG(Service_CFG, "(STUBBED) called");
+    u8 ret = 0;
+    if (cfg->secure_info_a_loaded) {
+        ret = cfg->secure_info_a.unknown;
+    }
 
     IPC::RequestBuilder rb = rp.MakeBuilder(2, 0);
     rb.Push(RESULT_SUCCESS);
-    // According to 3dbrew this is normally 0.
-    rb.Push<u8>(0);
+    rb.Push<u8>(ret);
+}
+
+void Module::Interface::SecureInfoGetSerialNo(Kernel::HLERequestContext& ctx) {
+    IPC::RequestParser rp(ctx);
+    [[maybe_unused]] u32 out_size = rp.Pop<u32>();
+    auto out_buffer = rp.PopMappedBuffer();
+
+    if (out_buffer.GetSize() < sizeof(SecureInfoA::serial_number)) {
+        IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
+        rb.Push(ResultCode(ErrorDescription::InvalidSize, ErrorModule::Config,
+                           ErrorSummary::WrongArgument, ErrorLevel::Permanent));
+    }
+    // Never happens on real hardware, but may happen if user didn't supply a dump.
+    // Always make sure to have available both secure data kinds or error otherwise.
+    if (!cfg->secure_info_a_loaded || !cfg->local_friend_code_seed_b_loaded) {
+        IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
+        rb.Push(ResultCode(ErrorDescription::NotFound, ErrorModule::Config,
+                           ErrorSummary::InvalidState, ErrorLevel::Permanent));
+    }
+
+    out_buffer.Write(&cfg->secure_info_a.serial_number, 0, sizeof(SecureInfoA::serial_number));
+
+    IPC::RequestBuilder rb = rp.MakeBuilder(1, 2);
+    rb.Push(RESULT_SUCCESS);
+    rb.PushMappedBuffer(out_buffer);
 }
 
 void Module::Interface::GetTransferableId(Kernel::HLERequestContext& ctx) {
@@ -340,6 +367,43 @@ void Module::Interface::UpdateConfigNANDSavegame(Kernel::HLERequestContext& ctx)
     IPC::RequestParser rp(ctx);
     IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
     rb.Push(cfg->UpdateConfigNANDSavegame());
+}
+
+void Module::Interface::GetLocalFriendCodeSeedData(Kernel::HLERequestContext& ctx) {
+    IPC::RequestParser rp(ctx);
+    [[maybe_unused]] u32 out_size = rp.Pop<u32>();
+    auto out_buffer = rp.PopMappedBuffer();
+    IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
+
+    if (out_buffer.GetSize() < sizeof(LocalFriendCodeSeedB)) {
+        rb.Push(ResultCode(ErrorDescription::InvalidSize, ErrorModule::Config,
+                           ErrorSummary::WrongArgument, ErrorLevel::Permanent));
+    }
+    // Never happens on real hardware, but may happen if user didn't supply a dump.
+    // Always make sure to have available both secure data kinds or error otherwise.
+    if (!cfg->secure_info_a_loaded || !cfg->local_friend_code_seed_b_loaded) {
+        rb.Push(ResultCode(ErrorDescription::NotFound, ErrorModule::Config,
+                           ErrorSummary::InvalidState, ErrorLevel::Permanent));
+    }
+
+    out_buffer.Write(&cfg->local_friend_code_seed_b, 0, sizeof(LocalFriendCodeSeedB));
+    rb.Push(RESULT_SUCCESS);
+}
+
+void Module::Interface::GetLocalFriendCodeSeed(Kernel::HLERequestContext& ctx) {
+    IPC::RequestParser rp(ctx);
+
+    // Never happens on real hardware, but may happen if user didn't supply a dump.
+    // Always make sure to have available both secure data kinds or error otherwise.
+    if (!cfg->secure_info_a_loaded || !cfg->local_friend_code_seed_b_loaded) {
+        IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
+        rb.Push(ResultCode(ErrorDescription::NotFound, ErrorModule::Config,
+                           ErrorSummary::InvalidState, ErrorLevel::Permanent));
+    }
+
+    IPC::RequestBuilder rb = rp.MakeBuilder(3, 0);
+    rb.Push(RESULT_SUCCESS);
+    rb.Push<u64>(cfg->local_friend_code_seed_b.friend_code_seed);
 }
 
 void Module::Interface::FormatConfig(Kernel::HLERequestContext& ctx) {
@@ -484,6 +548,14 @@ ResultCode Module::UpdateConfigNANDSavegame() {
     return RESULT_SUCCESS;
 }
 
+std::string Module::GetLocalFriendCodeSeedBPath() {
+    return FileUtil::GetUserPath(FileUtil::UserPath::NANDDir) + "rw/sys/LocalFriendCodeSeed_B";
+}
+
+std::string Module::GetSecureInfoAPath() {
+    return FileUtil::GetUserPath(FileUtil::UserPath::NANDDir) + "rw/sys/SecureInfo_A";
+}
+
 ResultCode Module::FormatConfig() {
     ResultCode res = DeleteConfigNANDSaveFile();
     // The delete command fails if the file doesn't exist, so we have to check that too
@@ -557,6 +629,55 @@ ResultCode Module::LoadConfigNANDSaveFile() {
     return FormatConfig();
 }
 
+void Module::InvalidateSecureData() {
+    secure_info_a_loaded = local_friend_code_seed_b_loaded = false;
+}
+
+SecureDataLoadStatus Module::LoadSecureInfoAFile() {
+    if (secure_info_a_loaded) {
+        return SecureDataLoadStatus::Loaded;
+    }
+    std::string file_path = GetSecureInfoAPath();
+    if (!FileUtil::Exists(file_path)) {
+        return SecureDataLoadStatus::NotFound;
+    }
+    FileUtil::IOFile file(file_path, "rb");
+    if (!file.IsOpen()) {
+        return SecureDataLoadStatus::IOError;
+    }
+    if (file.GetSize() != sizeof(SecureInfoA)) {
+        return SecureDataLoadStatus::Invalid;
+    }
+    if (file.ReadBytes(&secure_info_a, sizeof(SecureInfoA)) != sizeof(SecureInfoA)) {
+        return SecureDataLoadStatus::IOError;
+    }
+    secure_info_a_loaded = true;
+    return SecureDataLoadStatus::Loaded;
+}
+
+SecureDataLoadStatus Module::LoadLocalFriendCodeSeedBFile() {
+    if (local_friend_code_seed_b_loaded) {
+        return SecureDataLoadStatus::Loaded;
+    }
+    std::string file_path = GetLocalFriendCodeSeedBPath();
+    if (!FileUtil::Exists(file_path)) {
+        return SecureDataLoadStatus::NotFound;
+    }
+    FileUtil::IOFile file(file_path, "rb");
+    if (!file.IsOpen()) {
+        return SecureDataLoadStatus::IOError;
+    }
+    if (file.GetSize() != sizeof(LocalFriendCodeSeedB)) {
+        return SecureDataLoadStatus::Invalid;
+    }
+    if (file.ReadBytes(&local_friend_code_seed_b, sizeof(LocalFriendCodeSeedB)) !=
+        sizeof(LocalFriendCodeSeedB)) {
+        return SecureDataLoadStatus::IOError;
+    }
+    local_friend_code_seed_b_loaded = true;
+    return SecureDataLoadStatus::Loaded;
+}
+
 Module::Module() {
     LoadConfigNANDSaveFile();
     // Check the config savegame EULA Version and update it to 0x7F7F if necessary
@@ -569,6 +690,8 @@ Module::Module() {
         SetEULAVersion(default_version);
         UpdateConfigNANDSavegame();
     }
+    LoadSecureInfoAFile();
+    LoadLocalFriendCodeSeedBFile();
 }
 
 Module::~Module() = default;
