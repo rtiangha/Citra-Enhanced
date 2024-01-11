@@ -66,7 +66,6 @@ private:
     ConfigurationShared::CheckState is_new_3ds;
     bool enabled = false;
 
-    std::shared_ptr<Service::AM::Module> am;
     std::shared_ptr<Service::CFG::Module> cfg;
     std::u16string username;
     int birthmonth = 0;
