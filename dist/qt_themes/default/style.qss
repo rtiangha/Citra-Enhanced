@@ -45,12 +45,12 @@ QWidget {
 }
 
 QWidget:item:hover {
-    background-color: #18465d;
+    background-color: #0078D4;
     color: #eff0f1;
 }
 
 QWidget:item:selected {
-    background-color: #18465d;
+    background-color: #0078D4;
 }
 
 /* Style for QCheckBox */
@@ -259,7 +259,7 @@ QAbstractItemView:item {
 }
 
 QWidget:focus {
-    border: 1px solid #3daee9;
+    border: 1px solid #0078D4; /* Windows 11 blue for focus */
 }
 
 QTabWidget:focus,
@@ -273,51 +273,13 @@ QTabBar:focus {
 QLineEdit {
     background-color: #232629;
     padding: 5px;
-    border: 1px solid #54575B;
-    border-radius: 2px;
+    border: 1px solid #76797C; /* Lighter border for better contrast */
+    border-radius: 4px; /* Slightly more rounded corners to match Windows 11 style */
     color: #eff0f1;
 }
 
 QAbstractItemView QLineEdit {
     padding: 0;
-}
-
-QComboBox {
-    background-color: rgb(32, 32, 32); /* Dark gray background */;
-    border-radius: 5px;
-    padding-left: 10px;
-    min-height: 38px;
-    max-height: 38px;
-}
-
-QComboBox:hover {
-    background-color: rgb(80, 80, 80); /* Dark gray background */
-    border: 0px solid rgb(255, 255, 255, 10);
-}
-
-QComboBox::pressed {
-    background-color: rgb(32, 32, 32); /* Dark gray background */;
-    border: 1px solid #0078D4;
-    color: rgb(255, 255, 255, 200);
-}
-
-QComboBox::down-arrow {
-    image: url(:/ComboBox/img dark/ComboBox.png);
-}
-
-QComboBox::drop-down {
-    background-color: transparent;
-    min-width: 50px;
-}
-
-QComboBox:disabled {
-    color: rgb(150, 150, 150);
-    background-color: rgb(255, 255, 255, 13);
-    border: 1px solid rgb(255, 255, 255, 5);
-}
-
-QComboBox::down-arrow:disabled {
-    image: url(:/ComboBox/img dark/ComboBoxDisabled.png);
 }
 
 
@@ -336,6 +298,83 @@ QGroupBox::title {
     margin-left: 10px; /* Space from the left border of the QGroupBox */
     margin-bottom: 0px; /* Space from the top border of the QGroupBox */
     background-color: transparent;
+}
+
+/* Apply to all child widgets of QGroupBox */
+QGroupBox QWidget {
+    background-color: rgb(48, 48, 48); /* This should match the QGroupBox background color */
+}
+
+QGroupBox QComboBox {
+    background-color: rgb(66, 66, 66); /* Dark gray background */;
+    border-radius: 5px;
+    padding-left: 10px;
+    min-height: 38px;
+    max-height: 38px;
+}
+
+QGroupBox QComboBox:hover {
+    background-color: rgb(120, 120, 120); /* Dark gray background */
+    border: 0px solid rgb(255, 255, 255, 10);
+}
+
+QGroupBox QComboBox::pressed {
+    background-color: rgb(32, 32, 32); /* Dark gray background */;
+    border: 1px solid #0078D4;
+    color: rgb(255, 255, 255, 200);
+}
+
+QGroupBox QComboBox::down-arrow {
+    image: url(:/ComboBox/img dark/ComboBox.png);
+}
+
+QGroupBox QComboBox::drop-down {
+    background-color: transparent;
+    min-width: 50px;
+}
+
+QGroupBox QComboBox:disabled {
+    color: rgb(150, 150, 150);
+    background-color: rgb(255, 255, 255, 13);
+    border: 1px solid rgb(255, 255, 255, 5);
+}
+
+QGroupBox QComboBox::down-arrow:disabled {
+    image: url(:/ComboBox/img dark/ComboBoxDisabled.png);
+}
+
+QGroupBox QSlider::groove:horizontal {
+    background-color: rgb(48, 48, 48); /* Lighter gray background to match QGroupBox */
+    border: 1px solid #404040; /* Adjust to match the QGroupBox border color */
+    height: 4px;
+    margin: 0px;
+    border-radius: 2px;
+}
+
+QGroupBox QSlider::handle:horizontal {
+    background: #0078D4; /* Windows 11 accent color for the handle */
+    border: none;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0;
+    border-radius: 8px;
+}
+
+QGroupBox QSlider::groove:vertical {
+    background-color: rgb(48, 48, 48); /* Lighter gray background to match QGroupBox */
+    border: 1px solid #404040; /* Adjust to match the QGroupBox border color */
+    width: 4px;
+    margin: 0px;
+    border-radius: 2px;
+}
+
+QGroupBox QSlider::handle:vertical {
+    background: #0078D4; /* Windows 11 accent color for the handle */
+    border: none;
+    width: 16px;
+    height: 16px;
+    margin: 0 -8px;
+    border-radius: 8px;
 }
 
 /* Style for QPushButton inside QGroupBox */
@@ -496,12 +535,13 @@ QTextEdit {
     background-color: #232629;
     color: #eff0f1;
     border: 1px solid #54575B;
+    border-radius: 4px; /* Rounded corners for Windows 11 style */
 }
 
 QPlainTextEdit {
     background-color: #232629;
     color: #eff0f1;
-    border-radius: 2px;
+    border-radius: 4px; /* Rounded corners for Windows 11 style */
     border: 1px solid #54575B;
 }
 
@@ -510,6 +550,7 @@ QHeaderView::section {
     color: #eff0f1;
     padding: 5px;
     border: 1px solid #76797C;
+    border-radius: 4px; /* Rounded corners for Windows 11 style */
 }
 
 QSizeGrip {
@@ -535,12 +576,12 @@ QMainWindow::separator:hover {
 }
 
 QFrame {
-    border-radius: 2px;
+    border-radius: 4px; /* Rounded corners for Windows 11 style */
     border: 1px solid #76797C;
 }
 
 QFrame[frameShape="0"] {
-    border-radius: 2px;
+    border-radius: 4px; /* Rounded corners for Windows 11 style */
     border: 1px transparent #76797C;
 }
 
@@ -571,7 +612,7 @@ QToolBar::separator:vertical {
 }
 
 QToolButton#qt_toolbar_ext_button {
-    background: #58595a
+    background: #58595a;
 }
 
 QPushButton {
@@ -951,40 +992,6 @@ QListView::indicator:indeterminate:pressed {
     image: url(:/qss_icons/rc/checkbox_indeterminate_focus.png);
 }
 
-QSlider::groove:horizontal {
-    border: 1px solid #565a5e;
-    height: 4px;
-    background: #565a5e;
-    margin: 0px;
-    border-radius: 2px;
-}
-
-QSlider::handle:horizontal {
-    background: #232629;
-    border: 1px solid #565a5e;
-    width: 16px;
-    height: 16px;
-    margin: -8px 0;
-    border-radius: 9px;
-}
-
-QSlider::groove:vertical {
-    border: 1px solid #565a5e;
-    width: 4px;
-    background: #565a5e;
-    margin: 0px;
-    border-radius: 3px;
-}
-
-QSlider::handle:vertical {
-    background: #232629;
-    border: 1px solid #565a5e;
-    width: 16px;
-    height: 16px;
-    margin: 0 -8px;
-    border-radius: 9px;
-}
-
 QToolButton {
     background-color: #232629;
     border: 1px solid #54575B;
@@ -1074,7 +1081,7 @@ QListView:focus {
 QTableView::item:pressed,
 QListView::item:pressed,
 QTreeView::item:pressed {
-    background: #18465d;
+    background: #0078D4;
     color: #eff0f1;
 }
 
