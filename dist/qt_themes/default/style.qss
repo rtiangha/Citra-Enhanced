@@ -1,30 +1,20 @@
-QPushButton#GraphicsAPIStatusBarButton {
-    color: #656565;
-    border: 1px solid transparent;
-    background-color: transparent;
-    padding: 0px 3px 0px 3px;
-    text-align: center;
+QPushButton#GraphicsAPIStatusBarButton, QPushButton#TogglableStatusBarButton {
+    color: #656565; /* Retaining the original text color */
+    border: 1px solid transparent; /* Retaining the original border style */
+    background-color: transparent; /* Retaining the original background */
+    padding: 0px 3px; /* Simplified padding */
+    text-align: center; /* Retaining the original text alignment */
+    border-radius: 4px; /* Adding rounded corners for Windows 11 style */
 }
 
-QPushButton#GraphicsAPIStatusBarButton:hover {
-    border: 1px solid #76797C;
-}
-
-QPushButton#TogglableStatusBarButton {
-    min-width: 0px;
-    color: #656565;
-    border: 1px solid transparent;
-    background-color: transparent;
-    padding: 0px 3px 0px 3px;
-    text-align: center;
+QPushButton#GraphicsAPIStatusBarButton:hover, QPushButton#TogglableStatusBarButton:hover {
+    border: 1px solid #76797C; /* Retaining the original hover border color */
+    background-color: #3A3A3A; /* Dark background on hover for Windows 11 style */
 }
 
 QPushButton#TogglableStatusBarButton:checked {
-    color: #00FF00;
-}
-
-QPushButton#TogglableStatusBarButton:hover {
-    border: 1px solid #76797C;
+    color: #00FF00; /* Retaining the original checked text color */
+    background-color: #3A3A3A; /* Dark background for checked state for Windows 11 style */
 }
 
 QToolTip {
@@ -51,6 +41,14 @@ QWidget:item:hover {
 
 QWidget:item:selected {
     background-color: #0078D4;
+}
+
+QWidget::separator {
+    background-color: transparent;
+    border: none;
+    image: none;
+    width: 0px;
+    height: 0px;
 }
 
 /* Style for QCheckBox */
@@ -89,11 +87,11 @@ QCheckBox::indicator:checked:pressed {
     image: url(:/CheckBox/img dark/CheckBoxPressed.png); /* Ensure this path is correct */
 }
 
-QCheckBox:disabled {
-    color: #F3F3F3;;
+QGroupBox QCheckBox:disabled {
+    background-color: rgb(48, 48, 48); /* Match this with your QGroupBox or desired background color */
 }
 
-QCheckBox::indicator:disabled {
+QGroupBox QCheckBox::indicator:disabled {
     border: 2px solid #F3F3F3;
     background-color: rgb(255, 255, 255, 0);
 }
@@ -176,33 +174,40 @@ QMenuBar::item:selected, QMenuBar::item:pressed {
 }
 
 QMenu {
-    background-color: #2D2D2D; /* Dark gray background */
-    color: #D0D0D0; /* Light grey text */
-    border: 1px solid #3A3A3A; /* Slightly lighter border */
     border-radius: 6px; /* Rounded corners */
+    background-color: #323232; /* Dark background color */
+    border: 1px solid #76797C; /* Border color to match the Windows 11 style */
+    color: #EFEFEF; /* Text color for readability */
+    font-size: 17px; /* Larger text size for Windows 11 style */
+    font-family: "Segoe UI Variable Text", "Segoe UI", sans-serif; /* Windows 11 font */
+    padding: 4px 0; /* Padding to space out the items */
+    margin: 0; /* Remove any default margin */
 }
 
 QMenu::item {
-    background-color: transparent;
-    padding: 5px 20px; /* Adjust padding as needed */
+    padding: 5px 20px; /* Adequate padding for menu items */
+    background-color: transparent; /* Transparent background for items */
+    border-radius: 4px; /* Rounded corners for items */
+    margin: 2px 0; /* Margin for separation between items */
 }
 
-QMenu::item:selected, QMenu::item:pressed {
-    background-color: #005A9E; /* Windows 11 blue for selected/pressed */
-    color: #FFFFFF; /* White text for contrast */
-    border-radius: 5px; /* Rounded corners for selected/pressed items */
+QMenu::item:selected {
+    background-color: #005A9E; /* Darker background for selected items */
+    color: #FFFFFF; /* Bright text color for selected items */
 }
+
+QMenu::separator {
+    height: 1px; /* Height of the separator */
+    background-color: transparent; /* Color of the separator to match the border */
+    margin-left: 10px; /* Left margin for the separator */
+    margin-right: 10px; /* Right margin for the separator */
+}
+
 
 QMenu::right-arrow {
     image: url(:/TreeView/img dark/TreeViewClose.png); /* Ensure this is appropriate */
     min-width: 40px;
     min-height: 18px;
-}
-
-QMenu::separator {
-    height: 1px;
-    background-color: #54575B; /* Lighter grey for separator */
-    margin: 5px 10px; /* Adjust margins as needed */
 }
 
 /* Adjust radio button and check mark indicators */
@@ -212,19 +217,19 @@ QMenu::indicator:exclusive:unchecked, QMenu::indicator:exclusive:checked {
 }
 
 QMenu::indicator:exclusive:unchecked {
-    image: url(:/qss_icons/rc/radio_unchecked.png);
+    image: url(:/qss_ico);
 }
 
 QMenu::indicator:exclusive:unchecked:selected {
-    image: url(:/qss_icons/rc/radio_unchecked_disabled.png);
+    image: url(:/RadioButton/img dark/RadioButton.png);
 }
 
 QMenu::indicator:exclusive:checked {
-    image: url(:/qss_icons/rc/radio_checked.png);
+    image: url(:/CheckBox/img dark/CheckBoxPressed.png);
 }
 
 QMenu::indicator:exclusive:checked:selected {
-    image: url(:/qss_icons/rc/radio_checked_disabled.png);
+    image: url(:/RadioButton/img dark/RadioButtonPressed.png);
 }
 
 /* Disabled state styling */
@@ -234,11 +239,6 @@ QMenuBar:disabled, QMenu::item:disabled {
 
 QMenu::item:disabled:hover, QMenu::item:disabled:selected {
     background-color: transparent; /* No background change for disabled items */
-}
-
-QWidget:disabled {
-    color: #4f515b;
-    background-color: #31363b;
 }
 
 QAbstractItemView {
@@ -259,7 +259,7 @@ QAbstractItemView:item {
 }
 
 QWidget:focus {
-    border: 1px solid #0078D4; /* Windows 11 blue for focus */
+    border: none
 }
 
 QTabWidget:focus,
@@ -271,11 +271,11 @@ QTabBar:focus {
 }
 
 QLineEdit {
-    background-color: #232629;
+    background-color: #393939;
     padding: 5px;
     border: 1px solid #76797C; /* Lighter border for better contrast */
     border-radius: 4px; /* Slightly more rounded corners to match Windows 11 style */
-    color: #eff0f1;
+    color: #f1efef;
 }
 
 QAbstractItemView QLineEdit {
@@ -303,6 +303,9 @@ QGroupBox::title {
 /* Apply to all child widgets of QGroupBox */
 QGroupBox QWidget {
     background-color: rgb(48, 48, 48); /* This should match the QGroupBox background color */
+    font-size: 17px;
+    font-family: "Segoe UI Variable Small", serif;
+    font-weight: 400;
 }
 
 QGroupBox QComboBox {
@@ -329,12 +332,27 @@ QGroupBox QComboBox::down-arrow {
 }
 
 QGroupBox QComboBox::drop-down {
-    background-color: transparent;
-    min-width: 50px;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px; /* Width of the dropdown button */
+    border-left-width: 1px;
+    border-left-color: #76797C; /* Border color similar to Windows 11 */
+    border-left-style: solid; /* Solid border for the dropdown button */
+    border-top-right-radius: 3px; /* Rounded corner for the dropdown button */
+    border-bottom-right-radius: 3px;
+}
+
+QGroupBox QComboBox QAbstractItemView {
+    border: 1px solid #76797C; /* Border color similar to Windows 11 */
+    selection-background-color: #3A3A3A; /* Background color for selected item */
+    background-color: #323232; /* Background color of the dropdown */
+    color: #EFEFEF; /* Text color for items in the dropdown */
+    padding: 4px; /* Padding around the items in the dropdown */
+    border-radius: 4px; /* Rounded corners for the dropdown */
 }
 
 QGroupBox QComboBox:disabled {
-    color: rgb(150, 150, 150);
+    color: rgb(119, 119, 119);
     background-color: rgb(255, 255, 255, 13);
     border: 1px solid rgb(255, 255, 255, 5);
 }
@@ -561,7 +579,7 @@ QSizeGrip {
 
 QMainWindow::separator {
     background-color: #31363b;
-    color: white;
+    color: rgb(255, 0, 0);
     padding-left: 4px;
     spacing: 2px;
     border: 1px dashed #76797C;
@@ -569,7 +587,7 @@ QMainWindow::separator {
 
 QMainWindow::separator:hover {
     background-color: #787876;
-    color: white;
+    color: rgb(255, 8, 8);
     padding-left: 4px;
     border: 1px solid #76797C;
     spacing: 2px;
@@ -603,12 +621,18 @@ QToolBar::handle:vertical {
     image: url(:/qss_icons/rc/Vmovetoolbar.png);
 }
 
+QToolBar::separator {
+    width: 0px;
+    height: 0px;
+    background-color: transparent;
+}
+
 QToolBar::separator:horizontal {
-    image: url(:/qss_icons/rc/Hsepartoolbar.png);
+    image: none
 }
 
 QToolBar::separator:vertical {
-    image: url(:/qss_icons/rc/Vsepartoolbar.png);
+    image: none
 }
 
 QToolButton#qt_toolbar_ext_button {
@@ -715,8 +739,8 @@ QTabWidget {
 
 /* General TabWidget styling */
 QTabWidget::pane {
-    border: 1px solid rgb(68, 68, 68);
-    background-color: rgb(48, 48, 48); /* Lighter gray background */
+    border: 0px solid rgb(255, 0, 0);
+    background-color: transparent;
     margin: 6px; /* Space between tabs and content */
 }
 
@@ -891,13 +915,12 @@ QDockWidget::float-button:pressed {
     background: rgba(255, 255, 255, 10);
 }
 
-QTreeView,
+
 QTreeView {
-    background-color: transparent;
-    border: 1px solid rgb(255, 255, 255, 13);
-    border-radius: 5px;
-    outline: 0;
-    padding-right: 5px;
+    background-color: rgb(48, 48, 48); /* Match this with your QGroupBox or desired background color */
+    color: rgb(255, 255, 255); /* Text color */
+    border-radius: 8px; /* Rounded corners */
+    border: 1px solid rgb(68, 68, 68); /* Optional: Adjust the border color to match your theme */
 }
 
 QTreeView:branch:selected,
@@ -937,7 +960,13 @@ QTreeView::branch:open:has-children:has-siblings:hover {
     image: url(:/qss_icons/rc/branch_open-on.png);
 }
 
-QTreeView::item:!selected:hover {
+/* Style for QTreeView items */
+QTreeView::item {
+    background-color: rgb(48, 48, 48); /* Match this with your QTreeView background color */
+    color: rgb(255, 255, 255); /* Text color */
+}
+
+QTreeView::item:selected:hover {
     background-color: rgb(255, 255, 255, 16);
     border-radius: 5px;
     margin-bottom: 3px;
@@ -945,9 +974,9 @@ QTreeView::item:!selected:hover {
 }
 
 QListView::item:selected:hover,
-QTreeView::item:selected:hover {
-    background: #287399;
-    color: #eff0f1;
+QTreeView::item:hover {
+    background-color: rgb(68, 68, 68); /* Slightly lighter/darker for contrast */
+    color: rgb(255, 255, 255); /* Text color for hovered items */
 }
 
 QTreeView::indicator:checked,
@@ -1075,7 +1104,7 @@ QHeaderView {
 }
 
 QListView:focus {
-    border-color: #54575B;
+    border-color: #5b5454;
 }
 
 QTableView::item:pressed,
@@ -1088,59 +1117,62 @@ QTreeView::item:pressed {
 QTableView::item:selected:active,
 QTreeView::item:selected:active,
 QListView::item:selected:active {
-    background: #287399;
-    color: #eff0f1;
+    background: #0078D4;
+    color: #f1efef;
 }
 
 QHeaderView {
-    background-color: #403F3F;
-    border: 1px transparent;
-    border-radius: 0px;
+    background-color: #202020; /* Darker background for the header */
+    border: 1px solid #333333; /* Dark border for a subtle contrast */
+    border-radius: 0px; /* Keeping corners square to match Windows 11 style */
     margin: 0px;
     padding: 0px;
 }
 
 QHeaderView::section {
-    background-color: #232629;
-    color: #eff0f1;
-    padding: 0 5px;
-    border: 1px solid #434242;
-    border-bottom: 0;
-    border-radius: 0px;
-    text-align: center;
+    background-color: #2D2D2D; /* Slightly lighter dark background for sections */
+    color: #EFEFEF; /* Light text color for contrast */
+    padding: 5px; /* Adequate padding for text */
+    border: 1px solid #333333; /* Dark border for sections */
+    border-bottom: 0; /* Removing bottom border for a unified look */
+    border-radius: 0px; /* Square corners for sections to match the header */
+    text-align: center; /* Center-aligned text */
+}
+
+QHeaderView::section:hover {
+    background-color: #3D3D3D; /* Slightly lighter background for hover effect */
+    color: #FFFFFF; /* Keeping text color bright for readability */
 }
 
 QHeaderView::section::vertical::first,
 QHeaderView::section::vertical::only-one {
-    border-top: 1px solid #31363b;
+    border-top: 1px solid #333333; /* Dark border for the first or only vertical section */
 }
 
 QHeaderView::section::vertical {
-    border-top: transparent;
+    border-top: transparent; /* Transparent top border for other vertical sections */
 }
 
 QHeaderView::section::horizontal,
 QHeaderView::section::horizontal::first,
 QHeaderView::section::horizontal::only-one {
-    border-left: transparent;
+    border-left: transparent; /* Transparent left border for horizontal sections */
 }
 
 QHeaderView::section::horizontal::last {
-    border-right: transparent;
+    border-right: transparent; /* Transparent right border for the last horizontal section */
 }
 
 QHeaderView::section:checked {
-    color: white;
-    background-color: #334e5e;
+    color: #FFFFFF; /* Bright text color for checked sections */
+    background-color: #1E1E1E; /* Dark background for checked sections */
 }
 
-/* sort indicator */
-QHeaderView::down-arrow {
-    image: url(:/qss_icons/rc/down_arrow.png);
-}
-
-QHeaderView::up-arrow {
-    image: url(:/qss_icons/rc/up_arrow.png);
+/* Sort indicator */
+QHeaderView::down-arrow, QHeaderView::up-arrow {
+    image: url(:/qss_icons/rc/down_arrow_dark.png); /* Assuming dark mode icons */
+    width: 8px; /* Adjust size as needed */
+    height: 8px;
 }
 
 QTableCornerButton::section {
