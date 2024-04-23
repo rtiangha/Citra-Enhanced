@@ -540,6 +540,10 @@ struct Values {
     Setting<bool> use_gdbstub{false, "use_gdbstub"};
     Setting<u16> gdbstub_port{24689, "gdbstub_port"};
 
+    // Hacks
+    Setting<bool> skip_slow_draw{false, "skip_slow_draw"};
+    Setting<bool> skip_texture_copy{false, "skip_texture_copy"};
+
     // Miscellaneous
     Setting<std::string> log_filter{"*:Info", "log_filter"};
     Setting<std::string> log_regex_filter{"", "log_regex_filter"};
