@@ -20,6 +20,7 @@ import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
+import android.content.res.Configuration;
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
@@ -36,6 +37,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import android.content.pm.ActivityInfo
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
@@ -255,6 +257,11 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                     true
                 }
 
+                R.id.menu_rotate_screen -> {
+                    rotateScreen()
+                    true
+                }
+
                 R.id.menu_amiibo -> {
                     showAmiiboMenu()
                     true
@@ -410,6 +417,16 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         }
 
         setInsets()
+    }
+
+    private fun rotateScreen() {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        } else {
+            (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
     }
 
     private fun togglePause() {
@@ -581,6 +598,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         popupMenu.menu.apply {
             findItem(R.id.menu_show_overlay).isChecked = EmulationMenuSettings.showOverlay
             findItem(R.id.menu_show_fps).isChecked = EmulationMenuSettings.showFps
+            findItem(R.id.menu_haptic_feedback).isChecked = EmulationMenuSettings.hapticFeedback
             findItem(R.id.menu_emulation_joystick_rel_center).isChecked =
                 EmulationMenuSettings.joystickRelCenter
             findItem(R.id.menu_emulation_dpad_slide_enable).isChecked =
@@ -597,6 +615,13 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
 
                 R.id.menu_show_fps -> {
                     EmulationMenuSettings.showFps = !EmulationMenuSettings.showFps
+                    updateShowFpsOverlay()
+                    true
+                }
+
+                R.id.menu_haptic_feedback -> {
+                    EmulationMenuSettings.hapticFeedback = !EmulationMenuSettings.hapticFeedback
+                    // wtf
                     updateShowFpsOverlay()
                     true
                 }
