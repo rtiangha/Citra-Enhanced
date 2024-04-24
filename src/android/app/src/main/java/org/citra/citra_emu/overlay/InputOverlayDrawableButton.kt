@@ -54,7 +54,7 @@ class InputOverlayDrawableButton(
      *
      * @return true if value was changed
      */
-    fun updateStatus(event: MotionEvent, overlay:InputOverlay): Boolean {
+    fun updateStatus(event: MotionEvent, overlay: InputOverlay): Boolean {
         val pointerIndex = event.actionIndex
         val xPosition = event.getX(pointerIndex).toInt()
         val yPosition = event.getY(pointerIndex).toInt()
