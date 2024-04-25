@@ -541,8 +541,8 @@ struct Values {
     Setting<u16> gdbstub_port{24689, "gdbstub_port"};
 
     // Hacks
-    bool skip_slow_draw;
-    bool skip_texture_copy;
+    SwitchableSetting<bool> skip_slow_draw{false, "skip_slow_draw"};
+    SwitchableSetting<bool> skip_texture_copy{false, "skip_texture_copy"};
 
     // Miscellaneous
     Setting<std::string> log_filter{"*:Info", "log_filter"};
