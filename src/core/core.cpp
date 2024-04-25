@@ -253,6 +253,51 @@ System::ResultStatus System::SingleStep() {
     return RunLoop(false);
 }
 
+static void LoadOverrides(u64 title_id) {
+    // This gamelist may improve performance or fix issues using the hacks
+    if (title_id == 0x0004000000068B00 || title_id == 0x0004000000061300 ||
+        title_id == 0x000400000004A700 || title_id == 0x000400000005D700) {
+        // Tales of the Abyss / Pac Man Party 3D
+        Settings::values.skip_slow_draw = true;
+    } else if (title_id == 0x000400000015CB00) {
+        // New Atelier Rorona
+        Settings::values.skip_slow_draw = true;
+    } else if (title_id == 0x000400000018E900) {
+        // My Hero Academia
+        Settings::values.skip_slow_draw = true;
+    } else if (title_id == 0x000400000016AD00) {
+        // Dragon Quest Monsters Joker 3
+        Settings::values.skip_slow_draw = true;
+    } else if (title_id == 0x00040000001ACB00) {
+        // Dragon Quest Monsters Joker 3 Professional
+        Settings::values.skip_slow_draw = true;
+    } else if (title_id == 0x000400000008B400 || title_id == 0x0004000000030600 ||
+               title_id == 0x0004000000030800 || title_id == 0x0004000000030700) {
+        // Mario Kart 7
+        Settings::values.skip_texture_copy = true;
+    }
+
+    // This gamelist requires accurate multiplication to render properly
+    const std::array<u64, 10> accurate_mul_ids = {
+        0x0004000000033400, // The Legend of Zelda: Ocarina of Time 3D
+        0x0004000000033500, // The Legend of Zelda: Ocarina of Time 3D
+        0x0004000000033600, // The Legend of Zelda: Ocarina of Time 3D
+        0x000400000008F800, // The Legend of Zelda: Ocarina of Time 3D
+        0x000400000008F900, // The Legend of Zelda: Ocarina of Time 3D
+        0x00040000001B8F00, // Mario & Luigi: Superstar Saga + Bowsers Minions
+        0x00040000001B9000, // Mario & Luigi: Superstar Saga + Bowsers Minions
+        0x0004000000194B00, // Mario & Luigi: Superstar Saga + Bowsers Minions
+        0x00040000001D1400, // Mario & Luigi: Bowsers Inside Story + Bowser Jrs Journey
+        0x00040000001D1500, // Mario & Luigi: Bowsers Inside Story + Bowser Jrs Journey
+    };
+    for (auto id : accurate_mul_ids) {
+        if (title_id == id) {
+            Settings::values.shaders_accurate_mul = true;
+            break;
+        }
+    }
+}
+
 System::ResultStatus System::Load(Frontend::EmuWindow& emu_window, const std::string& filepath,
                                   Frontend::EmuWindow* secondary_window) {
     FileUtil::SetCurrentRomPath(filepath);
@@ -290,6 +335,12 @@ System::ResultStatus System::Load(Frontend::EmuWindow& emu_window, const std::st
             return ResultStatus::ErrorSystemMode;
         }
     }
+
+    title_id = 0;
+    if (app_loader->ReadProgramId(title_id) != Loader::ResultStatus::Success) {
+        LOG_ERROR(Core, "Failed to find title id for ROM");
+    }
+    LoadOverrides(title_id);
 
     ASSERT(memory_mode.first);
     auto n3ds_hw_caps = app_loader->LoadNew3dsHwCapabilities();
@@ -339,11 +390,6 @@ System::ResultStatus System::Load(Frontend::EmuWindow& emu_window, const std::st
         }
     }
     kernel->SetCurrentProcess(process);
-    title_id = 0;
-    if (app_loader->ReadProgramId(title_id) != Loader::ResultStatus::Success) {
-        LOG_ERROR(Core, "Failed to find title id for ROM (Error {})",
-                  static_cast<u32>(load_result));
-    }
 
     cheat_engine.LoadCheatFile(title_id);
     cheat_engine.Connect();
