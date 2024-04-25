@@ -54,6 +54,7 @@ class ForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        showRunningNotification() // TODO(Gamer64): workaround to fix a random exit crash
         if (intent == null) {
             return START_NOT_STICKY
         }
