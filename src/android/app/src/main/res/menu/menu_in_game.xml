@@ -48,6 +48,11 @@
         android:title="@string/cheats" />
 
     <item
+        android:id="@+id/menu_tweaks"
+        android:icon="@drawable/ic_stat_notification_logo"
+        android:title="@string/tweaks_title" />
+
+    <item
         android:id="@+id/menu_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/preferences_settings" />

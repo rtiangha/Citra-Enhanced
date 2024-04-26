@@ -341,6 +341,35 @@ void Java_org_citra_citra_1emu_NativeLibrary_swapScreens([[maybe_unused]] JNIEnv
     Camera::NDK::g_rotation = rotation;
 }
 
+jintArray Java_org_citra_citra_1emu_NativeLibrary_getTweaks(JNIEnv* env,
+                                                            [[maybe_unused]] jobject obj) {
+    int i = 0;
+    int settings[2];
+
+    // get settings
+    settings[i++] = Settings::values.skip_slow_draw.GetValue();
+    settings[i++] = Settings::values.skip_texture_copy.GetValue();
+
+    jintArray array = env->NewIntArray(i);
+    env->SetIntArrayRegion(array, 0, i, settings);
+    return array;
+}
+
+void Java_org_citra_citra_1emu_NativeLibrary_setTweaks(JNIEnv* env,
+                                                       [[maybe_unused]] jobject obj,
+                                                       jintArray array) {
+    int i = 0;
+    jint* settings = env->GetIntArrayElements(array, nullptr);
+
+    // Skip Slow Draw
+    Settings::values.skip_slow_draw.SetValue(settings[i++] > 0);
+
+    // Skip Texture Copy
+    Settings::values.skip_texture_copy.SetValue(settings[i++] > 0);
+
+    env->ReleaseIntArrayElements(array, settings, 0);
+}
+
 jboolean Java_org_citra_citra_1emu_NativeLibrary_areKeysAvailable([[maybe_unused]] JNIEnv* env,
                                                                   [[maybe_unused]] jobject obj) {
     HW::AES::InitKeys();

@@ -36,6 +36,7 @@ import org.citra.citra_emu.features.hotkeys.HotkeyUtility
 import org.citra.citra_emu.features.settings.model.SettingsViewModel
 import org.citra.citra_emu.features.settings.model.view.InputBindingSetting
 import org.citra.citra_emu.fragments.MessageDialogFragment
+import org.citra.citra_emu.ui.TweaksDialog
 import org.citra.citra_emu.utils.ControllerMappingHelper
 import org.citra.citra_emu.utils.FileBrowserHelper
 import org.citra.citra_emu.utils.ForegroundService
@@ -161,6 +162,11 @@ class EmulationActivity : AppCompatActivity() {
             getString(R.string.emulation_menu_help),
             Toast.LENGTH_LONG
         ).show()
+    }
+
+    fun displayTweaks() {
+        val dialog = TweaksDialog(this)
+        dialog.show()
     }
 
     private fun enableFullscreenImmersive() {

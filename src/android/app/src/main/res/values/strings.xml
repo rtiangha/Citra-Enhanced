@@ -292,6 +292,11 @@
     <string name="setting_not_editable_description">This option can\'t be changed while a game is running.</string>
     <string name="auto_select">Auto-Select</string>
 
+    <!-- Tweaks Dialog -->
+    <string name="tweaks_title">Tweaks</string>
+    <string name="setting_skip_slow_draw">Skip Slow Draw</string>
+    <string name="setting_skip_texture_copy">Skip Texture Copy</string>
+
     <!-- Add Directory Screen-->
     <string name="select_game_folder">Select Game Folder</string>
 
