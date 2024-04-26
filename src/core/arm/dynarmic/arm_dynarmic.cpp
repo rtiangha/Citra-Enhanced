@@ -105,7 +105,7 @@ public:
     }
 
     void AddTicks(std::uint64_t ticks) override {
-        ticks = std::max(ticks, static_cast<u64>(Settings::values.core_ticks.GetValue()));
+        ticks = std::max(ticks, static_cast<u64>(Settings::values.raise_ticks.GetValue()));
         parent.GetTimer().AddTicks(ticks);
     }
     std::uint64_t GetTicksRemaining() override {

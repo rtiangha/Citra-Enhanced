@@ -278,6 +278,12 @@ Se esperan fallos gráficos temporales cuando ésta esté activado.</string>
     <string name="setting_not_editable_description">Esta opción no puede cambiarse mientras se está ejecutando un juego.</string>
     <string name="auto_select">Auto-elegir</string>
 
+    <!-- Tweaks Dialog -->
+    <string name="tweaks_title">Modificaciones</string>
+    <string name="setting_raise_ticks">Incrementar Ticks</string>
+    <string name="setting_skip_slow_draw">Omitir Dibujo Lento</string>
+    <string name="setting_skip_texture_copy">Omitir Copia de Textura</string>
+
     <!-- Add Directory Screen-->
     <string name="select_game_folder">Seleccionar Directorio de Juego</string>
 

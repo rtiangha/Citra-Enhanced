@@ -294,6 +294,7 @@
 
     <!-- Tweaks Dialog -->
     <string name="tweaks_title">Tweaks</string>
+    <string name="setting_raise_ticks">Raise Ticks</string>
     <string name="setting_skip_slow_draw">Skip Slow Draw</string>
     <string name="setting_skip_texture_copy">Skip Texture Copy</string>
 

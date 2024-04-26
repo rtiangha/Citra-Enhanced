@@ -147,6 +147,20 @@ void LogSettings() {
     log_setting("Debugging_GdbstubPort", values.gdbstub_port.GetValue());
 }
 
+void RaiseTicks(bool enable) {
+    if (enable) {
+        if (values.use_cpu_jit) {
+            // add 16000 ticks
+            values.raise_ticks = 16000;
+        } else {
+            values.raise_ticks = 0xFFFF;
+        }
+    } else {
+        // default ticks
+        values.raise_ticks = 0;
+    }
+}
+
 bool IsConfiguringGlobal() {
     return configuring_global;
 }

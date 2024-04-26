@@ -344,9 +344,10 @@ void Java_org_citra_citra_1emu_NativeLibrary_swapScreens([[maybe_unused]] JNIEnv
 jintArray Java_org_citra_citra_1emu_NativeLibrary_getTweaks(JNIEnv* env,
                                                             [[maybe_unused]] jobject obj) {
     int i = 0;
-    int settings[2];
+    int settings[3];
 
     // get settings
+    settings[i++] = Settings::values.raise_ticks.GetValue() > 0;
     settings[i++] = Settings::values.skip_slow_draw.GetValue();
     settings[i++] = Settings::values.skip_texture_copy.GetValue();
 
@@ -361,11 +362,14 @@ void Java_org_citra_citra_1emu_NativeLibrary_setTweaks(JNIEnv* env,
     int i = 0;
     jint* settings = env->GetIntArrayElements(array, nullptr);
 
+    // Raise Ticks
+    Settings::RaiseTicks(settings[i++] > 0);
+
     // Skip Slow Draw
-    Settings::values.skip_slow_draw.SetValue(settings[i++] > 0);
+    Settings::values.skip_slow_draw = settings[i++] > 0;
 
     // Skip Texture Copy
-    Settings::values.skip_texture_copy.SetValue(settings[i++] > 0);
+    Settings::values.skip_texture_copy = settings[i++] > 0;
 
     env->ReleaseIntArrayElements(array, settings, 0);
 }
