@@ -356,8 +356,7 @@ jintArray Java_org_citra_citra_1emu_NativeLibrary_getTweaks(JNIEnv* env,
     return array;
 }
 
-void Java_org_citra_citra_1emu_NativeLibrary_setTweaks(JNIEnv* env,
-                                                       [[maybe_unused]] jobject obj,
+void Java_org_citra_citra_1emu_NativeLibrary_setTweaks(JNIEnv* env, [[maybe_unused]] jobject obj,
                                                        jintArray array) {
     int i = 0;
     jint* settings = env->GetIntArrayElements(array, nullptr);
