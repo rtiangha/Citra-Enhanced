@@ -1,9 +1,9 @@
 package org.citra.citra_emu.ui
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
@@ -40,8 +40,8 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
         recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
-    override fun onOptionsMenuClosed(menu: Menu) {
-        super.onOptionsMenuClosed(menu)
+    override fun setOnDismissListener(listener: DialogInterface.OnDismissListener?) {
+        super.setOnDismissListener(listener)
         adapter.saveSettings()
     }
 
