@@ -103,7 +103,7 @@ android {
     buildTypes {
         // Signed by release key, allowing for upload to Play Store.
         release {
-            signingConfig = if (keystoreFile != null) {
+            signingConfig = if (encryptedKeystore != null) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")
