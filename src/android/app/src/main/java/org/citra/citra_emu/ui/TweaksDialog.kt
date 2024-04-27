@@ -40,8 +40,8 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
         recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
-    override fun onPanelClosed(featureId: Int, menu: Menu) {
-        super.onPanelClosed(featureId, menu)
+    override fun onOptionsMenuClosed(menu: Menu) {
+        super.onOptionsMenuClosed(menu)
         adapter.saveSettings()
     }
 
