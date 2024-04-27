@@ -61,7 +61,11 @@ function pack_artifacts() {
     fi
 }
 
-if [ -n "$UNPACKED" ]; then
+if [ "$OS" = "android" ]; then
+for ARTIFACT in build/bundle/*; do
+        pack_artifacts "$ARTIFACT"
+    done
+elif [ -n "$UNPACKED" ]; then
     # Copy the artifacts to be uploaded unpacked.
     for ARTIFACT in build/bundle/*; do
         FILENAME=$(basename "$ARTIFACT")
