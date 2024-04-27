@@ -231,6 +231,20 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="toggle_skip_slow_draw">
+        <property name="text">
+         <string>Skip Slow Draw</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="toggle_skip_texture_copy">
+        <property name="text">
+         <string>Skip Texture Copy</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
