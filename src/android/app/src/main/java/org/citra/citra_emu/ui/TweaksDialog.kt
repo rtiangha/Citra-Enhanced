@@ -40,8 +40,8 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
         recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
-    override fun setOnDismissListener(listener: DialogInterface.OnDismissListener?) {
-        super.setOnDismissListener(listener)
+    override fun onStop() {
+        super.onStop()
         adapter.saveSettings()
     }
 
