@@ -13,7 +13,6 @@ fi
 cd src/android
 chmod +x ./gradlew
 ./gradlew assemble${BUILD_FLAVOR}Release
-./gradlew bundle${BUILD_FLAVOR}Release
 
 ccache -s -v
 
