@@ -212,10 +212,10 @@ void ConfigureGraphics::SetupPerGameUI() {
                                             async_shader_compilation);
     ConfigurationShared::SetColoredTristate(
         ui->toggle_async_present, Settings::values.async_presentation, async_presentation);
-    ConfigurationShared::SetColoredTristate(
-        ui->toggle_skip_slow_draw, Settings::values.skip_slow_draw, skip_slow_draw);
-    ConfigurationShared::SetColoredTristate(
-        ui->toggle_skip_texture_copy, Settings::values.skip_texture_copy, skip_texture_copy);
+    ConfigurationShared::SetColoredTristate(ui->toggle_skip_slow_draw,
+                                            Settings::values.skip_slow_draw, skip_slow_draw);
+    ConfigurationShared::SetColoredTristate(ui->toggle_skip_texture_copy,
+                                            Settings::values.skip_texture_copy, skip_texture_copy);
     ConfigurationShared::SetColoredTristate(ui->spirv_shader_gen, Settings::values.spirv_shader_gen,
                                             spirv_shader_gen);
 }
