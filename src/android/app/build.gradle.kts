@@ -87,10 +87,10 @@ android {
     }
 
     val encryptedKeystore = System.getenv("ANDROID_KEYSTORE_B64")
-    if (encryptedKeystore != null) {
-        val keystoreFile = System.getenv("ANDROID_KEYSTORE_FILE")
+    val keystoreFile: String? = if (encryptedKeystore != null) {
+    System.getenv("ANDROID_KEYSTORE_FILE")
     } else {
-        val keystoreFile = 
+        null
     }
 
     if (keystoreFile != null) {
