@@ -87,8 +87,13 @@ android {
     }
 
     val encryptedKeystore = System.getenv("ANDROID_KEYSTORE_B64")
-    val keystoreFile = System.getenv("ANDROID_KEYSTORE_FILE")
     if (encryptedKeystore != null) {
+        val keystoreFile = System.getenv("ANDROID_KEYSTORE_FILE")
+    } else {
+        val keystoreFile = 
+    }
+
+    if (keystoreFile != null) {
         signingConfigs {
             create("release") {
                 storeFile = file(keystoreFile)
@@ -103,7 +108,7 @@ android {
     buildTypes {
         // Signed by release key, allowing for upload to Play Store.
         release {
-            signingConfig = if (encryptedKeystore != null) {
+            signingConfig = if (keystoreFile != null) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")
