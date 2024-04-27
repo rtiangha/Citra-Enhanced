@@ -60,21 +60,3 @@ function pack_artifacts() {
         rm -rf "$REV_NAME"
     fi
 }
-
-if [ -n "$UNPACKED" ]; then
-    # Copy the artifacts to be uploaded unpacked.
-    for ARTIFACT in build/bundle/*; do
-        FILENAME=$(basename "$ARTIFACT")
-        EXTENSION="${FILENAME##*.}"
-
-        mv "$ARTIFACT" "artifacts/$REV_NAME.$EXTENSION"
-    done
-elif [ -n "$PACK_INDIVIDUALLY" ]; then
-    # Pack and upload the artifacts one-by-one.
-    for ARTIFACT in build/bundle/*; do
-        pack_artifacts "$ARTIFACT"
-    done
-else
-    # Pack all of the artifacts into a single archive.
-    pack_artifacts build/bundle
-fi
