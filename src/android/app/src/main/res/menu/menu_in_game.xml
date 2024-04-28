@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_emulation_pause"
-        android:icon="@drawable/ic_pause"
-        android:title="@string/pause_emulation" />
+        android:id="@+id/menu_emulation_resume"
+        android:icon="@drawable/ic_play"
+        android:title="@string/resume_emulation" />
 
     <item
         android:id="@+id/menu_emulation_savestates"
