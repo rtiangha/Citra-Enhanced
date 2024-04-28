@@ -231,6 +231,15 @@
         </property>
        </widget>
       </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="rendererBox">
+     <property name="title">
+      <string>Tweaks</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_8">
       <item>
        <widget class="QCheckBox" name="toggle_skip_slow_draw">
         <property name="text">
