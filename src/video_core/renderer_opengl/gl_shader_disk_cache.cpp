@@ -21,11 +21,11 @@ namespace OpenGL {
 constexpr std::size_t HASH_LENGTH = 64;
 using ShaderCacheVersionHash = std::array<u8, HASH_LENGTH>;
 
-enum class TransferableEntryKind : u8 {
+enum class TransferableEntryKind : u32 {
     Raw,
 };
 
-enum class PrecompiledEntryKind : u8 {
+enum class PrecompiledEntryKind : u32 {
     Decompiled,
     Dump,
 };
@@ -43,8 +43,8 @@ ShaderCacheVersionHash GetShaderCacheVersionHash() {
 
 ShaderDiskCacheRaw::ShaderDiskCacheRaw(u64 unique_identifier, ProgramType program_type,
                                        RawShaderConfig config, ProgramCode program_code)
-    : unique_identifier(unique_identifier), program_type(program_type), config(config),
-      program_code(std::move(program_code)) {}
+    : unique_identifier{unique_identifier}, program_type{program_type}, config{config},
+      program_code{std::move(program_code)} {}
 
 bool ShaderDiskCacheRaw::Load(FileUtil::IOFile& file) {
     if (file.ReadBytes(&unique_identifier, sizeof(u64)) != sizeof(u64) ||
@@ -52,7 +52,7 @@ bool ShaderDiskCacheRaw::Load(FileUtil::IOFile& file) {
         return false;
     }
 
-    u64 reg_array_len;
+    u64 reg_array_len{};
     if (file.ReadBytes(&reg_array_len, sizeof(u64)) != sizeof(u64)) {
         return false;
     }
@@ -63,7 +63,7 @@ bool ShaderDiskCacheRaw::Load(FileUtil::IOFile& file) {
 
     // Read in type specific configuration
     if (program_type == ProgramType::VS) {
-        u64 code_len;
+        u64 code_len{};
         if (file.ReadBytes(&code_len, sizeof(u64)) != sizeof(u64)) {
             return false;
         }
@@ -122,7 +122,7 @@ std::optional<std::vector<ShaderDiskCacheRaw>> ShaderDiskCache::LoadTransferable
         return std::nullopt;
     }
 
-    u8 version;
+    u32 version{};
     if (transferable_file.ReadBytes(&version, sizeof(version)) != sizeof(version)) {
         LOG_ERROR(Render_OpenGL,
                   "Failed to get transferable cache version for title id={} - removing",
@@ -145,8 +145,8 @@ std::optional<std::vector<ShaderDiskCacheRaw>> ShaderDiskCache::LoadTransferable
     // Version is valid, load the shaders
     std::vector<ShaderDiskCacheRaw> raws;
     while (transferable_file.Tell() < transferable_file.GetSize()) {
-        TransferableEntryKind kind;
-        if (transferable_file.ReadBytes(&kind, sizeof(kind)) != sizeof(kind)) {
+        TransferableEntryKind kind{};
+        if (transferable_file.ReadBytes(&kind, sizeof(u32)) != sizeof(u32)) {
             LOG_ERROR(Render_OpenGL, "Failed to read transferable file - removing");
             InvalidateAll();
             return std::nullopt;
@@ -178,9 +178,8 @@ std::optional<std::vector<ShaderDiskCacheRaw>> ShaderDiskCache::LoadTransferable
 
 std::pair<std::unordered_map<u64, ShaderDiskCacheDecompiled>, ShaderDumpsMap>
 ShaderDiskCache::LoadPrecompiled(bool compressed) {
-    if (!IsUsable()) {
+    if (!IsUsable())
         return {};
-    }
 
     if (precompiled_file.GetSize() == 0) {
         LOG_INFO(Render_OpenGL, "No precompiled shader cache found for game with title id={}",
@@ -188,8 +187,7 @@ ShaderDiskCache::LoadPrecompiled(bool compressed) {
         return {};
     }
 
-    const std::optional<std::pair<OpenGL::ShaderDecompiledMap, OpenGL::ShaderDumpsMap>> result =
-        LoadPrecompiledFile(precompiled_file, compressed);
+    const auto result = LoadPrecompiledFile(precompiled_file, compressed);
     if (!result) {
         LOG_INFO(Render_OpenGL,
                  "Failed to load precompiled cache for game with title id={} - removing",
@@ -231,7 +229,7 @@ ShaderDiskCache::LoadPrecompiledFile(FileUtil::IOFile& file, bool compressed) {
     std::unordered_map<u64, ShaderDiskCacheDecompiled> decompiled;
     ShaderDumpsMap dumps;
     while (decompressed_precompiled_cache_offset < decompressed_precompiled_cache.size()) {
-        PrecompiledEntryKind kind;
+        PrecompiledEntryKind kind{};
         if (!LoadObjectFromPrecompiled(kind)) {
             return std::nullopt;
         }
@@ -292,7 +290,7 @@ std::optional<ShaderDiskCacheDecompiled> ShaderDiskCache::LoadDecompiledEntry() 
         return std::nullopt;
     }
 
-    u32 code_size;
+    u32 code_size{};
     if (!LoadObjectFromPrecompiled(code_size)) {
         return std::nullopt;
     }
@@ -311,9 +309,8 @@ std::optional<ShaderDiskCacheDecompiled> ShaderDiskCache::LoadDecompiledEntry() 
 
 void ShaderDiskCache::SaveDecompiledToFile(FileUtil::IOFile& file, u64 unique_identifier,
                                            const std::string& code, bool sanitize_mul) {
-    if (!IsUsable()) {
+    if (!IsUsable())
         return;
-    }
 
     if (file.WriteObject(static_cast<u32>(PrecompiledEntryKind::Decompiled)) != 1 ||
         file.WriteObject(unique_identifier) != 1 || file.WriteObject(sanitize_mul) != 1 ||
@@ -360,9 +357,8 @@ void ShaderDiskCache::InvalidatePrecompiled() {
 }
 
 void ShaderDiskCache::SaveRaw(const ShaderDiskCacheRaw& entry) {
-    if (!IsUsable()) {
+    if (!IsUsable())
         return;
-    }
 
     const u64 id = entry.GetUniqueIdentifier();
     if (transferable.find(id) != transferable.end()) {
@@ -382,9 +378,8 @@ void ShaderDiskCache::SaveRaw(const ShaderDiskCacheRaw& entry) {
 
 void ShaderDiskCache::SaveDecompiled(u64 unique_identifier, const std::string& code,
                                      bool sanitize_mul) {
-    if (!IsUsable()) {
+    if (!IsUsable())
         return;
-    }
 
     if (decompressed_precompiled_cache.empty()) {
         SavePrecompiledHeaderToVirtualPrecompiledCache();
@@ -398,9 +393,8 @@ void ShaderDiskCache::SaveDecompiled(u64 unique_identifier, const std::string& c
 }
 
 void ShaderDiskCache::SaveDump(u64 unique_identifier, GLuint program) {
-    if (!IsUsable()) {
+    if (!IsUsable())
         return;
-    }
 
     GLint binary_length{};
     glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &binary_length);
@@ -422,9 +416,8 @@ void ShaderDiskCache::SaveDump(u64 unique_identifier, GLuint program) {
 }
 
 void ShaderDiskCache::SaveDumpToFile(u64 unique_identifier, GLuint program, bool sanitize_mul) {
-    if (!IsUsable()) {
+    if (!IsUsable())
         return;
-    }
 
     GLint binary_length{};
     glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &binary_length);
@@ -456,9 +449,8 @@ bool ShaderDiskCache::IsUsable() const {
 }
 
 FileUtil::IOFile ShaderDiskCache::AppendTransferableFile() {
-    if (!EnsureDirectories()) {
+    if (!EnsureDirectories())
         return {};
-    }
 
     const auto transferable_path{GetTransferablePath()};
     const bool existed = FileUtil::Exists(transferable_path);
@@ -480,11 +472,10 @@ FileUtil::IOFile ShaderDiskCache::AppendTransferableFile() {
 }
 
 FileUtil::IOFile ShaderDiskCache::AppendPrecompiledFile(bool write_header) {
-    if (!EnsureDirectories()) {
+    if (!EnsureDirectories())
         return {};
-    }
 
-    const std::string precompiled_path = GetPrecompiledPath();
+    const auto precompiled_path{GetPrecompiledPath()};
     const bool existed = FileUtil::Exists(precompiled_path);
 
     FileUtil::IOFile file(precompiled_path, "ab+");
@@ -519,7 +510,7 @@ void ShaderDiskCache::SaveVirtualPrecompiledFile() {
     const auto compressed =
         Common::Compression::CompressDataZSTDDefault(decompressed_precompiled_cache);
 
-    const std::string precompiled_path = GetPrecompiledPath();
+    const auto precompiled_path{GetPrecompiledPath()};
 
     precompiled_file.Close();
     if (!FileUtil::Delete(GetPrecompiledPath())) {
