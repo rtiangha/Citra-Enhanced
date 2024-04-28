@@ -1,5 +1,6 @@
 ccache -s -v
 
 if [ ! -z "${ANDROID_KEYSTORE_B64}" ]; then
-    rm "${ANDROID_KEYSTORE_FILE}"
+    chmod +x ${GITHUB_WORKSPACE}/src/android/app/ks.jks
+    rm "${GITHUB_WORKSPACE}/src/android/app/ks.jks"
 fi
