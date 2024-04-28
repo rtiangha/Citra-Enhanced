@@ -196,7 +196,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             }
 
             override fun onDrawerClosed(drawerView: View) {
-                NativeLibrary.UnpauseEmulation()
+                NativeLibrary.unPauseEmulation()
                 binding.drawerLayout.setDrawerLockMode(EmulationMenuSettings.drawerLockMode)
             }
 
