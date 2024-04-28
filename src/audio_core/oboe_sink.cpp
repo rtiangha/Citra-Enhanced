@@ -12,7 +12,8 @@ public:
     Impl() = default;
     ~Impl() override = default;
 
-    oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream, void *audioData, int32_t numFrames) override {
+    oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream, void *audioData,
+                                          int32_t numFrames) override {
         s16* outputBuffer = static_cast<s16*>(audioData);
         if (mCallback) {
             mCallback(outputBuffer, static_cast<std::size_t>(numFrames));
@@ -32,20 +33,22 @@ public:
     bool start() {
         oboe::AudioStreamBuilder builder;
         auto result = builder.setSharingMode(oboe::SharingMode::Exclusive)
-                ->setPerformanceMode(oboe::PerformanceMode::LowLatency)
-                ->setFormat(oboe::AudioFormat::I16)
-                ->setSampleRate(mSampleRate)
-                ->setChannelCount(2)
-                ->setCallback(this)
-                ->openManagedStream(mStream);
+                          ->setPerformanceMode(oboe::PerformanceMode::LowLatency)
+                          ->setFormat(oboe::AudioFormat::I16)
+                          ->setSampleRate(mSampleRate)
+                          ->setChannelCount(2)
+                          ->setCallback(this)
+                          ->openManagedStream(mStream);
         if (result != oboe::Result::OK) {
-            LOG_CRITICAL(Audio_Sink, "Error creating playback stream: %s", oboe::convertToText(result));
+            LOG_CRITICAL(Audio_Sink, "Error creating playback stream: %s",
+                         oboe::convertToText(result));
             return false;
         }
         mSampleRate = mStream->getSampleRate();
         result = mStream->start();
         if (result != oboe::Result::OK) {
-            LOG_CRITICAL(Audio_Sink, "Error starting playback stream: %s", oboe::convertToText(result));
+            LOG_CRITICAL(Audio_Sink, "Error starting playback stream: %s",
+                         oboe::convertToText(result));
             return false;
         }
         return true;
