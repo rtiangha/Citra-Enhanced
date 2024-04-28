@@ -97,6 +97,10 @@ use_cpu_jit =
 # Range is any positive integer (but we suspect 25 - 400 is a good idea) Default is 100
 cpu_clock_percentage =
 
+# Downcount will be limited to a smaller time slice.
+# 0 (default): Off, 1: On
+core_downcount_hack =
+
 # Boost low priority starved threads during kernel rescheduling.
 # 0 (default): Off, 1: On
 priority_boost =
