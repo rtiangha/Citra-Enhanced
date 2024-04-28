@@ -957,6 +957,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SwitchSetting(
+                    IntSetting.PRIORITY_BOOST,
+                    R.string.priority_boost,
+                    R.string.priority_boost_description,
+                    IntSetting.PRIORITY_BOOST.key,
+                    IntSetting.PRIORITY_BOOST.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
                     IntSetting.DEBUG_RENDERER,
                     R.string.renderer_debug,
                     R.string.renderer_debug_description,

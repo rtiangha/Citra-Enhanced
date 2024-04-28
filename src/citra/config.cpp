@@ -130,6 +130,7 @@ void Config::ReadValues() {
     // Core
     ReadSetting("Core", Settings::values.use_cpu_jit);
     ReadSetting("Core", Settings::values.cpu_clock_percentage);
+    ReadSetting("Core", Settings::values.priority_boost);
 
     // Renderer
     ReadSetting("Renderer", Settings::values.graphics_api);

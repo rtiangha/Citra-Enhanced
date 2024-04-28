@@ -233,12 +233,31 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_5">
+     <property name="title">
+      <string>Tweaks</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="toggle_priority_boost">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Boost low priority starved threads during kernel rescheduling. It can improve the performance, at the cost of get freezes during cutsences for some games&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Priority Boost</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
     <item>
-      <widget class="QGroupBox" name="groupBox_5">
+      <widget class="QGroupBox" name="groupBox_6">
         <property name="title">
           <string>Miscellaneus</string>
         </property>
-        <layout class="QGridLayout" name="gridLayout_2">
+        <layout class="QGridLayout" name="gridLayout_4">
           <item row="1" column="0">
             <widget class="QCheckBox" name="delay_start_for_lle_modules">
               <property name="toolTip">

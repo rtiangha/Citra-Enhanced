@@ -214,6 +214,9 @@
     <string name="renderer_debug_description">Log additional graphics related debug information. When enabled, game performance will be significantly reduced.</string>
     <string name="vsync">Enable V-Sync</string>
     <string name="vsync_description">Synchronizes the game frame rate to the refresh rate of your device.</string>
+    <string name="priority_boost">Enable Priority Boost</string>
+    <string name="priority_boost_description">Boost low priority starved threads during kernel rescheduling. It can improve the performance, at the cost of get freezes during cutsences for some games</string>
+    <string name="priority_boost_tweaks">Priority Boost</string>
     <string name="linear_filtering">Linear Filtering</string>
     <string name="linear_filtering_description">Enables linear filtering, which causes game visuals to appear smoother.</string>
     <string name="texture_filter_name">Texture Filter</string>

@@ -454,6 +454,7 @@ void Config::ReadCoreValues() {
     qt_config->beginGroup(QStringLiteral("Core"));
 
     ReadGlobalSetting(Settings::values.cpu_clock_percentage);
+    ReadGlobalSetting(Settings::values.priority_boost);
 
     if (global) {
         ReadBasicSetting(Settings::values.use_cpu_jit);
@@ -991,6 +992,7 @@ void Config::SaveCoreValues() {
     qt_config->beginGroup(QStringLiteral("Core"));
 
     WriteGlobalSetting(Settings::values.cpu_clock_percentage);
+    WriteGlobalSetting(Settings::values.priority_boost);
 
     if (global) {
         WriteBasicSetting(Settings::values.use_cpu_jit);
