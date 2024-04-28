@@ -191,10 +191,12 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             }
 
             override fun onDrawerOpened(drawerView: View) {
+                NativeLibrary.pauseEmulation()
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
 
             override fun onDrawerClosed(drawerView: View) {
+                NativeLibrary.UnpauseEmulation()
                 binding.drawerLayout.setDrawerLockMode(EmulationMenuSettings.drawerLockMode)
             }
 
@@ -226,23 +228,9 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             game.title
         binding.inGameMenu.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.menu_emulation_pause -> {
-                    if (emulationState.isPaused) {
-                        emulationState.unpause()
-                        it.title = resources.getString(R.string.pause_emulation)
-                        it.icon = ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.ic_pause,
-                            requireContext().theme
-                        )
-                    } else {
-                        emulationState.pause()
-                        it.title = resources.getString(R.string.resume_emulation)
-                        it.icon = ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.ic_play,
-                            requireContext().theme
-                        )
+                R.id.menu_emulation_resume -> {
+                    if (binding.drawerLayout.isOpen) {
+                        binding.drawerLayout.close()
                     }
                     true
                 }
