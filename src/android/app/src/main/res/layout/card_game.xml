@@ -9,7 +9,8 @@
     android:layout_height="wrap_content"
     android:focusable="true"
     android:foreground="@drawable/rounded_selectable_item_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="15dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_contents"
