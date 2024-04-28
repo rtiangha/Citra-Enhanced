@@ -12,7 +12,7 @@ public:
     Impl() = default;
     ~Impl() override = default;
 
-    oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream, void *audioData,
+    oboe::DataCallbackResult onAudioReady(oboe::AudioStream* oboeStream, void* audioData,
                                           int32_t numFrames) override {
         s16* outputBuffer = static_cast<s16*>(audioData);
         if (mCallback) {
