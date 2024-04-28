@@ -545,6 +545,7 @@ struct Values {
     SwitchableSetting<u32> raise_ticks{0, "raise_ticks"};
     SwitchableSetting<bool> skip_slow_draw{false, "skip_slow_draw"};
     SwitchableSetting<bool> skip_texture_copy{false, "skip_texture_copy"};
+    SwitchableSetting<bool> priority_boost{true, "priority_boost"};
 
     // Miscellaneous
     Setting<std::string> log_filter{"*:Info", "log_filter"};

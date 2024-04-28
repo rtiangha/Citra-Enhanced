@@ -469,7 +469,26 @@ bool ThreadManager::HaveReadyThreads() {
     return ready_queue.get_first() != nullptr;
 }
 
+void ThreadManager::PriorityBoostStarvedThreads() {
+    const u64 current_ticks = kernel.timing.GetTicks();
+
+    for (auto& thread : thread_list) {
+        const u64 boost_ticks = 1400000;
+
+        u64 delta = current_ticks - thread->last_running_ticks;
+
+        if (thread->status == ThreadStatus::Ready && delta > boost_ticks) {
+            const s32 priority = std::max(ready_queue.get_first()->current_priority, 40u);
+            thread->BoostPriority(priority);
+        }
+    }
+}
+
 void ThreadManager::Reschedule() {
+    if (Settings::values.priority_boost) {
+        PriorityBoostStarvedThreads();
+    }
+
     Thread* cur = GetCurrentThread();
     Thread* next = PopNextReadyThread();
 
