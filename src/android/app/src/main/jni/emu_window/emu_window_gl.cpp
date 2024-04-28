@@ -145,7 +145,8 @@ bool EmuWindow_Android_OpenGL::CreateWindowSurface() {
 
     if (egl_surface == EGL_NO_SURFACE) {
         EGLint error = eglGetError(); // Get the error code
-        LOG_CRITICAL(Frontend, "EmuWindow_Android_OpenGL eglCreateWindowSurface() returned error {}", error);
+        LOG_CRITICAL(Frontend,
+                     "EmuWindow_Android_OpenGL eglCreateWindowSurface() returned error {}", error);
         return true;
     }
 
