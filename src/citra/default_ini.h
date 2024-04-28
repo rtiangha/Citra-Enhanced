@@ -110,6 +110,14 @@ priority_boost =
 # 0: Software, 1: OpenGL (default), 2: Vulkan
 graphics_api =
 
+# Skips the slow drawing event from PICA core.
+# 0 (default): Off, 1: On
+skip_slow_draw =
+
+# Skips the texture copy event from rasterizer cache.
+# 0 (default): Off, 1: On
+skip_texture_copy =
+
 # Whether to render using GLES or OpenGL
 # 0 (default): OpenGL, 1: GLES
 use_gles =

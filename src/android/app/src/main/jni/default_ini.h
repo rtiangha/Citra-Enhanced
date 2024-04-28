@@ -118,6 +118,14 @@ async_shader_compilation =
 # 0: GLSL, 1: SPIR-V (default)
 spirv_shader_gen =
 
+# Skips the slow drawing event from PICA core.
+# 0 (default): Off, 1: On
+skip_slow_draw =
+
+# Skips the texture copy event from rasterizer cache.
+# 0 (default): Off, 1: On
+skip_texture_copy =
+
 # Whether to use hardware shaders to emulate 3DS shaders
 # 0: Software, 1 (default): Hardware
 use_hw_shader =

@@ -23,11 +23,6 @@ ConfigureGraphics::ConfigureGraphics(QString gl_renderer, std::span<const QStrin
     ui->physical_device_combo->setEnabled(!is_powered_on);
     ui->toggle_async_shaders->setEnabled(!is_powered_on);
     ui->toggle_async_present->setEnabled(!is_powered_on);
-
-    // only show hacks when a game is running
-    ui->toggle_skip_slow_draw->setEnabled(is_powered_on);
-    ui->toggle_skip_texture_copy->setEnabled(is_powered_on);
-
     // Set the index to -1 to ensure the below lambda is called with setCurrentIndex
     ui->graphics_api_combo->setCurrentIndex(-1);
 

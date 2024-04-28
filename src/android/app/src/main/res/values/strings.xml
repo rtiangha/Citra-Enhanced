@@ -225,6 +225,10 @@
     <string name="texture_filter_description">Enhances the visuals of games by applying a filter to textures. The supported filters are Anime4K Ultrafast, Bicubic, ScaleForce, and xBRZ freescale.</string>
     <string name="hw_shaders">Enable Hardware Shader</string>
     <string name="hw_shaders_description">Uses hardware to emulate 3DS shaders. When enabled, game performance will be significantly improved.</string>
+    <string name="skip_slow_draw">Skip Slow Draw</string>
+    <string name="skip_slow_draw_description">Skips the slow drawing event from PICA core. Can improve performance or rarely fix issues, but may cause graphical bugs.</string>
+    <string name="skip_texture_copy">Skip Texture Copy</string>
+    <string name="skip_texture_copy_description">Skips the texture copy event from rasterizer cache. Can improve performance or rarely fix issues, but may cause graphical bugs.</string>
     <string name="shaders_accurate_mul">Accurate Multiplication</string>
     <string name="shaders_accurate_mul_description">Uses more accurate multiplication in hardware shaders, which may fix some graphical bugs. When enabled, performance will be reduced.</string>
     <string name="asynchronous_gpu">Enable asynchronous GPU emulation</string>

@@ -89,6 +89,8 @@ void LogSettings() {
     log_setting("Renderer_GraphicsAPI", GetGraphicsAPIName(values.graphics_api.GetValue()));
     log_setting("Renderer_AsyncShaders", values.async_shader_compilation.GetValue());
     log_setting("Renderer_AsyncPresentation", values.async_presentation.GetValue());
+    log_setting("Renderer_SkipSlowDraw", values.skip_slow_draw.GetValue());
+    log_setting("Renderer_SkipTextureCopy", values.skip_texture_copy.GetValue());
     log_setting("Renderer_SpirvShaderGen", values.spirv_shader_gen.GetValue());
     log_setting("Renderer_Debug", values.renderer_debug.GetValue());
     log_setting("Renderer_UseHwShader", values.use_hw_shader.GetValue());
@@ -202,6 +204,8 @@ void RestoreGlobalState(bool is_powered_on) {
     values.spirv_shader_gen.SetGlobal(true);
     values.async_shader_compilation.SetGlobal(true);
     values.async_presentation.SetGlobal(true);
+    values.skip_slow_draw.SetGlobal(true);
+    values.skip_texture_copy.SetGlobal(true);
     values.use_hw_shader.SetGlobal(true);
     values.use_disk_shader_cache.SetGlobal(true);
     values.shaders_accurate_mul.SetGlobal(true);

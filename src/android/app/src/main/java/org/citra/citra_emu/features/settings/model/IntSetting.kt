@@ -28,6 +28,8 @@ enum class IntSetting(
     LLE_APPLETS("lle_applets", Settings.SECTION_SYSTEM, 0),
     CPU_CLOCK_SPEED("cpu_clock_percentage", Settings.SECTION_CORE, 100),
     LINEAR_FILTERING("filter_mode", Settings.SECTION_RENDERER, 1),
+    SKIP_SLOW_DRAW("skip_slow_draw", Settings.SECTION_RENDERER, 0),
+    SKIP_TEXTURE_COPY("skip_texture_copy", Settings.SECTION_RENDERER, 0),
     SHADERS_ACCURATE_MUL("shaders_accurate_mul", Settings.SECTION_RENDERER, 0),
     DISK_SHADER_CACHE("use_disk_shader_cache", Settings.SECTION_RENDERER, 1),
     DUMP_TEXTURES("dump_textures", Settings.SECTION_UTILITY, 0),
