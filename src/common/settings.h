@@ -542,7 +542,7 @@ struct Values {
     Setting<u16> gdbstub_port{24689, "gdbstub_port"};
 
     // Hacks
-    SwitchableSetting<u32> raise_ticks{0, "raise_ticks"};
+    SwitchableSetting<bool> raise_ticks{false, "raise_ticks"};
     SwitchableSetting<bool> skip_slow_draw{false, "skip_slow_draw"};
     SwitchableSetting<bool> skip_texture_copy{false, "skip_texture_copy"};
     SwitchableSetting<bool> core_downcount_hack{false, "core_downcount_hack"};
@@ -567,7 +567,6 @@ struct Values {
 
 extern Values values;
 
-void RaiseTicks(bool enable);
 bool IsConfiguringGlobal();
 void SetConfiguringGlobal(bool is_global);
 

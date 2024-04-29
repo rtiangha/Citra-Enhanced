@@ -218,7 +218,6 @@
     <string name="core_downcount_hack_description">When enabled, core downcount will be limited to a smaller time slice, reducing CPU usage. It usually reduce the performance, but improves for low-end devices or GPU hungry games</string>
     <string name="priority_boost">Enable Priority Boost</string>
     <string name="priority_boost_description">Boost low priority starved threads during kernel rescheduling. It can improve the performance, at the cost of get freezes during cutsences for some games</string>
-    <string name="priority_boost_tweaks">Priority Boost</string>
     <string name="linear_filtering">Linear Filtering</string>
     <string name="linear_filtering_description">Enables linear filtering, which causes game visuals to appear smoother.</string>
     <string name="texture_filter_name">Texture Filter</string>
@@ -314,8 +313,7 @@
     <!-- Tweaks Dialog -->
     <string name="tweaks_title">Tweaks</string>
     <string name="setting_raise_ticks">Raise Ticks</string>
-    <string name="setting_skip_slow_draw">Skip Slow Draw</string>
-    <string name="setting_skip_texture_copy">Skip Texture Copy</string>
+    <string name="priority_boost_tweaks">Priority Boost</string>
 
     <!-- Add Directory Screen-->
     <string name="select_game_folder">Select Game Folder</string>

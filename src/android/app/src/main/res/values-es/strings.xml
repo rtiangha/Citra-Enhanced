@@ -281,8 +281,6 @@ Se esperan fallos gráficos temporales cuando ésta esté activado.</string>
     <!-- Tweaks Dialog -->
     <string name="tweaks_title">Modificaciones</string>
     <string name="setting_raise_ticks">Incrementar Ticks</string>
-    <string name="setting_skip_slow_draw">Omitir Dibujo Lento</string>
-    <string name="setting_skip_texture_copy">Omitir Copia de Textura</string>
 
     <!-- Add Directory Screen-->
     <string name="select_game_folder">Seleccionar Directorio de Juego</string>

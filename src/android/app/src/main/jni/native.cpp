@@ -347,7 +347,7 @@ jintArray Java_org_citra_citra_1emu_NativeLibrary_getTweaks(JNIEnv* env,
     int settings[4];
 
     // get settings
-    settings[i++] = Settings::values.raise_ticks.GetValue() > 0;
+    settings[i++] = Settings::values.raise_ticks.GetValue();
     settings[i++] = Settings::values.skip_slow_draw.GetValue();
     settings[i++] = Settings::values.skip_texture_copy.GetValue();
     settings[i++] = Settings::values.priority_boost.GetValue();
@@ -363,7 +363,7 @@ void Java_org_citra_citra_1emu_NativeLibrary_setTweaks(JNIEnv* env, [[maybe_unus
     jint* settings = env->GetIntArrayElements(array, nullptr);
 
     // Raise Ticks
-    Settings::RaiseTicks(settings[i++] > 0);
+    Settings::values.raise_ticks = settings[i++] > 0;
 
     // Skip Slow Draw
     Settings::values.skip_slow_draw = settings[i++] > 0;
