@@ -21,7 +21,7 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
 
     companion object {
         // tweaks
-        const val SETTING_RAISE_TICKS = 0
+        const val SETTING_RAISE_CPU_TICKS = 0
         const val SETTING_SKIP_SLOW_DRAW = 1
         const val SETTING_SKIP_TEXTURE_COPY = 2
         const val SETTING_PRIORITY_BOOST = 3
@@ -127,7 +127,7 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
             settings = ArrayList()
 
             // native settings
-            settings.add(SettingsItem(SETTING_RAISE_TICKS, context.getString(R.string.raise_ticks), TYPE_SWITCH, tweaks[i++]))
+            settings.add(SettingsItem(SETTING_RAISE_CPU_TICKS, context.getString(R.string.raise_cpu_ticks), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_SKIP_SLOW_DRAW, context.getString(R.string.skip_slow_draw), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_SKIP_TEXTURE_COPY, context.getString(R.string.skip_texture_copy), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_PRIORITY_BOOST, context.getString(R.string.priority_boost_tweaks), TYPE_SWITCH, tweaks[i++]))

@@ -176,9 +176,8 @@ u64 Timing::Timer::GetTicks() const {
 }
 
 void Timing::Timer::AddTicks(u64 ticks) {
-    downcount -= static_cast<u64>(
-        (Settings::values.raise_ticks.GetValue() ? 16000 : ticks) *
-        cpu_clock_scale);
+    downcount -= static_cast<u64>((Settings::values.raise_cpu_ticks.GetValue() ? 16000 : ticks) *
+                                  cpu_clock_scale);
 }
 
 u64 Timing::Timer::GetIdleTicks() const {

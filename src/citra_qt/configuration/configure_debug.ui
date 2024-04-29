@@ -240,12 +240,12 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
      <item row="1" column="0">
-       <widget class="QCheckBox" name="toggle_raise_ticks">
+       <widget class="QCheckBox" name="toggle_raise_cpu_ticks">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adds 16000 ticks. Can improve the performance or decrease, depending of the game or if it is a low-end device&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adds 16000 CPU ticks. Can improve the performance or decrease, depending of the game or if it is a low-end device&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>Raise Ticks</string>
+         <string>Raise CPU Ticks</string>
         </property>
        </widget>
       </item>

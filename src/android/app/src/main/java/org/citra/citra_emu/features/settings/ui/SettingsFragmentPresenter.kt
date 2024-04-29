@@ -974,6 +974,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SwitchSetting(
+                    IntSetting.RAISE_CPU_TICKS,
+                    R.string.raise_cpu_ticks,
+                    R.string.raise_cpu_ticks_description,
+                    IntSetting.RAISE_CPU_TICKS.key,
+                    IntSetting.RAISE_CPU_TICKS.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
                     IntSetting.CORE_DOWNCOUNT_HACK,
                     R.string.core_downcount_hack,
                     R.string.core_downcount_hack_description,

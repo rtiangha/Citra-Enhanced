@@ -40,6 +40,7 @@ enum class IntSetting(
     CPU_JIT("use_cpu_jit", Settings.SECTION_CORE, 1),
     HW_SHADER("use_hw_shader", Settings.SECTION_RENDERER, 1),
     VSYNC("use_vsync_new", Settings.SECTION_RENDERER, 1),
+    RAISE_CPU_TICKS("raise_cpu_ticks", Settings.SECTION_CORE, 0),
     CORE_DOWNCOUNT_HACK("core_downcount_hack", Settings.SECTION_CORE, 0),
     PRIORITY_BOOST("priority_boost", Settings.SECTION_CORE, 0),
     DEBUG_RENDERER("renderer_debug", Settings.SECTION_DEBUG, 0),
