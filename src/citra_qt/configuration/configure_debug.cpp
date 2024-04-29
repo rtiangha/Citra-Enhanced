@@ -107,6 +107,7 @@ void ConfigureDebug::SetConfiguration() {
         Settings::values.delay_start_for_lle_modules.GetValue());
     ui->toggle_renderer_debug->setChecked(Settings::values.renderer_debug.GetValue());
     ui->toggle_dump_command_buffers->setChecked(Settings::values.dump_command_buffers.GetValue());
+    ui->toggle_raise_ticks->setChecked(Settings::values.raise_ticks.GetValue());
     ui->toggle_core_downcount_hack->setChecked(Settings::values.core_downcount_hack.GetValue());
     ui->toggle_priority_boost->setChecked(Settings::values.priority_boost.GetValue());
 
@@ -143,6 +144,7 @@ void ConfigureDebug::ApplyConfiguration() {
     Settings::values.delay_start_for_lle_modules = ui->delay_start_for_lle_modules->isChecked();
     Settings::values.renderer_debug = ui->toggle_renderer_debug->isChecked();
     Settings::values.dump_command_buffers = ui->toggle_dump_command_buffers->isChecked();
+    Settings::values.raise_ticks = ui->toggle_raise_ticks->isChecked();
     Settings::values.core_downcount_hack = ui->toggle_core_downcount_hack->isChecked();
     Settings::values.priority_boost = ui->toggle_priority_boost->isChecked();
 
