@@ -105,7 +105,7 @@ public:
     }
 
     void AddTicks(std::uint64_t ticks) override {
-        parent.GetTimer().AddTicks(Settings::values.raise_ticks.GetValue() ? 16000 : ticks);
+        parent.GetTimer().AddTicks(ticks);
     }
     std::uint64_t GetTicksRemaining() override {
         s64 ticks = parent.GetTimer().GetDowncount();
