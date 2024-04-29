@@ -128,8 +128,8 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
 
             // native settings
             settings.add(SettingsItem(SETTING_RAISE_TICKS, context.getString(R.string.setting_raise_ticks), TYPE_SWITCH, tweaks[i++]))
-            settings.add(SettingsItem(SETTING_SKIP_SLOW_DRAW, context.getString(R.string.setting_skip_slow_draw), TYPE_SWITCH, tweaks[i++]))
-            settings.add(SettingsItem(SETTING_SKIP_TEXTURE_COPY, context.getString(R.string.setting_skip_texture_copy), TYPE_SWITCH, tweaks[i++]))
+            settings.add(SettingsItem(SETTING_SKIP_SLOW_DRAW, context.getString(R.string.skip_slow_draw), TYPE_SWITCH, tweaks[i++]))
+            settings.add(SettingsItem(SETTING_SKIP_TEXTURE_COPY, context.getString(R.string.skip_texture_copy), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_PRIORITY_BOOST, context.getString(R.string.priority_boost_tweaks), TYPE_SWITCH, tweaks[i++]))
         }
 
