@@ -83,7 +83,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(contex
 
     private fun swapScreens() {
         val isSwapScreensEnabled = !EmulationMenuSettings.swapScreens
-        EmulationMenuSettings.swapScreens = isEnabled
+        EmulationMenuSettings.swapScreens = isSwapScreensEnabled
         NativeLibrary.swapScreens(
             isSwapScreensEnabled,
             (context as Activity).windowManager.defaultDisplay.rotation
