@@ -68,7 +68,8 @@ public:
         if (mStream) {
             auto result = mStream->stop();
             if (result != oboe::Result::OK) {
-                LOG_CRITICAL(Audio_Sink, "Error stopping playback stream: {}", oboe::convertToText(result));
+                LOG_CRITICAL(Audio_Sink, "Error stopping playback stream: {}",
+                             oboe::convertToText(result));
             }
             mStream->close(); // Close the stream after stopping
         }
