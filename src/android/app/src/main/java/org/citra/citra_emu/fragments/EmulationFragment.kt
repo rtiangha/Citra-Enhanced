@@ -20,7 +20,7 @@ import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
-import android.content.res.Configuration;
+import android.content.res.Configuration
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
