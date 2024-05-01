@@ -188,7 +188,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.frame_limit_slider,
                     R.string.frame_limit_slider_description,
                     1,
-                    400,
+                    200,
                     "%",
                     IntSetting.FRAME_LIMIT.key,
                     IntSetting.FRAME_LIMIT.defaultValue.toFloat()
