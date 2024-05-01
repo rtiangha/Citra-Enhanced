@@ -69,6 +69,7 @@ import org.citra.citra_emu.utils.EmulationLifecycleUtil
 import org.citra.citra_emu.utils.Log
 import org.citra.citra_emu.utils.ViewUtils
 import org.citra.citra_emu.viewmodel.EmulationViewModel
+import java.io.File
 
 class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.FrameCallback {
     private val preferences: SharedPreferences
@@ -191,10 +192,12 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             }
 
             override fun onDrawerOpened(drawerView: View) {
+                NativeLibrary.pauseEmulation()
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
 
             override fun onDrawerClosed(drawerView: View) {
+                NativeLibrary.unPauseEmulation()
                 binding.drawerLayout.setDrawerLockMode(EmulationMenuSettings.drawerLockMode)
             }
 
@@ -226,23 +229,9 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             game.title
         binding.inGameMenu.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.menu_emulation_pause -> {
-                    if (emulationState.isPaused) {
-                        emulationState.unpause()
-                        it.title = resources.getString(R.string.pause_emulation)
-                        it.icon = ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.ic_pause,
-                            requireContext().theme
-                        )
-                    } else {
-                        emulationState.pause()
-                        it.title = resources.getString(R.string.resume_emulation)
-                        it.icon = ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.ic_play,
-                            requireContext().theme
-                        )
+                R.id.menu_emulation_resume -> {
+                    if (binding.drawerLayout.isOpen) {
+                        binding.drawerLayout.close()
                     }
                     true
                 }
@@ -445,10 +434,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     override fun onResume() {
         super.onResume()
         Choreographer.getInstance().postFrameCallback(this)
-        if (NativeLibrary.isRunning()) {
-            NativeLibrary.unPauseEmulation()
-            return
-        }
 
         if (DirectoryInitialization.areCitraDirectoriesReady()) {
             emulationState.run(emulationActivity.isActivityRecreated)
@@ -459,7 +444,11 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
 
     override fun onPause() {
         if (NativeLibrary.isRunning()) {
-            emulationState.pause()
+            if (!binding.drawerLayout.isOpen) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                        binding.drawerLayout.open()
+                }, 500) // 500 milliseconds delay
+            }
         }
         Choreographer.getInstance().removeFrameCallback(this)
         super.onPause()
@@ -1017,14 +1006,12 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             val SPEED = 3
             perfStatsUpdater = Runnable {
                 val perfStats = NativeLibrary.getPerfStats()
+                val ramUsage = File("/proc/self/statm").readLines()[0].split(' ')[1].toLong() * 4096 / 1000000
+                val ramUsageText = "RAM USAGE: " + ramUsage + " MB"
                 if (perfStats[FPS] > 0) {
-                    binding.showFpsText.text = String.format(
-                        "FPS: %d Speed: %d%%",
-                        (perfStats[FPS] + 0.5).toInt(),
-                        (perfStats[SPEED] * 100.0 + 0.5).toInt()
-                    )
+                    binding.showFpsText.text = String.format("FPS: %d Speed: %d%%\n%s", (perfStats[FPS] + 0.5).toInt(), (perfStats[SPEED] * 100.0 + 0.5).toInt(), ramUsageText)
                 }
-                perfStatsUpdateHandler.postDelayed(perfStatsUpdater!!, 3000)
+                perfStatsUpdateHandler.postDelayed(perfStatsUpdater!!, 800)
             }
             perfStatsUpdateHandler.post(perfStatsUpdater!!)
             binding.showFpsText.visibility = View.VISIBLE

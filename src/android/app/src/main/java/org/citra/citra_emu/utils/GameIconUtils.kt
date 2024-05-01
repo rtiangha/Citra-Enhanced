@@ -68,11 +68,6 @@ object GameIconUtils {
             .data(game)
             .target(imageView)
             .error(R.drawable.no_icon)
-            .transformations(
-                RoundedCornersTransformation(
-                    activity.resources.getDimensionPixelSize(R.dimen.spacing_med).toFloat()
-                )
-            )
             .build()
         imageLoader.enqueue(request)
     }
