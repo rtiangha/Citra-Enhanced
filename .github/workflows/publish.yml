@@ -41,13 +41,12 @@ jobs:
           unzip macos-universal.zip -d ./macos-universal
           mv ./macos-universal/citra-macos-universal-*.7z ./macos-universal.7z
 
-      - name: Download Source Artifact
+      - name: Download/Unzip Source Artifact
         run: |
           curl -L -o source.zip https://nightly.link/Gamer64ytb/Citra-Enhanced/workflows/build/master/source.zip
-
-      - name: Extract Source File
-        run: unzip source.zip
-
+          unzip source.zip -d ./source
+          mv ./source/citra-unified-source-*.tar.xz ./citra-unified-source.tar.xz
+          
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
