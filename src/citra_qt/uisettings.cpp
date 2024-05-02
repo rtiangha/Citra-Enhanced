@@ -7,7 +7,7 @@
 namespace UISettings {
 
 const Themes themes{{
-    {"LemonadeUX", "default"},
+    {"CitraUX", "default"},
 }};
 
 Values values = {};
