@@ -924,9 +924,6 @@ void GMainWindow::ConnectMenuEvents() {
 
     // Help
     connect_menu(ui->action_Open_Citra_Folder, &GMainWindow::OnOpenCitraFolder);
-    connect_menu(ui->action_FAQ, []() {
-        QDesktopServices::openUrl(QUrl(QStringLiteral("https://citra-emu.org/wiki/faq/")));
-    });
     connect_menu(ui->action_About, &GMainWindow::OnMenuAboutCitra);
 
 #if ENABLE_QT_UPDATER

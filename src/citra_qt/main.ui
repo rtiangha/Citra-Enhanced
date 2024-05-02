@@ -202,7 +202,6 @@
     <addaction name="separator"/>
     <addaction name="action_Report_Compatibility"/>
     <addaction name="separator"/>
-    <addaction name="action_FAQ"/>
     <addaction name="action_About"/>
    </widget>
    <addaction name="menu_File"/>
