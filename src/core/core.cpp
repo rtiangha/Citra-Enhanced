@@ -272,7 +272,13 @@ static void LoadOverrides(u64 title_id) {
     } else if (title_id == 0x000400000008FE00) {
         // 1001 Spikes
         Settings::values.gl_stream_buffer_hack = false;
+        Settings::values.core_downcount_hack = true; // perf
         // This gamelist may improve performance or rarely fix issues using this
+    } else if (title_id == 0x0004000000030500 || title_id == 0x0004000000032D00 ||
+               title_id == 0x0004000000033C00) {
+        // Super Street Fighter IV: 3D Edition
+        // Fixes vulkan FPS drops on some parts for weak devices mostly
+        Settings::values.raise_cpu_ticks = true;
     } else if (title_id == 0x0004000000068B00 || title_id == 0x0004000000061300 ||
                title_id == 0x000400000004A700 || title_id == 0x000400000005D700) {
         // Tales of the Abyss / Pac Man Party 3D
@@ -293,6 +299,26 @@ static void LoadOverrides(u64 title_id) {
                title_id == 0x0004000000030800 || title_id == 0x0004000000030700) {
         // Mario Kart 7
         Settings::values.skip_texture_copy = true;
+    }
+
+    const std::array<u64, 11> cpu_limit_ids = {
+        0x000400000007C700, // Mario Tennis Open
+        0x000400000007C800, // Mario Tennis Open
+        0x0004000000064D00, // Mario Tennis Open
+        0x00040000000B9100, // Mario Tennis Open
+        0x00040000000DCD00, // Mario Golf: World Tour
+        0x00040000000A5300, // Mario Golf: World Tour
+        0x00040000000DCE00, // Mario Golf: World Tour
+        0x00040000001CCD00, // The Alliance Alive
+        0x00040000001B4500, // The Alliance Alive
+        0x0004000000120900, // Lord of Magna: Maiden Heaven
+        0x0004000000164300, // Lord of Magna: Maiden Heaven
+    };
+    for (auto id : cpu_limit_ids) {
+        if (title_id == id) {
+            Settings::values.core_downcount_hack = true;
+            break;
+        }
     }
 
     // This gamelist requires accurate multiplication to render properly

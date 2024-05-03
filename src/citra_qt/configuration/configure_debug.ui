@@ -252,7 +252,7 @@
       <item row="2" column="0">
        <widget class="QCheckBox" name="toggle_core_downcount_hack">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When enabled, core downcount will be limited to a smaller time slice, reducing CPU usage. It usually reduce the performance, but improves for low-end devices or GPU hungry games&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When enabled, core downcount will be limited to a smaller time slice, reducing CPU usage. May improve the performance, and rarely cause issues&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Enable Core Downcount Hack</string>
