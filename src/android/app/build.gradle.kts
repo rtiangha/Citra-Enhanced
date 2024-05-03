@@ -61,7 +61,7 @@ android {
 
     defaultConfig {
         // TODO If this is ever modified, change application_id in strings.xml
-        applicationId = "org.citra.citra_emu"
+        applicationId = "org.gamerytb.citra"
         minSdk = 28
         targetSdk = 34
         versionCode = autoVersion
