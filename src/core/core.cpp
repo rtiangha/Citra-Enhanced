@@ -272,9 +272,9 @@ static void LoadOverrides(u64 title_id) {
     } else if (title_id == 0x000400000008FE00) {
         // 1001 Spikes
         Settings::values.gl_stream_buffer_hack = false;
-    // This gamelist may improve performance or fix issues using the hacks
+        // This gamelist may improve performance or rarely fix issues using this
     } else if (title_id == 0x0004000000068B00 || title_id == 0x0004000000061300 ||
-        title_id == 0x000400000004A700 || title_id == 0x000400000005D700) {
+               title_id == 0x000400000004A700 || title_id == 0x000400000005D700) {
         // Tales of the Abyss / Pac Man Party 3D
         Settings::values.skip_slow_draw = true;
     } else if (title_id == 0x000400000015CB00) {
