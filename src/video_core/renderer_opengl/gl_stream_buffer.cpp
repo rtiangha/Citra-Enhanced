@@ -36,7 +36,6 @@ OGLStreamBuffer::OGLStreamBuffer(Driver& driver, GLenum target, GLsizeiptr size,
 
 OGLStreamBuffer::~OGLStreamBuffer() {
     if (persistent) {
-        glBindBuffer(gl_target, gl_buffer.handle);
         glUnmapBuffer(gl_target);
     }
     gl_buffer.Release();
@@ -75,18 +74,18 @@ std::tuple<u8*, GLintptr, bool> OGLStreamBuffer::Map(GLsizeiptr size, GLintptr a
                            (coherent ? GL_MAP_COHERENT_BIT : GL_MAP_FLUSH_EXPLICIT_BIT) |
                            (invalidate ? GL_MAP_INVALIDATE_BUFFER_BIT : GL_MAP_UNSYNCHRONIZED_BIT);
         mapped_ptr = static_cast<u8*>(
-            glMapBufferRange(gl_target, buffer_pos, buffer_size - buffer_pos, flags));
+            glMapBufferRange(gl_target, buffer_pos, size, flags));
         mapped_offset = buffer_pos;
     }
 
-    return std::make_tuple(mapped_ptr + buffer_pos - mapped_offset, buffer_pos, invalidate);
+    return std::make_tuple(mapped_ptr, buffer_pos, invalidate);
 }
 
 void OGLStreamBuffer::Unmap(GLsizeiptr size) {
     ASSERT(size <= mapped_size);
 
     if (!coherent && size > 0) {
-        glFlushMappedBufferRange(gl_target, buffer_pos - mapped_offset, size);
+        glFlushMappedBufferRange(gl_target, buffer_pos, size);
     }
 
     if (!persistent) {
