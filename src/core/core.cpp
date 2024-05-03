@@ -301,7 +301,7 @@ static void LoadOverrides(u64 title_id) {
         Settings::values.skip_texture_copy = true;
     }
 
-    const std::array<u64, 11> cpu_limit_ids = {
+    const std::array<u64, 11> core_downcount_ids = {
         0x000400000007C700, // Mario Tennis Open
         0x000400000007C800, // Mario Tennis Open
         0x0004000000064D00, // Mario Tennis Open
@@ -314,7 +314,7 @@ static void LoadOverrides(u64 title_id) {
         0x0004000000120900, // Lord of Magna: Maiden Heaven
         0x0004000000164300, // Lord of Magna: Maiden Heaven
     };
-    for (auto id : cpu_limit_ids) {
+    for (auto id : core_downcount_ids) {
         if (title_id == id) {
             Settings::values.core_downcount_hack = true;
             break;
