@@ -5,6 +5,7 @@
 #include "common/alignment.h"
 #include "common/assert.h"
 #include "common/profiling.h"
+#include "common/settings.h"
 #include "video_core/renderer_opengl/gl_driver.h"
 #include "video_core/renderer_opengl/gl_stream_buffer.h"
 
@@ -30,12 +31,16 @@ OGLStreamBuffer::OGLStreamBuffer(Driver& driver, GLenum target, GLsizeiptr size,
         mapped_ptr = static_cast<u8*>(glMapBufferRange(
             gl_target, 0, buffer_size, flags | (coherent ? 0 : GL_MAP_FLUSH_EXPLICIT_BIT)));
     } else {
+        // prefer `glBufferData` than `glMapBufferRange` on mobile device
         glBufferData(gl_target, allocate_size, nullptr, GL_STREAM_DRAW);
     }
+
+    gl_target_invalidate_hack = Settings::values.gl_stream_buffer_hack.GetValue() ? GL_TEXTURE_BUFFER : 0;
 }
 
 OGLStreamBuffer::~OGLStreamBuffer() {
     if (persistent) {
+        glBindBuffer(gl_target, gl_buffer.handle);
         glUnmapBuffer(gl_target);
     }
     gl_buffer.Release();
@@ -61,10 +66,11 @@ std::tuple<u8*, GLintptr, bool> OGLStreamBuffer::Map(GLsizeiptr size, GLintptr a
     bool invalidate = false;
     if (buffer_pos + size > buffer_size) {
         buffer_pos = 0;
-        invalidate = true;
-
-        if (persistent) {
-            glUnmapBuffer(gl_target);
+        if (gl_target_invalidate_hack == 0 || gl_target == gl_target_invalidate_hack) {
+            invalidate = true;
+            if (persistent) {
+                glUnmapBuffer(gl_target);
+            }
         }
     }
 
@@ -73,18 +79,19 @@ std::tuple<u8*, GLintptr, bool> OGLStreamBuffer::Map(GLsizeiptr size, GLintptr a
         GLbitfield flags = GL_MAP_WRITE_BIT | (persistent ? GL_MAP_PERSISTENT_BIT : 0) |
                            (coherent ? GL_MAP_COHERENT_BIT : GL_MAP_FLUSH_EXPLICIT_BIT) |
                            (invalidate ? GL_MAP_INVALIDATE_BUFFER_BIT : GL_MAP_UNSYNCHRONIZED_BIT);
-        mapped_ptr = static_cast<u8*>(glMapBufferRange(gl_target, buffer_pos, size, flags));
+        mapped_ptr = static_cast<u8*>(
+            glMapBufferRange(gl_target, buffer_pos, buffer_size - buffer_pos, flags));
         mapped_offset = buffer_pos;
     }
 
-    return std::make_tuple(mapped_ptr, buffer_pos, invalidate);
+    return std::make_tuple(mapped_ptr + buffer_pos - mapped_offset, buffer_pos, invalidate);
 }
 
 void OGLStreamBuffer::Unmap(GLsizeiptr size) {
     ASSERT(size <= mapped_size);
 
     if (!coherent && size > 0) {
-        glFlushMappedBufferRange(gl_target, buffer_pos, size);
+        glFlushMappedBufferRange(gl_target, buffer_pos - mapped_offset, size);
     }
 
     if (!persistent) {

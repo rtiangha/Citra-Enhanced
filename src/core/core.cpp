@@ -254,8 +254,26 @@ System::ResultStatus System::SingleStep() {
 }
 
 static void LoadOverrides(u64 title_id) {
+    // This gamelist have problems with stream buffer hack from opengl
+    if (title_id == 0x000400000019E700 || title_id == 0x00040000001A5600) {
+        // Armed Blue Gunvolt
+        Settings::values.gl_stream_buffer_hack = false;
+    } else if (title_id == 0x000400000019B200 || title_id == 0x0004000000196A00 ||
+               title_id == 0x00040000001A6E00) {
+        // Armed Blue Gunvolt 2
+        Settings::values.gl_stream_buffer_hack = false;
+    } else if (title_id == 0x0004000000149100) {
+        // Gravity Falls - Legend of the Gnome Gemulets
+        Settings::values.gl_stream_buffer_hack = false;
+    } else if (title_id == 0x0004000000196900 || title_id == 0x0004000000119A00 ||
+               title_id == 0x000400000017C900 || title_id == 0x000400000017E100) {
+        // Shovel Knight
+        Settings::values.gl_stream_buffer_hack = false;
+    } else if (title_id == 0x000400000008FE00) {
+        // 1001 Spikes
+        Settings::values.gl_stream_buffer_hack = false;
     // This gamelist may improve performance or fix issues using the hacks
-    if (title_id == 0x0004000000068B00 || title_id == 0x0004000000061300 ||
+    } else if (title_id == 0x0004000000068B00 || title_id == 0x0004000000061300 ||
         title_id == 0x000400000004A700 || title_id == 0x000400000005D700) {
         // Tales of the Abyss / Pac Man Party 3D
         Settings::values.skip_slow_draw = true;
