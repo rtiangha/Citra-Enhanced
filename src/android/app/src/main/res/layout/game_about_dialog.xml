@@ -84,8 +84,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/game_icon"
-            app:layout_constraintVertical_bias="1">
+            app:layout_constraintTop_toBottomOf="@id/game_icon">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/game_play"
@@ -95,9 +94,7 @@
                 android:contentDescription="@string/play"
                 android:focusedByDefault="true"
                 android:text="@string/play"
-                app:icon="@drawable/ic_play"
-                app:layout_flexGrow="1"
-                app:layout_maxWidth="140dp" />
+                app:icon="@drawable/ic_play"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/game_settings"
@@ -110,16 +107,6 @@
                 app:icon="@drawable/ic_settings"
                 app:iconGravity="textStart" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/game_pin"
-                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:contentDescription="@string/pin"
-                app:icon="@drawable/ic_add_home"
-                app:iconGravity="textStart" />
-
         </LinearLayout>
 
         <TextView
@@ -130,7 +117,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/save_management"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/flexboxGeneral" />
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_layout" />
 
         <LinearLayout
             android:id="@+id/layout_horizontal_saves"
@@ -142,8 +129,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/save_management"
-            app:layout_constraintVertical_bias="1">
+            app:layout_constraintTop_toBottomOf="@+id/save_management">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/import_save"
