@@ -99,8 +99,7 @@ class GameAdapter(private val activity: AppCompatActivity) :
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
         } else {
-            val action = CheatsFragmentDirections.actionGlobalCheatsFragment(holder.game.titleId)
-            view.findNavController().navigate(action)
+            showGameAboutDialog()
         }
         return true
     }
@@ -183,6 +182,19 @@ class GameAdapter(private val activity: AppCompatActivity) :
                 3000
             )
         }
+    }
+
+    private fun showGameAboutDialog() {
+        val bottomSheetView = layoutInflater.inflate(R.layout.game_about_dialog, null)
+        
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(bottomSheetView)
+
+        binding.gameTitle.text = game.title
+        binding.gameAuthor.text = game.company
+        GameIconUtils.loadGameIcon(activity, game, binding.gameIcon)
+        
+        bottomSheetDialog.show()
     }
 
     private fun isValidGame(extension: String): Boolean {
