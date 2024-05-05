@@ -59,7 +59,7 @@
         <LinearLayout
             android:id="@+id/horizontal_layout"
             style="@style/ThemeOverlay.Material3.Button.IconButton.Filled.Tonal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="start|center"
@@ -103,7 +103,7 @@
         <LinearLayout
             android:id="@+id/layout_horizontal_saves"
             style="@style/ThemeOverlay.Material3.Button.IconButton.Filled.Tonal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="start|center"
