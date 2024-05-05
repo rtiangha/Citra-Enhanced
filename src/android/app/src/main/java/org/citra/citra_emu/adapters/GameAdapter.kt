@@ -36,7 +36,7 @@ import org.citra.citra_emu.model.Game
 import org.citra.citra_emu.utils.GameIconUtils
 import org.citra.citra_emu.viewmodel.GamesViewModel
 
-class GameAdapter(private val activity: AppCompatActivity), private val inflater: LayoutInflater) :
+class GameAdapter(private val activity: AppCompatActivity, private val inflater: LayoutInflater) :
     ListAdapter<Game, GameViewHolder>(AsyncDifferConfig.Builder(DiffCallback()).build()),
     View.OnClickListener, View.OnLongClickListener {
     private var lastClickTime = 0L
