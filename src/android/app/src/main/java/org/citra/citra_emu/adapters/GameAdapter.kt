@@ -103,7 +103,7 @@ class GameAdapter(private val activity: AppCompatActivity, private val inflater:
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
         } else {
-            showGameAboutDialog(context, holder.game, holder)
+            showGameAboutDialog(context, holder.game, holder, view)
         }
         return true
     }
@@ -188,7 +188,7 @@ class GameAdapter(private val activity: AppCompatActivity, private val inflater:
         }
     }
 
-    private fun showGameAboutDialog(context: Context, game: Game, holder: GameViewHolder) {
+    private fun showGameAboutDialog(context: Context, game: Game, holder: GameViewHolder, view: View) {
         val bottomSheetView = inflater.inflate(R.layout.game_about_dialog, null)
         
         val bottomSheetDialog = BottomSheetDialog(context)
