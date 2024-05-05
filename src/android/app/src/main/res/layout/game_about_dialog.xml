@@ -43,35 +43,16 @@
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="The Legend of Zelda: Breath of the Wild" />
-
-            <TextView
-                android:id="@+id/game_title_id"
-                style="?attr/textAppearanceBodyMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="@id/game_title"
-                app:layout_constraintTop_toBottomOf="@id/game_title"
-                tools:text="0100000000010000" />
-
-            <TextView
-                android:id="@+id/game_version"
-                style="?attr/textAppearanceBodyMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/game_title_id"
-                app:layout_constraintTop_toBottomOf="@id/game_title_id"
-                tools:text="1.0.0" />
+                tools:text="Game Title" />
 
             <TextView
                 android:id="@+id/game_author"
                 style="?attr/textAppearanceBodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/game_version"
-                app:layout_constraintTop_toBottomOf="@id/game_version"
-                tools:text="Nintendo" />
+                app:layout_constraintStart_toStartOf="@id/game_title"
+                app:layout_constraintTop_toBottomOf="@id/game_title"
+                tools:text="Game Author" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -81,6 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="start|center"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -124,6 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="start|center"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
