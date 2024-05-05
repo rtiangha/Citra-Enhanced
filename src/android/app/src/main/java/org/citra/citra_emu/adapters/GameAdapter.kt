@@ -36,7 +36,7 @@ import org.citra.citra_emu.model.Game
 import org.citra.citra_emu.utils.GameIconUtils
 import org.citra.citra_emu.viewmodel.GamesViewModel
 
-class GameAdapter(private val activity: AppCompatActivity) :
+class GameAdapter(private val activity: AppCompatActivity), private val inflater: LayoutInflater) :
     ListAdapter<Game, GameViewHolder>(AsyncDifferConfig.Builder(DiffCallback()).build()),
     View.OnClickListener, View.OnLongClickListener {
     private var lastClickTime = 0L
@@ -188,7 +188,7 @@ class GameAdapter(private val activity: AppCompatActivity) :
     }
 
     private fun showGameAboutDialog(context: Context, game: Game) {
-        val bottomSheetView = layoutInflater.inflate(R.layout.game_about_dialog, null)
+        val bottomSheetView = inflater.inflate(R.layout.game_about_dialog, null)
         
         val bottomSheetDialog = BottomSheetDialog(context)
         bottomSheetDialog.setContentView(bottomSheetView)
