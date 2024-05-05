@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
 import org.citra.citra_emu.HomeNavigationDirections
 import org.citra.citra_emu.CitraApplication
 import org.citra.citra_emu.R
@@ -86,7 +87,7 @@ class GameAdapter(private val activity: AppCompatActivity, private val inflater:
     }
 
     /**
-     * Opens the cheats settings for the game that was clicked on.
+     * Opens the GameAboutDialog for the game that was clicked on.
      *
      * @param view The view representing the game the user wants to play.
      */
@@ -102,7 +103,7 @@ class GameAdapter(private val activity: AppCompatActivity, private val inflater:
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
         } else {
-            showGameAboutDialog(context, holder.game)
+            showGameAboutDialog(context, holder.game, holder)
         }
         return true
     }
@@ -187,7 +188,7 @@ class GameAdapter(private val activity: AppCompatActivity, private val inflater:
         }
     }
 
-    private fun showGameAboutDialog(context: Context, game: Game) {
+    private fun showGameAboutDialog(context: Context, game: Game, holder: GameViewHolder) {
         val bottomSheetView = inflater.inflate(R.layout.game_about_dialog, null)
         
         val bottomSheetDialog = BottomSheetDialog(context)
@@ -196,6 +197,11 @@ class GameAdapter(private val activity: AppCompatActivity, private val inflater:
         bottomSheetView.findViewById<TextView>(R.id.game_title).text = game.title
         bottomSheetView.findViewById<TextView>(R.id.game_author).text = game.company
         GameIconUtils.loadGameIcon(activity, game, bottomSheetView.findViewById(R.id.game_icon))
+
+        bottomSheetView.findViewById<MaterialButton>(R.id.game_play).setOnClickListener {
+            val action = HomeNavigationDirections.actionGlobalEmulationActivity(holder.game)
+            view.findNavController().navigate(action)
+        }
         
         bottomSheetDialog.show()
     }
