@@ -36,6 +36,8 @@ import org.citra.citra_emu.features.cheats.ui.CheatsFragmentDirections
 import org.citra.citra_emu.model.Game
 import org.citra.citra_emu.utils.GameIconUtils
 import org.citra.citra_emu.viewmodel.GamesViewModel
+import org.citra.citra_emu.features.settings.ui.SettingsActivity
+import org.citra.citra_emu.features.settings.utils.SettingsFile
 
 class GameAdapter(private val activity: AppCompatActivity, private val inflater: LayoutInflater) :
     ListAdapter<Game, GameViewHolder>(AsyncDifferConfig.Builder(DiffCallback()).build()),
@@ -201,6 +203,14 @@ class GameAdapter(private val activity: AppCompatActivity, private val inflater:
         bottomSheetView.findViewById<MaterialButton>(R.id.game_play).setOnClickListener {
             val action = HomeNavigationDirections.actionGlobalEmulationActivity(holder.game)
             view.findNavController().navigate(action)
+        }
+
+        bottomSheetView.findViewById<MaterialButton>(R.id.game_settings).setOnClickListener {
+            SettingsActivity.launch(
+                        context,
+                        SettingsFile.FILE_NAME_CONFIG,
+                        ""
+                    )
         }
         
         bottomSheetDialog.show()
