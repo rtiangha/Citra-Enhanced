@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.citra.citra_emu.HomeNavigationDirections
 import org.citra.citra_emu.CitraApplication
 import org.citra.citra_emu.R
@@ -99,7 +100,7 @@ class GameAdapter(private val activity: AppCompatActivity) :
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
         } else {
-            showGameAboutDialog()
+            showGameAboutDialog(context, holder.game)
         }
         return true
     }
@@ -184,15 +185,15 @@ class GameAdapter(private val activity: AppCompatActivity) :
         }
     }
 
-    private fun showGameAboutDialog() {
+    private fun showGameAboutDialog(context: Context, game: Game) {
         val bottomSheetView = layoutInflater.inflate(R.layout.game_about_dialog, null)
         
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetDialog = BottomSheetDialog(context)
         bottomSheetDialog.setContentView(bottomSheetView)
 
-        binding.gameTitle.text = game.title
-        binding.gameAuthor.text = game.company
-        GameIconUtils.loadGameIcon(activity, game, binding.gameIcon)
+        bottomSheetView.findViewById<TextView>(R.id.game_title).text = game.title
+        bottomSheetView.findViewById<TextView>(R.id.game_author).text = game.company
+        GameIconUtils.loadGameIcon(activity, game, bottomSheetView.findViewById(R.id.game_icon))
         
         bottomSheetDialog.show()
     }
