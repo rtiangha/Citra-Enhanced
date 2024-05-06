@@ -212,6 +212,11 @@ class GameAdapter(private val activity: AppCompatActivity, private val inflater:
                         ""
                     )
         }
+
+        bottomSheetView.findViewById<MaterialButton>(R.id.cheats).setOnClickListener {
+            val action = CheatsFragmentDirections.actionGlobalCheatsFragment(holder.game.titleId)
+            view.findNavController().navigate(action)
+        }
         
         bottomSheetDialog.show()
     }
