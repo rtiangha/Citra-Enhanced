@@ -91,12 +91,12 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/save_management"
+            android:id="@+id/add_ons"
             style="?attr/textAppearanceLabelLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/save_management"
+            android:text="@string/add_ons"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/horizontal_layout" />
 
@@ -114,34 +114,12 @@
             app:layout_constraintTop_toBottomOf="@+id/save_management">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/import_save"
+                android:id="@+id/cheats"
                 style="@style/Widget.Material3.Button.TonalButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/import_save"
-                android:text="@string/import_save"
-                app:icon="@drawable/ic_add" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/export_save"
-                style="@style/Widget.Material3.Button.TonalButton.Icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:contentDescription="@string/export_save"
-                android:text="@string/export_save"
-                app:icon="@drawable/ic_share" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/delete_save"
-                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:contentDescription="@string/delete_save"
-                android:tooltipText="@string/delete_save"
-                app:icon="@drawable/ic_delete"
-                app:iconGravity="textStart" />
+                android:contentDescription="@string/cheats"
+                android:text="@string/cheats" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
