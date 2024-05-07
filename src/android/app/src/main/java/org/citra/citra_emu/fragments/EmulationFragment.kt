@@ -77,6 +77,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
 
     private lateinit var emulationState: EmulationState
     private var IsEmulationPaused: Boolean = false
+    private var IsFragmentResumed: Boolean = false
     private var perfStatsUpdater: Runnable? = null
 
     private lateinit var emulationActivity: EmulationActivity
@@ -204,6 +205,14 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                 if (IsEmulationPaused) {
                     IsEmulationPaused = false
                     NativeLibrary.unPauseEmulation()
+                    if (IsFragmentResumed) {
+                        IsFragmentResumed = false
+                        if (DirectoryInitialization.areCitraDirectoriesReady()) {
+                            emulationState.run(emulationActivity.isActivityRecreated)
+                        } else {
+                            setupCitraDirectoriesThenStartEmulation()
+                        }
+                    }
                 }
                 binding.drawerLayout.setDrawerLockMode(EmulationMenuSettings.drawerLockMode)
             }
@@ -442,11 +451,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         super.onResume()
         Choreographer.getInstance().postFrameCallback(this)
 
-        if (DirectoryInitialization.areCitraDirectoriesReady()) {
-            emulationState.run(emulationActivity.isActivityRecreated)
-        } else {
-            setupCitraDirectoriesThenStartEmulation()
-        }
+        IsFragmentResumed = true
     }
 
     override fun onPause() {
