@@ -360,16 +360,16 @@ void Java_org_citra_citra_1emu_NativeLibrary_setTweaks(JNIEnv* env, [[maybe_unus
     jint* settings = env->GetIntArrayElements(array, nullptr);
 
     // Raise CPU Ticks
-    Settings::values.raise_cpu_ticks = settings[i++] > 0;
+    Settings::values.raise_cpu_ticks.SetValue(settings[i++] > 0);
 
     // Skip Slow Draw
-    Settings::values.skip_slow_draw = settings[i++] > 0;
+    Settings::values.skip_slow_draw.SetValue(settings[i++] > 0);
 
     // Skip Texture Copy
-    Settings::values.skip_texture_copy = settings[i++] > 0;
+    Settings::values.skip_texture_copy.SetValue(settings[i++] > 0);
 
     // Priority Boost
-    Settings::values.priority_boost = settings[i++] > 0;
+    Settings::values.priority_boost.SetValue(settings[i++] > 0);
 
     env->ReleaseIntArrayElements(array, settings, 0);
 }
