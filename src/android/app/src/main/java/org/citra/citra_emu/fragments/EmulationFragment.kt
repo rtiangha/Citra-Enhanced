@@ -76,6 +76,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         get() = PreferenceManager.getDefaultSharedPreferences(CitraApplication.appContext)
 
     private lateinit var emulationState: EmulationState
+    private var IsEmulationPaused: Boolean = false
     private var perfStatsUpdater: Runnable? = null
 
     private lateinit var emulationActivity: EmulationActivity
@@ -166,8 +167,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         if (requireActivity().isFinishing) {
             return
         }
-        
-        var IsEmulationPaused: Boolean = false
 
         binding.surfaceEmulation.holder.addCallback(this)
         binding.doneControlConfig.setOnClickListener {
