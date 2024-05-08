@@ -22,7 +22,9 @@
 #define _WIN32_WINNT 0x0A00
 #include <windows.h>
 #include <dwmapi.h>
+#ifdef _MSC_VER
 #pragma comment(lib, "dwmapi.lib")
+#endif
 #endif
 #ifdef __unix__
 #include <QVariant>
