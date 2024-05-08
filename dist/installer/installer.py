@@ -1,8 +1,9 @@
 import os
+import sys
 import requests
-from PyQt6.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QCheckBox, QStackedLayout, QHBoxLayout, QGroupBox, QComboBox, QProgressBar, QLineEdit, QMessageBox, QFileDialog, QVBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QCheckBox, QStackedLayout, QHBoxLayout, QGroupBox, QComboBox, QProgressBar, QLineEdit, QMessageBox, QFileDialog, QVBoxLayout
 from PyQt6.QtGui import QPixmap, QIcon, QImage
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QByteArray
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QByteArray, QFile, QTextStream , QObject, pyqtSignal, pyqtSlot
 import zipfile
 import shutil
 import tempfile
@@ -13,193 +14,177 @@ import winreg as reg
 import base64
 from image_base64 import image_data
 from icons import styledark_rc
+from stylesheet import Style
 
-
-class DownloadThread(QThread):
-    progress = pyqtSignal(int)
-
-    def __init__(self, url, dest):
-        super().__init__()
-        self.url = url
-        self.dest = dest
-
-    def run(self):
-        try:
-            response = requests.get(self.url, stream=True)
-            total_size = int(response.headers.get('content-length', 0))
-            if total_size == 0:
-                QMessageBox.critical(self, "Error", "The content-length of the response is zero.")
-                return
-
-            downloaded_size = 0
-            with open(self.dest, 'wb') as file:
-                for data in response.iter_content(1024):
-                    downloaded_size += len(data)
-                    file.write(data)
-                    progress_percentage = (downloaded_size / total_size) * 100
-                    self.progress.emit(int(progress_percentage))
-            print(f"Download completed. File saved to {self.dest}")
-        except Exception as e:
-            QMessageBox.critical(self, "Error", "Error doing downlaod.")
-
-class Installer(QWidget):
+class QtUi(QMainWindow, Style):
     def __init__(self):
         super().__init__()
-        self.layout = QStackedLayout()
-        self.setWindowIcon(QIcon('lemonade.ico'))
-        self.setWindowTitle('Lemonade Installer')  # Set the window title
+        self.logic = Logic(self)
+        self.setWindowTitle('Installer') # Window name
+        self.setCentralWidget(QWidget(self))  # Set a central widget
+        self.layout = QStackedLayout(self.centralWidget())  # Set the layout on the central widget
+        self.setFixedSize(700, 550) # Fixed window size
+        self.ui()  # Init UI
 
-        # Function to create a header with the icon
-        def createHeader():
-            headerLayout = QHBoxLayout()
-            headerLayout.addStretch(1)
-            iconLabel = QLabel()
-            image_bytes = base64.b64decode(image_data)
-            image = QImage.fromData(QByteArray(image_bytes))
-            pixmap = QPixmap.fromImage(image)
-            # Scale the pixmap to a new size while maintaining the aspect ratio
-            scaledPixmap = pixmap.scaled(128, 128, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-            iconLabel.setPixmap(scaledPixmap)
-            headerLayout.addWidget(iconLabel)
-            headerLayout.addStretch(1)
-            return headerLayout
-
-        # Disclaimer page with QGroupBox
-        self.disclaimerPage = QWidget()
-        disclaimerLayout = QVBoxLayout()
-        disclaimerGroup = QGroupBox("")
-        disclaimerGroupLayout = QVBoxLayout()
-        disclaimerLabel = QLabel('<b>Lemonade is still on the early alpha stage, to update the emulator run the installer again')
-        disclaimerGroupLayout.addWidget(disclaimerLabel)
-        disclaimerGroupLayout.addWidget(disclaimerLabel)
-        disclaimerGroup.setLayout(disclaimerGroupLayout)
-        disclaimerLayout.addLayout(createHeader())  # Add the icon to the header
-        disclaimerLayout.addWidget(disclaimerGroup)
-        nextButton = QPushButton('Next')
-        nextButton.clicked.connect(self.showInstallPage)
-        disclaimerLayout.addWidget(nextButton)
-        self.disclaimerPage.setLayout(disclaimerLayout)
-
-        # Install page with QGroupBox for checkboxes
-        self.installPage = QWidget()
-        installLayout = QVBoxLayout()
-        installLayout.addLayout(createHeader())
-        self.label = QLabel('<b>Installation Options')
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        installLayout.addWidget(self.label)
-
-        # Dropdown menu for selecting installation source
-        self.installationSourceComboBox = QComboBox()
-        self.installationSourceComboBox.addItem("Latest Release")  # Added option for Latest nightly
-        self.installationSourceComboBox.addItem("Latest Nightly")  # Added option for Latest Release
-        installLayout.addWidget(self.installationSourceComboBox)
-
-        # GroupBox for checkboxes
-        checkboxGroup = QGroupBox("Do you want to create shortcuts?")
-        checkboxLayout = QVBoxLayout()
-        self.desktopShortcutCheckbox = QCheckBox("Create a desktop shortcut")
-        self.startMenuShortcutCheckbox = QCheckBox("Create a start menu shortcut")
-        checkboxLayout.addWidget(self.desktopShortcutCheckbox)
-        checkboxLayout.addWidget(self.startMenuShortcutCheckbox)
-        checkboxGroup.setLayout(checkboxLayout)
-
-          # Path Selector
-        self.installationPathLineEdit = QLineEdit(os.path.join(os.environ['LOCALAPPDATA'], 'Lemonade'))
-        self.browseButton = QPushButton("Browse")
-        self.browseButton.clicked.connect(self.browseForInstallationPath)
-
-        # Create a QHBoxLayout and add the QLineEdit and QPushButton to it
-        pathSelectorLayout = QHBoxLayout()
-        pathSelectorLayout.addWidget(self.installationPathLineEdit)
-        pathSelectorLayout.addWidget(self.browseButton)
-
-        installLayout.addLayout(pathSelectorLayout)
-
-        self.button = QPushButton('Install')
-        self.button.clicked.connect(self.prepareAndInstall)
-
-        # Add widgets to the layout
-        installLayout.addWidget(checkboxGroup)
-        installLayout.addWidget(self.button)
-        self.installPage.setLayout(installLayout)
-
-        # Add pages to the stack and set layout
-        self.layout.addWidget(self.disclaimerPage)
-        self.layout.addWidget(self.installPage)
-        self.setLayout(self.layout)
-
-        # Page for the progress bars
-        self.progressBarPage = QWidget()
-        progressBarLayout = QVBoxLayout()
-
-        # Add the icon to the progress bar page
-        iconLabel = QLabel()
+    # self.header
+    def Header(self):
+        # Header Layout
+        self.headerLayout = QVBoxLayout()
+        self.headerLayout.setContentsMargins(0, 20, 0, 0)
+        # Icon Widget
+        CEicon = QLabel()
         image_bytes = base64.b64decode(image_data)
         image = QImage.fromData(QByteArray(image_bytes))
         pixmap = QPixmap.fromImage(image)
-        scaledPixmap = pixmap.scaled(128, 128, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        iconLabel.setPixmap(scaledPixmap)
-        progressBarLayout.addWidget(iconLabel, alignment=Qt.AlignmentFlag.AlignCenter)  # Add the icon and center it
+        ## Scale the pixmap
+        scaledPixmap = pixmap.scaled(180, 180,)
+        CEicon.setPixmap(scaledPixmap)
+        # Text Widget
+        CElabel = QLabel("<b>Citra-Enhanced Installer")
+        # Set Widgets
+        self.headerLayout.addWidget(CEicon, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.headerLayout.addWidget(CElabel, alignment=Qt.AlignmentFlag.AlignCenter)
+        return self.headerLayout
+    
+    # Widgets
+    def ui(self):
+        # Welcome page
+        self.welcomePage = QWidget()
+        ## Layout and gorup
+        welcomerLayout = QVBoxLayout()
+        welcomerGroup = QGroupBox("")
+        welcomerGroupLayout = QVBoxLayout()
+        buttonsLayout = QHBoxLayout()
+        welcomerGroup.setLayout(welcomerGroupLayout)
+        self.welcomePage.setLayout(welcomerLayout) # Set the welcomepage layout
+        ## Widgets
+        welcomerLabel = QLabel('<b>Citra Enhanced is a fork of Citra which aims to incrase')
+        welcomerLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.installButton = QPushButton('Install')
+        self.installButton.clicked.connect(self.logic.clickfunction)
+        self.updateButton = QPushButton('Update')
+        self.updateButton.clicked.connect(self.logic.clickfunction)
+        self.uninstallButton = QPushButton('Uninstall')
+        self.uninstallButton.clicked.connect(self.logic.clickfunction)
+        ## Add widgets / layouts
+        welcomerLayout.addLayout(self.Header()) 
+        welcomerLayout.addWidget(welcomerGroup)
+        welcomerGroupLayout.addWidget(welcomerLabel)
+        buttonsLayout.addWidget(self.installButton)
+        buttonsLayout.addWidget(self.updateButton)
+        buttonsLayout.addWidget(self.uninstallButton)
+        welcomerLayout.addLayout(buttonsLayout)
+        ## Add the welcome page to the layout
+        self.layout.addWidget(self.welcomePage)
 
-        self.downloadProgressBar = QProgressBar()
-        progressBarLayout.addStretch(1)
-        self.downloadProgressBar.setRange(0, 100)  # Assuming 0 to 100% progress
-        progressBarLayout.addWidget(QLabel("Downloading Lemonade:"))
-        progressBarLayout.addWidget(self.downloadProgressBar)
 
-        self.extractionProgressBar = QProgressBar()
-        self.extractionProgressBar.setRange(0, 100)  # Assuming 0 to 100% progress
-        progressBarLayout.addWidget(QLabel("Extracting Lemonade:"))
-        progressBarLayout.addWidget(self.extractionProgressBar)
+        # Install page
+        self.installPage = QWidget()
+        ## Layout and gorup
+        installLayout = QVBoxLayout()
+        checkboxLayout = QVBoxLayout()
+        checkboxGroup = QGroupBox("Do you want to create shortcuts?") # Checkboxes
+        checkboxGroup.setLayout(checkboxLayout) # Set the layout of Checkboxes
+        pathSelectorLayout = QHBoxLayout() # Browse widget layout
+        self.installPage.setLayout(installLayout) # Set the installpage layout
+        ## Widgets
+        InstalOpt = QLabel('<b>Installation Options')
+        InstalOpt.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.installationSourceComboBox = QComboBox() # Dropdown menu
+        self.installationSourceComboBox.addItem("Latest Release") 
+        self.installationSourceComboBox.addItem("Latest Nightly") 
+        self.desktopShortcutCheckbox = QCheckBox("Create a desktop shortcut") # Checkboxes
+        self.startMenuShortcutCheckbox = QCheckBox("Create a start menu shortcut")
+        self.installationPathLineEdit = QLineEdit(os.path.join(os.environ['LOCALAPPDATA'], 'Citra Enhanced')) # Browse for installation path widget
+        self.browseButton = QPushButton("Browse")
+        self.browseButton.clicked.connect(self.logic.browseForInstallationPath)
+        self.installCitraButton = QPushButton('Install') # Install button
+        self.installCitraButton.clicked.connect(self.logic.clickfunction)
+        ## Add widgets / layouts
+        installLayout.addLayout(self.Header()) ### Icon self.header
+        installLayout.addWidget(InstalOpt) ### Instalation Option Label
+        installLayout.addWidget(self.installationSourceComboBox) ## Install Sorce Widget
+        pathSelectorLayout.addWidget(self.installationPathLineEdit) ## Browse Widget
+        pathSelectorLayout.addWidget(self.browseButton)
+        installLayout.addLayout(pathSelectorLayout)
+        checkboxLayout.addWidget(self.desktopShortcutCheckbox) # Checkboxes
+        checkboxLayout.addWidget(self.startMenuShortcutCheckbox)
+        installLayout.addWidget(checkboxGroup)
+        installLayout.addWidget(self.installCitraButton)
+        ## Add the install page to the layout
+        self.layout.addWidget(self.installPage)
 
+
+        # Progress bar page
+        self.progressBarPage = QWidget()
+        ## Layout and groups
+        progressBarLayout = QVBoxLayout()
         self.progressBarPage.setLayout(progressBarLayout)
+        ## Widgets
+        self.downloadProgressBar = QProgressBar()
+        self.downloadProgressBar.setRange(0, 100)  # Progress bar Widgets
+        self.extractionProgressBar = QProgressBar()
+        self.extractionProgressBar.setRange(0, 100)    
+        labeldown = QLabel("Downloading Citra Enhanced:")
+        labelext = QLabel("Extracting Citra-Enhanced:")
+        ## Add widgets / layouts
+        progressBarLayout.addLayout(self.Header())  # Add the icon self.header
+        progressBarLayout.addWidget(labeldown)
+        progressBarLayout.addWidget(self.downloadProgressBar)
+        progressBarLayout.addWidget(labelext)
+        progressBarLayout.addWidget(self.extractionProgressBar)
+        # Add the progress bar page to the layout
         self.layout.addWidget(self.progressBarPage)
 
-        # Add the icon to the finish page
-        iconLabel = QLabel()
-        image_bytes = base64.b64decode(image_data)
-        image = QImage.fromData(QByteArray(image_bytes))
-        pixmap = QPixmap.fromImage(image)
-        scaledPixmap = pixmap.scaled(128, 128, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        iconLabel.setPixmap(scaledPixmap)
 
+        # Finish page
         self.finishPage = QWidget()
+        ## Layout and groups
         finishLayout = QVBoxLayout()
+        self.finishPage.setLayout(finishLayout)
+        ## Widgets
         finishLabel = QLabel("<b>Installation Complete!")
         finishLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)  # Center the text horizontally
         finishButton = QPushButton("Finish")
         finishButton.clicked.connect(self.close)
-        finishLayout.addWidget(iconLabel, alignment=Qt.AlignmentFlag.AlignCenter)  # Add the icon and center it
+        ## Add widgets / layouts
+        finishLayout.addLayout(self.Header())  # Add the icon self.header
         finishLayout.addWidget(finishLabel)
         finishLayout.addWidget(finishButton)
-        self.finishPage.setLayout(finishLayout)
+        # Add the progress bar page to the layout
+        self.layout.addWidget(self.finishPage)   
+    
+    def load_stylesheet(app):
+            app.setStyleSheet(Style.dark_stylesheet)
 
-        self.layout.addWidget(self.finishPage)
+class Logic:
+# Every method here is due to change , the update and uninstall buttons do nothing for now althouhg the install ubtton works    
+    def __init__(self, qtui):
+        self.qtui = qtui
 
-
-    def showInstallPage(self):
-        self.layout.setCurrentIndex(1)
-
-    def prepareAndInstall(self):
-        # Show the progress bar page
-        self.showProgressBarPage()
-        # Then start the installation process
-        self.install()
-
-    def showProgressBarPage(self):
-        self.layout.setCurrentIndex(2)
-
+    def clickfunction(self):
+        button = qtui.sender()
+        if button is qtui.installButton:
+            qtui.layout.setCurrentIndex(1)
+        elif button is qtui.updateButton:
+            print('Placeholder')
+        elif button is qtui.uninstallButton:
+            print('Placeholder')
+        if button is qtui.installCitraButton:
+            qtui.layout.setCurrentIndex(2)
+            self.install()
+        
     def browseForInstallationPath(self):
-        selectedDirectory = QFileDialog.getExistingDirectory(self, "Select Installation Directory", self.installationPathLineEdit.text())
+        selectedDirectory = QFileDialog.getExistingDirectory(self.qtui, "Select Installation Directory", self.qtui.installationPathLineEdit.text())
         if selectedDirectory:  # Check if a directory was selected
-            # Append "Lemonade" to the selected directory path
-            lemonadeDirectory = os.path.join(selectedDirectory, 'Lemonade')
-            self.installationPathLineEdit.setText(lemonadeDirectory)
+            # Append "Citra-Enhanced" to the selected directory path
+            CitraEnhancedDirectory = os.path.join(selectedDirectory, 'Citra-Enhanced')
+            qtui.installationPathLineEdit.setText(CitraEnhancedDirectory)
 
     def install(self):
-        selection = self.installationSourceComboBox.currentText()
+        selection = qtui.installationSourceComboBox.currentText()
         if selection == "Latest Nightly":
-            url = "https://nightly.link/Lemonade-emu/Lemonade/workflows/build/master/windows-msvc.zip"
+            url = "https://nightly.link/Gamer64ytb/Citra-Enhanced/workflows/build/master/windows-msvc.zip"
             response = requests.get(url, stream=True)
             if response.status_code == 200:
                 print("Download successful, proceeding with installation.")
@@ -207,21 +192,39 @@ class Installer(QWidget):
                 QMessageBox.critical(self, "Error", "Failed to download. HTTP status code: {response.status_code}.")
                 return
         elif selection == "Latest Release":
-            url = self.get_latest_release_url()
+            url = Logic.get_latest_release_url(self)
             if not url:
                 QMessageBox.critical(self, "Error", "Repo URL was not found.")
                 return
         temp_file = tempfile.NamedTemporaryFile(delete=False).name
-        self.download_thread = DownloadThread(url, temp_file)
-        self.download_thread.progress.connect(self.downloadProgressBar.setValue)
-        installationPath = self.installationPathLineEdit.text()
-        os.makedirs(installationPath, exist_ok=True)
-        self.download_thread.finished.connect(lambda: self.extract_zip(temp_file, installationPath))
-        self.download_thread.start()
+        self.installationPath = self.qtui.installationPathLineEdit.text()
+        os.makedirs(self.installationPath, exist_ok=True)
+        self.start_download (url, temp_file)
+
+    def print_finished(self):
+        print("Thread has finished.")
+
+    
+    def start_download(self, url, temp_file):
+        self.download_thread = QThread()  # Create a QThread
+        self.download_worker = DownloadWorker(url, temp_file)  # Create the worker
+        self.download_worker.moveToThread(self.download_thread)  # Move the worker to the thread
+        self.download_thread.started.connect(self.download_worker.do_download)  # Start the worker when the thread starts
+        self.download_worker.progress.connect(self.qtui.downloadProgressBar.setValue)  # Connect the progress signal
+        self.download_thread.start()  # Start the thread
+
+        self.download_worker.finished.connect(lambda: self.extract_zip(temp_file, self.installationPath))
+
+    def finish_download(self, temp_file):
+        self.download_worker.deleteLater()
+        print ("Download finished.")
+        self.extract_zip(temp_file, self.installationPath)
+            
+
 
     def get_latest_release_url(self):
         try:
-            api_url = "https://api.github.com/repos/Lemonade-emu/Lemonade/releases"
+            api_url = "https://api.github.com/repos/kleidis/Citra-Enhanced/releases"
             response = requests.get(api_url)
             if response.status_code != 200:
                 QMessageBox.critical(self, "Error", "Failed to fetch releases from GitHub.")
@@ -233,10 +236,10 @@ class Installer(QWidget):
                 for asset in assets:
                     if "windows-msvc" in asset['name']:
                         return asset['browser_download_url']
-            QMessageBox.critical(self, "Error", "No suitable release found.")
+            QMessageBox.critical(qtui, "Error", "No suitable release found.")
             return None
         except Exception as e:
-            QMessageBox.critical(self, "Exception", f"An error occurred: {e}")
+            QMessageBox.critical(qtui, "Exception", f"An error occurred: {e}")
             return None
 
     def clear_directory(self, directory):
@@ -256,6 +259,7 @@ class Installer(QWidget):
                 logging.error(f'Failed to delete {item_path}. Reason: {e}')
 
     def extract_zip(self, temp_file, extract_to):
+        print (f"Extracting {temp_file} to {extract_to}.")
         try:
             # Clear the target directory before extracting new files
             if os.path.exists(extract_to):
@@ -301,7 +305,7 @@ class Installer(QWidget):
             # After extracting all files
             nested_dir_name = None
             for item in os.listdir(extract_to):
-                if os.path.isdir(os.path.join(extract_to, item)) and 'lemonade-windows-msvc' in item:
+                if os.path.isdir(os.path.join(extract_to, item)) and 'windows-msvc' in item:
                     nested_dir_name = item
                     break
 
@@ -317,112 +321,67 @@ class Installer(QWidget):
                 # Remove the now-empty nested directory
                 shutil.rmtree(nested_dir_path)
 
-            # Github info
-            release_api_url = "https://api.github.com/repos/Lemonade-emu/Lemonade-installer/releases"
-            dest_path = os.path.normpath(os.path.join(self.installationPathLineEdit.text(), 'uninstaller.exe'))
-
             # Set the progress bar to 100% and call installation_complete
-            self.extractionProgressBar.setValue(100)
-            executable_path = os.path.normpath(os.path.join(self.installationPathLineEdit.text(), 'lemonade-qt.exe'))
-            self.download_uninstaller(release_api_url, dest_path)
-            self.add_to_programs_list(executable_path)
+            qtui.extractionProgressBar.setValue(100)
+            executable_path = os.path.normpath(os.path.join(qtui.installationPathLineEdit.text(), 'citra-qt.exe'))
+#            self.add_to_programs_list(executable_path)
             self.installation_complete()
         except Exception as e:
-            logging.error(f"Failed to extract zip file: {e}. File: {item}")
+            logging.error(f"Failed to extract zip file: {e}. File: {temp_file}")
 
     def installation_complete(self):
-        executable_path = os.path.normpath(os.path.join(self.installationPathLineEdit.text(), 'lemonade-qt.exe'))
-        if self.desktopShortcutCheckbox.isChecked():
+        executable_path = os.path.normpath(os.path.join(qtui.installationPathLineEdit.text(), 'citra-qt.exe'))
+        if qtui.desktopShortcutCheckbox.isChecked():
             self.create_desktop_shortcut(executable_path)
-        if self.startMenuShortcutCheckbox.isChecked():
+        if qtui.startMenuShortcutCheckbox.isChecked():
             self.create_start_menu_shortcut(executable_path)
-        self.layout.setCurrentIndex(self.layout.indexOf(self.finishPage))  # Switch to finish page
+        qtui.layout.setCurrentIndex(qtui.layout.indexOf(qtui.finishPage))  # Switch to finish page
 
-    def download_uninstaller(self, release_api_url, dest_path):
-        try:
-            logging.info("Starting to download uninstaller.")
-            response = requests.get(release_api_url)
-            response.raise_for_status()  # This will raise an exception for HTTP errors
-            releases = response.json()
-            found = False
-            for release in releases:
-                for asset in release.get('assets', []):
-                    if asset['name'] == "uninstaller.exe":
-                        uninstaller_url = asset['browser_download_url']
-                        self.download_file(uninstaller_url, dest_path)
-                        found = True
-                        logging.info("Uninstaller downloaded successfully.")
-                        break
-                if found:
-                    break
-            if not found:
-                logging.error("Uninstaller not found in any release.")
-        except requests.RequestException as e:
-            logging.error(f"Error downloading uninstaller: {e}")
-
-    def download_file(self, url, dest_path):
-        try:
-            with requests.get(url, stream=True) as r:
-                r.raise_for_status()
-                with open(dest_path, 'wb') as f:
-                    for chunk in r.iter_content(chunk_size=8192):
-                        f.write(chunk)
-        except requests.RequestException as e:
-            print(f"Error saving the uninstaller: {e}")
-
-    def add_to_programs_list(self, executable_path):
-        """
-        Add the application to the Windows Program list with the uninstall option.
-
-        :param executable_path: Path to the executable file of the application.
-        """
-        print("Adding to programs list...")
-        # Path to the uninstall key
-        key_path = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Lemonade"
-        # Uninstaller path
-        uninstaller_path = os.path.normpath(os.path.join(self.installationPathLineEdit.text(), 'uninstaller.exe'))
-        print(f"Uninstaller path: {uninstaller_path}")
-
-        # Attempt to open the key, create if it does not exist
-        try:
-            key = reg.OpenKey(reg.HKEY_CURRENT_USER, key_path, 0, reg.KEY_WRITE)
-            print("Registry key exists, opened successfully.")
-        except FileNotFoundError:
-            key = reg.CreateKey(reg.HKEY_CURRENT_USER, key_path)
-            print("Registry key does not exist, created successfully.")
-
-        # Set values within the key
-        with key:
-            reg.SetValueEx(key, "DisplayName", 0, reg.REG_SZ, "Lemonade")
-            reg.SetValueEx(key, "UninstallString", 0, reg.REG_SZ, uninstaller_path)
-            reg.SetValueEx(key, "DisplayIcon", 0, reg.REG_SZ, executable_path)
-            reg.SetValueEx(key, "Publisher", 0, reg.REG_SZ, "Lemonade-Emu")
-            reg.SetValueEx(key, "URLInfoAbout", 0, reg.REG_SZ, "https://lemonade-emu.github.io/")
-            print("Registry values set successfully.")
-
-        print("Added to programs list successfully.")
+# HEAVILY INCOMPLETE , DO NOT USE
+#    def add_to_programs_list(self, executable_path):
+#        """
+#        Add the application to the Windows Program list with the uninstall option.
+#
+#        :param executable_path: Path to the executable file of the application.
+#        """
+#        print("Adding to programs list...")
+#        # Path to the uninstall key
+#        key_path = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Citra-Enhanced"
+#        # Uninstaller path
+#        uninstaller_path = os.path.normpath(os.path.join(self.installationPathLineEdit.text(), 'uninstaller.exe'))
+#        print(f"Uninstaller path: {uninstaller_path}")
+#
+#       # Attempt to open the key, create if it does not exist
+#        try:
+#            key = reg.OpenKey(reg.HKEY_CURRENT_USER, key_path, 0, reg.KEY_WRITE)
+#            print("Registry key exists, opened successfully.")
+#        except FileNotFoundError:
+#            key = reg.CreateKey(reg.HKEY_CURRENT_USER, key_path)
+#            print("Registry key does not exist, created successfully.")
+#
+#        # Set values within the key
+#        with key:
+#            reg.SetValueEx(key, "DisplayName", 0, reg.REG_SZ, "Citra-Enhanced")
+#            reg.SetValueEx(key, "UninstallString", 0, reg.REG_SZ, uninstaller_path)
+#            reg.SetValueEx(key, "DisplayIcon", 0, reg.REG_SZ, executable_path)
+#            reg.SetValueEx(key, "Publisher", 0, reg.REG_SZ, "Citra-Enhanced-Emu")
+#            reg.SetValueEx(key, "URLInfoAbout", 0, reg.REG_SZ, "https://Citra-Enhanced-emu.github.io/")
+#            print("Registry values set successfully.")
+#
+#        print("Added to programs list successfully.")
 
     def create_desktop_shortcut(self, target):
         desktop_path = os.path.join(os.environ['USERPROFILE'], 'Desktop')
-        shortcut_path = os.path.join(desktop_path, 'Lemonade.lnk')
+        shortcut_path = os.path.join(desktop_path, 'Citra-Enhanced.lnk')
         self.create_shortcut(target, shortcut_path)
 
     def create_start_menu_shortcut(self, target):
         start_menu_path = os.path.join(os.environ['APPDATA'], 'Microsoft', 'Windows', 'Start Menu', 'Programs')
-        shortcut_path = os.path.join(start_menu_path, 'Lemonade.lnk')
+        shortcut_path = os.path.join(start_menu_path, 'Citra-Enhanced.lnk')
         self.create_shortcut(target, shortcut_path)
 
 
     def create_shortcut(self, target, shortcut_path, description="", arguments="", hotkey=""):
-        """
-        Creates a shortcut at the specified path pointing to the target file.
-
-        :param target: Path to the target file the shortcut will point to.
-        :param shortcut_path: Path where the shortcut will be created.
-        :param description: Description of the shortcut.
-        :param arguments: Additional arguments to pass to the target when executed.
-        :param hotkey: Hotkey associated with the shortcut.
-        """
         # Verify the target exists
         if not os.path.exists(target):
             logging.error(f"Shortcut target does not exist: {target}")
@@ -443,234 +402,43 @@ class Installer(QWidget):
         except Exception as e:
             logging.error(f"Failed to create shortcut: {e}")
 
-if __name__ == '__main__':
-    app = QApplication([])
+class DownloadWorker(QThread):
+    progress = pyqtSignal(int)
 
-    # Define the Windows 11 dark mode stylesheet
-    dark_stylesheet = """
-    QWidget {
-        background-color: rgb(32, 32, 32);
-        color: rgb(255, 255, 255);
-        font-size: 17px;
-        font-family: "Segoe UI Variable Small", serif;
-        font-weight: 400;
-    }
-    /*PUSHBUTTON*/
-    QPushButton {
-        background-color: #323234;
-        border: 1px solid rgb(68, 68, 68);
-        border-radius: 7px;
-        min-height: 38px;
-        max-height: 38px;
-    }
+    def __init__(self, url, dest):
+        super().__init__()
+        self.url = url
+        self.dest = dest
 
-    QPushButton:hover {
-        background-color: rgb(100, 100, 100);
-        border: 1px solid rgb(255, 255, 255, 10);
-    }
+    @pyqtSlot()
+    def do_download(self):
+        try:
+            response = requests.get(self.url, stream=True)
+            total_size = int(response.headers.get('content-length', 0))
+            if total_size == 0:
+                print("The content-length of the response is zero.")
+                return
 
-    QPushButton::pressed {
-        background-color: rgb(255, 255, 255, 7);
-        border: 1px solid rgb(255, 255, 255, 13);
-        color: rgb(255, 255, 255, 200);
-    }
+            downloaded_size = 0
+            with open(self.dest, 'wb') as file:
+                for data in response.iter_content(1024):
+                    downloaded_size += len(data)
+                    file.write(data)
+                    progress_percentage = (downloaded_size / total_size) * 100
+                    self.progress.emit(int(progress_percentage))
+            print(f"Download completed. File saved to {self.dest}")
+            self.finished.emit()
+        except Exception as e:
+            print("Error doing download.")
+            self.finished.emit()
 
-    QPushButton::disabled {
-        color: rgb(150, 150, 150);
-        background-color: rgb(255, 255, 255, 13);
-    }
-    QLabel, QCheckBox {
-        color: #ffffff;
-    }
-    /*GROUPBOX*/
-    QGroupBox {
-        border-radius: 5px;
-        border: 0px solid rgb(255, 255, 255, 13);
-        margin-top: 36px;
-    }
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    qtui = QtUi()
+    logic = Logic(qtui)
+    qtui.load_stylesheet()
+    qtui.show()
+    sys.exit(app.exec())
 
-    QGroupBox::title {
-        subcontrol-origin: margin;
-        subcontrol-position: top left;
-        background-color: rgb(255, 255, 255, 16);
-        padding: 7px 15px;
-        margin-left: 5px;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-    }
 
-    QGroupBox::title::disabled {
-        color: rgb(150, 150, 150)
-    }
-    /*COMBOBOX*/
-    QComboBox {
-        background-color: rgb(66, 66, 66);
-        border: 1px solid rgb(68, 68, 68);
-        border-radius: 5px;
-        padding-left: 10px;
-        min-height: 38px;
-        max-height: 38px;
-    }
 
-    QComboBox:hover {
-        background-color: rgb(120, 120, 120);
-        border: 1px solid rgb(255, 255, 255, 10);
-    }
-
-    QComboBox::pressed {
-        background-color: rgb(66, 66, 66);
-        border: 1px solid #0078D4;
-        color: rgb(255, 255, 255, 200);
-    }
-
-    QComboBox::down-arrow {
-        image: url(:/ComboBox/img dark/ComboBox.png);
-    }
-
-    QComboBox::drop-down {
-        background-color: transparent;
-        min-width: 50px;
-    }
-
-    QComboBox:disabled {
-        color: rgb(150, 150, 150);
-        background-color: rgb(255, 255, 255, 13);
-        border: 1px solid rgb(255, 255, 255, 5);
-    }
-
-    QComboBox::down-arrow:disabled {
-        image: url(:/ComboBox/img dark/ComboBoxDisabled.png);
-    }
-    /*CHECKBOX*/
-    QCheckBox {
-        min-height: 30px;
-        max-height: 30px;
-    }
-
-    QCheckBox::indicator {
-        width: 22px;
-        height: 22px;
-        border-radius: 5px;
-        border: 2px solid #848484;
-        background-color: rgb(255, 255, 255, 0);
-        margin-right: 5px;
-    }
-
-    QCheckBox::indicator:hover {
-        background-color: rgb(255, 255, 255, 16);
-    }
-
-    QCheckBox::indicator:pressed {
-        background-color: rgb(255, 255, 255, 20);
-        border: 2px solid #434343;
-    }
-
-    QCheckBox::indicator:checked {
-        background-color: #0078D4;
-        border: 2px solid #0078D4;
-        image: url(:/CheckBox/img dark/CheckBox.png);
-    }
-
-    QCheckBox::indicator:checked:pressed {
-        image: url(:/CheckBox/img dark/CheckBoxPressed.png);
-    }
-
-    QCheckBox:disabled {
-        color: rgb(150, 150, 150);
-    }
-
-    QCheckBox::indicator:disabled {
-        border: 2px solid #646464;
-        background-color: rgb(255, 255, 255, 0);
-    }
-    /*PROGRESSBAR*/
-    QProgressBar {
-        background-color: qlineargradient(spread:reflect, x1:0.5, y1:0.5, x2:0.5, y2:1, stop:0.119403 rgba(255, 255, 255, 250), stop:0.273632 rgba(0, 0, 0, 0));
-        border-radius: 2px;
-        min-height: 4px;
-        max-height: 4px;
-    }
-
-    QProgressBar::chunk {
-        background-color: #0078D4;;
-        border-radius: 2px;
-    }
-    /*MENU*/
-    QMenu {
-        background-color: transparent;
-        padding-left: 1px;
-        padding-top: 1px;
-        border-radius: 5px;
-        border: 1px solid rgb(255, 255, 255, 13);
-    }
-
-    QMenu::item {
-        background-color: transparent;
-        padding: 5px 15px;
-        border-radius: 5px;
-        min-width: 60px;
-        margin: 3px;
-    }
-
-    QMenu::item:selected {
-        background-color: rgb(255, 255, 255, 16);
-    }
-
-    QMenu::item:pressed {
-        background-color: rgb(255, 255, 255, 10);
-    }
-
-    QMenu::right-arrow {
-        image: url(:/TreeView/img dark/TreeViewClose.png);
-        min-width: 40px;
-        min-height: 18px;
-    }
-
-    QMenuBar:disabled {
-        color: rgb(150, 150, 150);
-    }
-
-    QMenu::item:disabled {
-        color: rgb(150, 150, 150);
-        background-color: transparent;
-    }
-    /*LINEEDIT*/
-    QLineEdit {
-        background-color: #323234;
-        border: 1px solid rgb(68, 68, 68);
-        font-size: 16px;
-        font-family: "Segoe UI", serif;
-        font-weight: 500;
-        border-radius: 7px;
-        border-bottom: 1px solid rgb(255, 255, 255, 150);
-        padding-top: 0px;
-        padding-left: 5px;
-    }
-
-    QLineEdit:hover {
-        background-color: rgb(120, 120, 120);
-        border: 1px solid rgb(255, 255, 255, 10);
-        border-bottom: 1px solid rgb(255, 255, 255, 150);
-    }
-
-    QLineEdit:focus {
-        border-bottom: 2px solid #0078D4;
-        background-color: rgb(100, 100, 100);
-        border-top: 1px solid rgb(255, 255, 255, 13);
-        border-left: 1px solid rgb(255, 255, 255, 13);
-        border-right: 1px solid rgb(255, 255, 255, 13);
-    }
-
-    QLineEdit:disabled {
-        color: rgb(150, 150, 150);
-        background-color: rgb(255, 255, 255, 13);
-        border: 1px solid rgb(255, 255, 255, 5);
-    }
-    """
-
-    # Apply the dark stylesheet to the application
-    app.setStyleSheet(dark_stylesheet)
-
-    installer = Installer()
-    installer.show()
-    app.exec()
