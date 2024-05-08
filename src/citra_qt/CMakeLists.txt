@@ -182,6 +182,8 @@ add_executable(citra-qt
     util/spinbox.h
     util/util.cpp
     util/util.h
+    util/mica.cpp
+    util/mica.h
 )
 
 file(GLOB COMPAT_LIST

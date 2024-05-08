@@ -253,7 +253,7 @@ private slots:
     void StartVideoDumping(const QString& path);
     void OnStopVideoDumping();
     void OnCoreError(Core::System::ResultStatus, std::string);
-    /// Called whenever a user selects Help->About Citra
+    /// Called whenever a user selects Help->About Lemoande
     void OnMenuAboutCitra();
 
 #if ENABLE_QT_UPDATER
