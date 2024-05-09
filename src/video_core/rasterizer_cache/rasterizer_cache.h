@@ -977,7 +977,8 @@ void RasterizerCache<T>::ValidateSurface(SurfaceId surface_id, PAddr addr, u32 s
 
         // Try to find surface in cache with different format
         // that can can be reinterpreted to the requested format.
-        if (ValidateByReinterpretation(surface, params, interval)) {
+        if (ValidateByReinterpretation(surface, params, interval) &&
+            !Settings::values.skip_format_validation) {
             notify_validated(interval);
             continue;
         }
