@@ -76,8 +76,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         get() = PreferenceManager.getDefaultSharedPreferences(CitraApplication.appContext)
 
     private lateinit var emulationState: EmulationState
-    private var IsEmulationPaused: Boolean = false
-    private var IsFragmentResumed: Boolean = false
     private var perfStatsUpdater: Runnable? = null
 
     private lateinit var emulationActivity: EmulationActivity
@@ -194,26 +192,12 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             }
 
             override fun onDrawerOpened(drawerView: View) {
-                if (!IsEmulationPaused) {
-                    IsEmulationPaused = true
-                    NativeLibrary.pauseEmulation()
-                }
+                NativeLibrary.pauseEmulation()
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
 
             override fun onDrawerClosed(drawerView: View) {
-                if (IsEmulationPaused) {
-                    IsEmulationPaused = false
-                    NativeLibrary.unPauseEmulation()
-                    if (IsFragmentResumed) {
-                        IsFragmentResumed = false
-                        if (DirectoryInitialization.areCitraDirectoriesReady()) {
-                            emulationState.run(emulationActivity.isActivityRecreated)
-                        } else {
-                            setupCitraDirectoriesThenStartEmulation()
-                        }
-                    }
-                }
+                NativeLibrary.unPauseEmulation()
                 binding.drawerLayout.setDrawerLockMode(EmulationMenuSettings.drawerLockMode)
             }
 
@@ -451,14 +435,16 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         super.onResume()
         Choreographer.getInstance().postFrameCallback(this)
 
-        IsFragmentResumed = true
+        if (DirectoryInitialization.areCitraDirectoriesReady()) {
+            emulationState.run(emulationActivity.isActivityRecreated)
+        } else {
+            setupCitraDirectoriesThenStartEmulation()
+        }
     }
 
     override fun onPause() {
         if (NativeLibrary.isRunning()) {
             if (!binding.drawerLayout.isOpen) {
-                IsEmulationPaused = true
-                NativeLibrary.pauseEmulation()
                 Handler(Looper.getMainLooper()).postDelayed({
                         binding.drawerLayout.open()
                 }, 500) // 500 milliseconds delay
