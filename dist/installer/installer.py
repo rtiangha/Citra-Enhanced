@@ -212,8 +212,8 @@ class Logic:
 
     # Fetching the update channel and setting the download URL
     def PrepareDownload(self):
-        self.checkreg()        
-        if self.updatevalue is not None: # Checks the update channel
+        test = self.checkreg()        
+        if test is not None: # Checks the update channel
             selection = self.updatevalue
         else:
             selection = qtui.installationSourceComboBox.currentText()

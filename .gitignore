@@ -50,3 +50,4 @@ node_modules/
 VULKAN_SDK/
 dist/installer/image_base64.py
 dist/installer/installer.spec
+/dist/installer/dist
