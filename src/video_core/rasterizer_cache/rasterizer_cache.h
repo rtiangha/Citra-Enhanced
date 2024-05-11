@@ -1162,7 +1162,7 @@ bool RasterizerCache<T>::ValidateByReinterpretation(Surface& surface, SurfacePar
     // Check if any part of the interval is owned by a dirty surface with a different stride
     // than ours. If so, return true without further validation.
     const auto it = std::find_if(dirty_regions.begin(), dirty_regions.end(),
-                                  [&interval, &surface](const auto& entry) {
+                                  [&interval, &surface, this](const auto& entry) {
                                       return entry.second && slot_surfaces[entry.second].stride != surface.stride &&
                                           boost::icl::intersects(interval, entry.first);
                                   });
