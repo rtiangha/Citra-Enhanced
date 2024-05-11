@@ -348,7 +348,7 @@ public:
         return WriteArray(str.data(), str.length());
     }
 
-        /**
+    /**
      * Reads a span of T data from a file sequentially.
      * This function reads from the current position of the file pointer and
      * advances it by the (count of T * sizeof(T)) bytes successfully read.

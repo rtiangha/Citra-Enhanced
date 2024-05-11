@@ -5,9 +5,9 @@
 #include <array>
 #include <cmath>
 #include <QPainter>
+#include "citra_qt/util/util.h"
 #include "common/logging/log.h"
 #include "core/loader/smdh.h"
-#include "citra_qt/util/util.h"
 
 #ifdef _WIN32
 #include <windows.h>
