@@ -273,11 +273,13 @@ static void LoadOverrides(u64 title_id) {
         // 1001 Spikes
         Settings::values.gl_stream_buffer_hack = false;
         // This gamelist may improve performance or rarely fix issues using this
+#ifdef ENABLE_VULKAN
     } else if (title_id == 0x0004000000030500 || title_id == 0x0004000000032D00 ||
                title_id == 0x0004000000033C00) {
         // Super Street Fighter IV: 3D Edition
         // Fixes FPS drops while using vulkan for some devices
         Settings::values.raise_cpu_ticks = true;
+#endif
     } else if (title_id == 0x00040000000D0000 || title_id == 0x0004000000076400 ||
                title_id == 0x0004000000055F00 || title_id == 0x0004000000076500) {
         // Luigi's Mansion: Dark Moon
