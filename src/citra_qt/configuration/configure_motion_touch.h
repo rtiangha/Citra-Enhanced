@@ -51,7 +51,7 @@ class ConfigureMotionTouch : public QDialog {
     Q_OBJECT
 
 protected:
-    void showEvent(QShowEvent* event)override;
+    void showEvent(QShowEvent* event) override;
 
 public:
     explicit ConfigureMotionTouch(QWidget* parent = nullptr);

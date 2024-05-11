@@ -19,7 +19,8 @@ AboutDialog::AboutDialog(QWidget* parent)
 }
 
 AboutDialog::~AboutDialog() = default;
-  void AboutDialog::showEvent(QShowEvent* event) {
+
+void AboutDialog::showEvent(QShowEvent* event) {
     QDialog::showEvent(event); // Call the base class method first
 
 #ifdef _WIN32

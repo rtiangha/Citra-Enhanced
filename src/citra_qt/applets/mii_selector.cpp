@@ -12,13 +12,13 @@
 #include "util/mica.h"
 
 void QtMiiSelectorDialog::showEvent(QShowEvent* event) {
-        QDialog::showEvent(event); // Call the base class method first
+    QDialog::showEvent(event); // Call the base class method first
 
-    #ifdef _WIN32
-        HWND hwnd = reinterpret_cast<HWND>(this->winId());
-        Utils::EnableDarkMicaForWindow(hwnd);
-    #endif
-    }
+#ifdef _WIN32
+    HWND hwnd = reinterpret_cast<HWND>(this->winId());
+    Utils::EnableDarkMicaForWindow(hwnd);
+#endif
+}
 
 QtMiiSelectorDialog::QtMiiSelectorDialog(QWidget* parent, QtMiiSelector* mii_selector_)
     : QDialog(parent), mii_selector(mii_selector_) {

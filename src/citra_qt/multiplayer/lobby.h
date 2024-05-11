@@ -33,7 +33,7 @@ class Lobby : public QDialog {
     Q_OBJECT
 
 protected:
-    void showEvent(QShowEvent* event)override;
+    void showEvent(QShowEvent* event) override;
 
 public:
     explicit Lobby(Core::System& system, QWidget* parent, QStandardItemModel* list,
