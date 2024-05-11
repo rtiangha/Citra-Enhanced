@@ -172,6 +172,8 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
             // apply settings if changes are detected
             if (isChanged) {
                 NativeLibrary.setTweaks(newSettings)
+                // save to ini file
+                NativeLibrary.reloadSettings()
             }
         }
     }
