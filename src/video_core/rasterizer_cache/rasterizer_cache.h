@@ -220,7 +220,16 @@ bool RasterizerCache<T>::AccelerateTextureCopy(const Pica::DisplayTransferConfig
     dst_params.stride =
         dst_params.width + src_info.PixelsInBytes(src_info.is_tiled ? output_gap / 8 : output_gap);
     dst_params.height = src_rect.GetHeight() / src_info.res_scale;
-    dst_params.res_scale = src_info.res_scale;
+
+    // some games like pokemon ultra sun have texture ghosting issues if we use
+    // more res than 240p. Do not upscale dst_params to fix it as a workaround.
+    if (Settings::values.upscaling_hack && src_info.res_scale > 1 &&
+        (dst_params.height < 400 || dst_params.width < 240)) {
+        dst_params.res_scale = 1;
+    } else {
+        dst_params.res_scale = src_info.res_scale;
+    }
+
     dst_params.UpdateParams();
 
     // Since we are going to invalidate the gap if there is one, we will have to load it first
