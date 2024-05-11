@@ -106,7 +106,7 @@ raise_cpu_ticks =
 core_downcount_hack =
 
 # Boost low priority starved threads during kernel rescheduling.
-# 0 (default): Off, 1: On
+# 0: Off, 1 (default): On
 priority_boost =
 
 [Renderer]

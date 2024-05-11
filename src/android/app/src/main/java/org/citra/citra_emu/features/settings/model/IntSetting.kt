@@ -42,7 +42,7 @@ enum class IntSetting(
     VSYNC("use_vsync_new", Settings.SECTION_RENDERER, 1),
     RAISE_CPU_TICKS("raise_cpu_ticks", Settings.SECTION_CORE, 0),
     CORE_DOWNCOUNT_HACK("core_downcount_hack", Settings.SECTION_CORE, 0),
-    PRIORITY_BOOST("priority_boost", Settings.SECTION_CORE, 0),
+    PRIORITY_BOOST("priority_boost", Settings.SECTION_CORE, 1),
     DEBUG_RENDERER("renderer_debug", Settings.SECTION_DEBUG, 0),
     TEXTURE_FILTER("texture_filter", Settings.SECTION_RENDERER, 0),
     USE_FRAME_LIMIT("use_frame_limit", Settings.SECTION_RENDERER, 1);
