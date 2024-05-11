@@ -10,23 +10,21 @@ import tempfile
 import win32com.client
 import logging
 import re
-import winreg as reg
+import winreg
 import base64
 from image_base64 import image_data
 from icons import styledark_rc
 from stylesheet import Style
+from pathlib import Path
 
 class QtUi(QMainWindow, Style):
     def __init__(self):
         super().__init__()
-        self.logic = Logic(self)
-        self.setWindowTitle('Installer') # Window name
-        self.setCentralWidget(QWidget(self))  # Set a central widget
-        self.layout = QStackedLayout(self.centralWidget())  # Set the layout on the central widget
-        self.setFixedSize(700, 550) # Fixed window size
+        self.logic = Logic()
         self.ui()  # Init UI
-
-    # self.header
+        self.load_stylesheet()
+        
+    # Icon Header
     def Header(self):
         # Header Layout
         self.headerLayout = QVBoxLayout()
@@ -48,6 +46,12 @@ class QtUi(QMainWindow, Style):
     
     # Widgets
     def ui(self):
+        # Init Window
+        self.setWindowTitle('Installer') # Window name
+        self.setCentralWidget(QWidget(self))  # Set a central widget
+        self.layout = QStackedLayout(self.centralWidget())  # Set the layout on the central widget
+        self.setFixedSize(700, 550) # Fixed window size
+        
         # Welcome page
         self.welcomePage = QWidget()
         ## Layout and gorup
@@ -97,7 +101,7 @@ class QtUi(QMainWindow, Style):
         self.startMenuShortcutCheckbox = QCheckBox("Create a start menu shortcut")
         self.installationPathLineEdit = QLineEdit(os.path.join(os.environ['LOCALAPPDATA'], 'Citra Enhanced')) # Browse for installation path widget
         self.browseButton = QPushButton("Browse")
-        self.browseButton.clicked.connect(self.logic.browseForInstallationPath)
+        self.browseButton.clicked.connect(self.logic.InstallPath)
         self.installCitraButton = QPushButton('Install') # Install button
         self.installCitraButton.clicked.connect(self.logic.clickfunction)
         ## Add widgets / layouts
@@ -152,102 +156,101 @@ class QtUi(QMainWindow, Style):
         finishLayout.addWidget(finishLabel)
         finishLayout.addWidget(finishButton)
         # Add the progress bar page to the layout
-        self.layout.addWidget(self.finishPage)   
-    
+        self.layout.addWidget(self.finishPage)  
+        
     def load_stylesheet(app):
             app.setStyleSheet(Style.dark_stylesheet)
+            
 
 class Logic:
-# Every method here is due to change , the update and uninstall buttons do nothing for now althouhg the install ubtton works    
-    def __init__(self, qtui):
-        self.qtui = qtui
+    def __init__(self):
+        self.value = None  # Declare the reg value as none
+        self.mode = None # Declare the instalation mode as none
 
+    # Disable buttons depanding on if it the program is already installed or not
+    def disableButtons(self):
+        regvalue = self.checkreg() 
+        if regvalue is None:
+            qtui.installButton.setEnabled(True) 
+            qtui.updateButton.setEnabled(False)
+            qtui.uninstallButton.setEnabled(False)                    
+        else:
+            qtui.installButton.setEnabled(False) 
+            qtui.updateButton.setEnabled(True)
+            qtui.uninstallButton.setEnabled(True)               
+
+    #Welcome page buttons clicking linking and declaring the installation mode
     def clickfunction(self):
         button = qtui.sender()
         if button is qtui.installButton:
+            self.mode = "Install"
             qtui.layout.setCurrentIndex(1)
         elif button is qtui.updateButton:
-            print('Placeholder')
+            self.mode = "Update"
+            qtui.layout.setCurrentIndex(2)
+            self.PrepareDownload()
         elif button is qtui.uninstallButton:
-            print('Placeholder')
+            self.mode = "Uninstall" # Unused for now
+            self.uninstall()
         if button is qtui.installCitraButton:
             qtui.layout.setCurrentIndex(2)
-            self.install()
-        
-    def browseForInstallationPath(self):
-        selectedDirectory = QFileDialog.getExistingDirectory(self.qtui, "Select Installation Directory", self.qtui.installationPathLineEdit.text())
-        if selectedDirectory:  # Check if a directory was selected
-            # Append "Citra-Enhanced" to the selected directory path
-            CitraEnhancedDirectory = os.path.join(selectedDirectory, 'Citra-Enhanced')
-            qtui.installationPathLineEdit.setText(CitraEnhancedDirectory)
-
-    def install(self):
-        selection = qtui.installationSourceComboBox.currentText()
-        if selection == "Latest Nightly":
-            url = "https://nightly.link/Gamer64ytb/Citra-Enhanced/workflows/build/master/windows-msvc.zip"
-            response = requests.get(url, stream=True)
-            if response.status_code == 200:
-                print("Download successful, proceeding with installation.")
-            else:
-                QMessageBox.critical(self, "Error", "Failed to download. HTTP status code: {response.status_code}.")
-                return
-        elif selection == "Latest Release":
-            url = Logic.get_latest_release_url(self)
-            if not url:
-                QMessageBox.critical(self, "Error", "Repo URL was not found.")
-                return
-        temp_file = tempfile.NamedTemporaryFile(delete=False).name
-        self.installationPath = self.qtui.installationPathLineEdit.text()
-        os.makedirs(self.installationPath, exist_ok=True)
-        self.start_download (url, temp_file)
-
-    def print_finished(self):
-        print("Thread has finished.")
-
+            self.PrepareDownload()
+        return self.mode
     
-    def start_download(self, url, temp_file):
-        self.download_thread = QThread()  # Create a QThread
-        self.download_worker = DownloadWorker(url, temp_file)  # Create the worker
-        self.download_worker.moveToThread(self.download_thread)  # Move the worker to the thread
-        self.download_thread.started.connect(self.download_worker.do_download)  # Start the worker when the thread starts
-        self.download_worker.progress.connect(self.qtui.downloadProgressBar.setValue)  # Connect the progress signal
-        self.download_thread.start()  # Start the thread
+    # Select installation path function (Needs cleaning up)
+    def InstallPath(self):
+        self.CitraEnhancedDirectory = qtui.installationPathLineEdit.text()
+        if qtui.browseButton.clicked:
+            selectedDirectory = QFileDialog.getExistingDirectory(qtui, "Select Installation Directory", qtui.installationPathLineEdit.text())
+            if selectedDirectory:  # Check if a directory was selected
+                # Append "Citra-Enhanced" to the selected directory path
+                CitraEnhancedDirectory = os.path.join(selectedDirectory, 'Citra-Enhanced')
+                qtui.installationPathLineEdit.setText(CitraEnhancedDirectory)
+        else:
+            pass        
+        return self.CitraEnhancedDirectory     
 
-        self.download_worker.finished.connect(lambda: self.extract_zip(temp_file, self.installationPath))
-
-    def finish_download(self, temp_file):
-        self.download_worker.deleteLater()
-        print ("Download finished.")
-        self.extract_zip(temp_file, self.installationPath)
-            
-
-
-    def get_latest_release_url(self):
-        try:
-            api_url = "https://api.github.com/repos/kleidis/Citra-Enhanced/releases"
+    # Fetching the update channel and setting the download URL
+    def PrepareDownload(self):
+        self.checkreg()        
+        if self.updatevalue is not None: # Checks the update channel
+            selection = self.updatevalue
+        else:
+            selection = qtui.installationSourceComboBox.currentText()
+        if selection == "Latest Nightly":
+            self.url = "https://nightly.link/Gamer64ytb/Citra-Enhanced/workflows/build/master/windows-msvc.zip"
+            response = requests.get(self.url, stream=True)
+            self.DownloadCitraEnhanced()
+            return self.url
+        elif selection == "Latest Release":
+            api_url = "https://api.github.com/repos/kleidis/Citra-Enhanced/releases/latest"
             response = requests.get(api_url)
-            if response.status_code != 200:
-                QMessageBox.critical(self, "Error", "Failed to fetch releases from GitHub.")
-                return None
-
-            releases = response.json()
-            for release in releases:
-                assets = release.get('assets', [])
-                for asset in assets:
-                    if "windows-msvc" in asset['name']:
-                        return asset['browser_download_url']
+            release = response.json()
+            assets = release.get('assets', [])
+            for asset in assets:
+                if "windows-msvc.zip" in asset['name']:
+                    self.url = asset['browser_download_url']
+                    print("Download URL: ", self.url)
+                    self.DownloadCitraEnhanced()
+                    return self.url
             QMessageBox.critical(qtui, "Error", "No suitable release found.")
             return None
-        except Exception as e:
-            QMessageBox.critical(qtui, "Exception", f"An error occurred: {e}")
-            return None
+    # Download function    
+    def DownloadCitraEnhanced(self):
+        temp_file = tempfile.NamedTemporaryFile(delete=False).name
+        self.installationPath = self.value or qtui.installationPathLineEdit.text()
+        os.makedirs(self.installationPath, exist_ok=True)
+        # Threads
+        self.download_thread = QThread()
+        self.download_worker = DownloadWorker(self.url, temp_file)
+        self.download_worker.moveToThread(self.download_thread)
+        self.download_thread.started.connect(self.download_worker.do_download)
+        self.download_worker.progress.connect(qtui.downloadProgressBar.setValue)
+        self.download_thread.start()
+        self.download_worker.finished.connect(lambda: self.extract_and_install(temp_file, self.installationPath))
 
+    # Clear directory MEANT TO BE USED WITH THE ZIP FUNCTION (Needs major cleanup along with the ZIP function)
     def clear_directory(self, directory):
-        """
-        Removes all files and directories in the specified directory.
-
-        :param directory: Path to the directory to clear.
-        """
         for item in os.listdir(directory):
             item_path = os.path.join(directory, item)
             try:
@@ -258,129 +261,108 @@ class Logic:
             except Exception as e:
                 logging.error(f'Failed to delete {item_path}. Reason: {e}')
 
-    def extract_zip(self, temp_file, extract_to):
-        print (f"Extracting {temp_file} to {extract_to}.")
+# This can be cleaned up alot but i was running into issues with the nested folder citra-msvc folder (Needs major cleanup) 
+    def extract_and_install(self, temp_file, extract_to):
+        print(f"Extracting {temp_file} to {extract_to}.")
         try:
             # Clear the target directory before extracting new files
             if os.path.exists(extract_to):
                 self.clear_directory(extract_to)
 
-            # Rename the temporary file to have a .zip extension
-            zip_file_path = temp_file + '.zip'
+            # Rename the temporary file to have a .zip extension and create a temporary extraction folder
+            zip_file_path = f"{temp_file}.zip"
             os.rename(temp_file, zip_file_path)
-
-            # Temporary extraction folder
             temp_extract_folder = tempfile.mkdtemp()
 
             # Extract the main zip file to a temporary folder
             with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
                 zip_ref.extractall(temp_extract_folder)
-                logging.info(f"Main zip extraction completed to temporary folder.")
+                logging.info("Main zip extraction completed to temporary folder.")
 
-            # Find the nested zip file or the main directory
-            nested_zip_path = None
-            for root, dirs, files in os.walk(temp_extract_folder):
-                for file in files:
-                    if file.endswith('.zip'):
-                        nested_zip_path = os.path.join(root, file)
-                        break
-                if nested_zip_path:  # Stop searching if the nested zip is found
-                    break
-
+            # Handle nested zip files or direct extraction
+            nested_zip_path = self.find_nested_zip(temp_extract_folder)
             if nested_zip_path:
-                with zipfile.ZipFile(nested_zip_path, 'r') as nested_zip_ref:
-                    nested_zip_ref.extractall(extract_to)
-                    logging.info(f"Nested zip extraction completed to {extract_to}.")
+                self.extract_nested_zip(nested_zip_path, extract_to)
             else:
-                # If no nested zip, move the contents from the temp folder to the desired location
-                for item in os.listdir(temp_extract_folder):
-                    s = os.path.join(temp_extract_folder, item)
-                    d = os.path.join(extract_to, item)
-                    if os.path.isdir(s):
-                        shutil.move(s, d)
-                    else:
-                        shutil.copy2(s, d)
-                logging.info("Moved extracted files to the desired location.")
+                self.move_files(temp_extract_folder, extract_to)
 
-            # After extracting all files
-            nested_dir_name = None
-            for item in os.listdir(extract_to):
-                if os.path.isdir(os.path.join(extract_to, item)) and 'windows-msvc' in item:
-                    nested_dir_name = item
-                    break
+            # Clean up nested directories if present
+            self.handle_nested_directories(extract_to)
 
-            if nested_dir_name:
-                nested_dir_path = os.path.join(extract_to, nested_dir_name)
-                for item in os.listdir(nested_dir_path):
-                    s = os.path.join(nested_dir_path, item)
-                    d = os.path.join(extract_to, item)
-                    if os.path.isdir(s):
-                        shutil.move(s, d)
-                    else:
-                        shutil.copy2(s, d)
-                # Remove the now-empty nested directory
-                shutil.rmtree(nested_dir_path)
-
-            # Set the progress bar to 100% and call installation_complete
+            # Finalize installation
             qtui.extractionProgressBar.setValue(100)
-            executable_path = os.path.normpath(os.path.join(qtui.installationPathLineEdit.text(), 'citra-qt.exe'))
-#            self.add_to_programs_list(executable_path)
             self.installation_complete()
         except Exception as e:
             logging.error(f"Failed to extract zip file: {e}. File: {temp_file}")
-
+    def find_nested_zip(self, temp_extract_folder):
+        for root, dirs, files in os.walk(temp_extract_folder):
+            for file in files:
+                if file.endswith('.zip'):
+                    return os.path.join(root, file)
+        return None
+    def extract_nested_zip(self, nested_zip_path, extract_to):
+        with zipfile.ZipFile(nested_zip_path, 'r') as nested_zip_ref:
+            nested_zip_ref.extractall(extract_to)
+            logging.info(f"Nested zip extraction completed to {extract_to}.")
+    def move_files(self, source_folder, destination_folder):
+        for item in os.listdir(source_folder):
+            src_path = os.path.join(source_folder, item)
+            dest_path = os.path.join(destination_folder, item)
+            if os.path.isdir(src_path):
+                shutil.move(src_path, dest_path)
+            else:
+                shutil.copy2(src_path, dest_path)
+        logging.info("Moved extracted files to the desired location.")
+    def handle_nested_directories(self, extract_to):
+        for item in os.listdir(extract_to):
+            if os.path.isdir(os.path.join(extract_to, item)) and 'windows-msvc' in item:
+                nested_dir_path = os.path.join(extract_to, item)
+                self.move_files(nested_dir_path, extract_to)
+                shutil.rmtree(nested_dir_path)
+       
+    # After the extracting and moving of the files is done   
     def installation_complete(self):
-        executable_path = os.path.normpath(os.path.join(qtui.installationPathLineEdit.text(), 'citra-qt.exe'))
+        executable_path = os.path.normpath(os.path.join(qtui.installationPathLineEdit.text(), 'citra-qt.exe')) # Declare exe path for the shortcuts
         if qtui.desktopShortcutCheckbox.isChecked():
-            self.create_desktop_shortcut(executable_path)
+            self.define_desktop_shortcut(executable_path)
         if qtui.startMenuShortcutCheckbox.isChecked():
-            self.create_start_menu_shortcut(executable_path)
+            self.define_start_menu_shortcut(executable_path)
+        self.checkreg()
         qtui.layout.setCurrentIndex(qtui.layout.indexOf(qtui.finishPage))  # Switch to finish page
+ 
+    # Function to check the reg values
+    def checkreg(self):
+        try:
+            self.registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Citra-Enhanced", 0, winreg.KEY_READ)
+            self.value, regtype = winreg.QueryValueEx(self.registry_key, 'CitraEnhancedDirectory')
+            self.updatevalue, regtype = winreg.QueryValueEx(self.registry_key, 'CitraEnhancedUpdateChannel')
+            winreg.CloseKey(self.registry_key)
+            return self.value, self.updatevalue  
+        except FileNotFoundError:
+            if self.mode == 'Install':
+                self.createreg()
+            else:            
+                print("Found the key, skipping creation")
+    # Function to create the reg values            
+    def createreg (self):   
+        winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\\Citra-Enhanced")
+        self.registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Citra-Enhanced", 0, 
+                                        winreg.KEY_WRITE)
+        
+        winreg.SetValueEx(self.registry_key, 'CitraEnhancedDirectory', 0, winreg.REG_SZ, qtui.installationPathLineEdit.text())
+        winreg.SetValueEx(self.registry_key, 'CitraEnhancedUpdateChannel', 0, winreg.REG_SZ, qtui.installationSourceComboBox.currentText())
+        winreg.CloseKey(self.registry_key)
+        print ("Key Created/ Updated")
 
-# HEAVILY INCOMPLETE , DO NOT USE
-#    def add_to_programs_list(self, executable_path):
-#        """
-#        Add the application to the Windows Program list with the uninstall option.
-#
-#        :param executable_path: Path to the executable file of the application.
-#        """
-#        print("Adding to programs list...")
-#        # Path to the uninstall key
-#        key_path = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Citra-Enhanced"
-#        # Uninstaller path
-#        uninstaller_path = os.path.normpath(os.path.join(self.installationPathLineEdit.text(), 'uninstaller.exe'))
-#        print(f"Uninstaller path: {uninstaller_path}")
-#
-#       # Attempt to open the key, create if it does not exist
-#        try:
-#            key = reg.OpenKey(reg.HKEY_CURRENT_USER, key_path, 0, reg.KEY_WRITE)
-#            print("Registry key exists, opened successfully.")
-#        except FileNotFoundError:
-#            key = reg.CreateKey(reg.HKEY_CURRENT_USER, key_path)
-#            print("Registry key does not exist, created successfully.")
-#
-#        # Set values within the key
-#        with key:
-#            reg.SetValueEx(key, "DisplayName", 0, reg.REG_SZ, "Citra-Enhanced")
-#            reg.SetValueEx(key, "UninstallString", 0, reg.REG_SZ, uninstaller_path)
-#            reg.SetValueEx(key, "DisplayIcon", 0, reg.REG_SZ, executable_path)
-#            reg.SetValueEx(key, "Publisher", 0, reg.REG_SZ, "Citra-Enhanced-Emu")
-#            reg.SetValueEx(key, "URLInfoAbout", 0, reg.REG_SZ, "https://Citra-Enhanced-emu.github.io/")
-#            print("Registry values set successfully.")
-#
-#        print("Added to programs list successfully.")
-
-    def create_desktop_shortcut(self, target):
+    # Function to create the shortcuts (Thsi works but can be cleaned up a bit)
+    def define_desktop_shortcut(self, target):
         desktop_path = os.path.join(os.environ['USERPROFILE'], 'Desktop')
         shortcut_path = os.path.join(desktop_path, 'Citra-Enhanced.lnk')
         self.create_shortcut(target, shortcut_path)
-
-    def create_start_menu_shortcut(self, target):
+    def define_start_menu_shortcut(self, target):
         start_menu_path = os.path.join(os.environ['APPDATA'], 'Microsoft', 'Windows', 'Start Menu', 'Programs')
         shortcut_path = os.path.join(start_menu_path, 'Citra-Enhanced.lnk')
         self.create_shortcut(target, shortcut_path)
-
-
     def create_shortcut(self, target, shortcut_path, description="", arguments="", hotkey=""):
         # Verify the target exists
         if not os.path.exists(target):
@@ -402,6 +384,42 @@ class Logic:
         except Exception as e:
             logging.error(f"Failed to create shortcut: {e}")
 
+    # Uninstall function that doesnt delete the working direcotry (YAY)
+    def uninstall(self):
+        self.checkreg()
+        if self.value is not None:
+            # Paths to the shortcuts
+            desktopshortcut = os.path.join(os.environ['USERPROFILE'], 'Desktop', 'Citra-Enhanced.lnk')
+            startmenushortcut = os.path.join(os.environ['APPDATA'], 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Citra-Enhanced.lnk')
+
+            reply = QMessageBox.question(qtui, "Uninstall", "Are you sure you want to uninstall Citra-Enhanced?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if reply == QMessageBox.StandardButton.No:
+                return
+            else:
+                
+                # Remove the shortcut and the, DIR and REG keys
+                if os.path.exists(desktopshortcut):
+                    os.remove(desktopshortcut)
+                if os.path.exists(startmenushortcut):
+                    os.remove(startmenushortcut)
+                dirpath = Path(self.value)
+                if dirpath.exists() and dirpath.is_dir():
+                    shutil.rmtree(dirpath)
+                    print (dirpath)
+                    winreg.DeleteKey(winreg.HKEY_CURRENT_USER, "Software\\Citra-Enhanced")
+                    QMessageBox.information(qtui, "Uninstall", "Citra-Enhanced has been successfully uninstalled.")
+                    exit()
+                else:
+                    QMessageBox.critical(qtui, "Error", "The direcotry might have been moved or deleted. Please reinstall the program.")
+                    winreg.DeleteKey(winreg.HKEY_CURRENT_USER, "Software\\Citra-Enhanced")
+                    qtui.updateButton.setEnabled(False)   
+                    qtui.uninstallButton.setEnabled(False)    
+                    qtui.installButton.setEnabled(True) 
+        else:
+            QMessageBox.critical(qtui, "Error",("Failed to read the registry key. Try and reinstall again!"))
+            qtui.layout.setCurrentIndex(1)        
+
+# Download Worker class (Help used)
 class DownloadWorker(QThread):
     progress = pyqtSignal(int)
 
@@ -435,9 +453,9 @@ class DownloadWorker(QThread):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     qtui = QtUi()
-    logic = Logic(qtui)
-    qtui.load_stylesheet()
     qtui.show()
+    self = Logic()
+    exec, Logic.disableButtons(self)
     sys.exit(app.exec())
 
 
