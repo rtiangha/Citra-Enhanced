@@ -37,14 +37,6 @@ function pack_artifacts() {
     if [ "$OS" = "windows" ]; then
         ARCHIVE_FULL_NAME="$ARCHIVE_NAME.zip"
         powershell Compress-Archive "$REV_NAME" "$ARCHIVE_FULL_NAME"
-        # Check if the installer.exe exists and then copy it
-        if [ -f "$GITHUB_WORKSPACE/build/enhanced-installer/installer.exe" ]; then
-            echo "Installer found. Adding to the archive..."
-            cp "$GITHUB_WORKSPACE/build/enhanced-installer/installer.exe" "$REV_NAME/"
-        else
-            echo "Error: Installer not found at $GITHUB_WORKSPACE/build/enhanced-installer/installer.exe"
-            exit 1
-        fi
     elif [ "$OS" = "android" ]; then
         ARCHIVE_FULL_NAME="$ARCHIVE_NAME.zip"
         zip -r "$ARCHIVE_FULL_NAME" "$REV_NAME"

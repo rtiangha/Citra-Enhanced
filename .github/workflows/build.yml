@@ -140,7 +140,6 @@ jobs:
           path: artifacts/
   windows:
     runs-on: windows-latest
-    needs: installer
     strategy:
       matrix:
         target: ["msvc", "msys2"]
@@ -157,11 +156,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Download Installer
-        uses: actions/download-artifact@v4
-        with:
-          name: Enhanced-Installer
-          path: build/enhanced-installer
       - name: Set up cache
         uses: actions/cache@v4
         with:
