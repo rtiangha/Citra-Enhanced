@@ -1159,6 +1159,18 @@ void RasterizerCache<T>::DownloadFillSurface(Surface& surface, SurfaceInterval i
 template <class T>
 bool RasterizerCache<T>::ValidateByReinterpretation(Surface& surface, SurfaceParams params,
                                                     const SurfaceInterval& interval) {
+    // Check if any part of the interval is owned by a dirty surface with a different stride
+    // than ours. If so, return true without further validation.
+    const auto it = std::find_if(dirty_regions.begin(), dirty_regions.end(),
+                                  [&interval, &surface](const auto& entry) {
+                                      return entry.second && slot_surfaces[entry.second].stride != surface.stride &&
+                                          boost::icl::intersects(interval, entry.first);
+                                  });
+    if (it != dirty_regions.end()) {
+        return true;
+    }
+
+    // Look for a surface with matching parameters in the cache
     SurfaceId reinterpret_id =
         FindMatch<MatchFlags::Reinterpret>(params, ScaleMatch::Ignore, interval);
     if (reinterpret_id) {
@@ -1167,6 +1179,8 @@ bool RasterizerCache<T>::ValidateByReinterpretation(Surface& surface, SurfacePar
         if (boost::icl::is_empty(copy_interval & interval)) {
             return false;
         }
+
+        // Perform the reinterpretation if there's a matching surface in the cache
         const u32 res_scale = src_surface.res_scale;
         if (res_scale > surface.res_scale) {
             surface.ScaleUp(res_scale);
@@ -1185,17 +1199,8 @@ bool RasterizerCache<T>::ValidateByReinterpretation(Surface& surface, SurfacePar
         return runtime.Reinterpret(src_surface, surface, reinterpret);
     }
 
-    // No surfaces were found in the cache that had a matching bit-width.
-    // Before entering the slow path, check if part of the interval is owned
-    // by a gpu modified surface with a different stride than ours. This is indicative
-    // of texture aliasing by the guest, which for the vast majority of cases we don't
-    // need to validate.
-    // TODO: While this works for the vast majority of cases, in Fire Emblem: Shadows of Valentia
-    // the warping effect when running in dugeons relies on this stride reinterpretation.
-    // In the future this transformation should be properly implemented with a GPU shader.
-    const auto it = dirty_regions.find(interval);
-    return it != dirty_regions.end() && it->second &&
-           slot_surfaces[it->second].stride != surface.stride;
+    // No matching surface found in the cache
+    return false;
 }
 
 template <class T>
