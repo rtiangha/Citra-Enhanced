@@ -62,7 +62,7 @@ class QtUi(QMainWindow, Style):
         welcomerGroup.setLayout(welcomerGroupLayout)
         self.welcomePage.setLayout(welcomerLayout) # Set the welcomepage layout
         ## Widgets
-        welcomerLabel = QLabel('<b>Citra Enhanced is a fork of Citra which aims to incrase')
+        welcomerLabel = QLabel('<b>Citra Enhanced is a fork of Citra which aims to incrase performance and add new options')
         welcomerLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.installButton = QPushButton('Install')
         self.installButton.clicked.connect(self.logic.clickfunction)
