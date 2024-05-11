@@ -79,18 +79,6 @@ const static std::unordered_map<VideoCore::LoadCallbackStage, const char*> progr
     {VideoCore::LoadCallbackStage::Complete, PROGRESSBAR_STYLE_COMPLETE},
 };
 
-static QPixmap GetQPixmapFromSMDH(std::vector<u8>& smdh_data) {
-    Loader::SMDH smdh;
-    std::memcpy(&smdh, smdh_data.data(), sizeof(Loader::SMDH));
-
-    bool large = true;
-    std::vector<u16> icon_data = smdh.GetIcon(large);
-    const uchar* data = reinterpret_cast<const uchar*>(icon_data.data());
-    int size = large ? 48 : 24;
-    QImage icon(data, size, size, QImage::Format::Format_RGB16);
-    return QPixmap::fromImage(icon);
-}
-
 LoadingScreen::LoadingScreen(QWidget* parent)
     : QWidget(parent), ui(std::make_unique<Ui::LoadingScreen>()),
       previous_stage(VideoCore::LoadCallbackStage::Complete) {
