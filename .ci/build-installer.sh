@@ -24,7 +24,7 @@ fi
 
 # Run PyInstaller to build the applications
 
-pyinstaller --onefile --windowed --distpath $GITHUB_WORKSPACE/build/enhanced-installer installer.py
+pyinstaller --onefile --windowed --icon=Citra-Enhanced.ico --distpath $GITHUB_WORKSPACE/build/enhanced-installer installer.py
 
 echo $GITHUB_WORKSPACE
 cd $GITHUB_WORKSPACE
