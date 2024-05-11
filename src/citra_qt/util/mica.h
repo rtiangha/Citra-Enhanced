@@ -4,6 +4,9 @@
 #include <windows.h>
 
 namespace Utils {
-    void EnableDarkMicaForWindow(HWND hwnd);
-}
+
+void EnableDarkMicaForWindow(HWND hwnd);
+
+} // namespace Utils
+
 #endif

@@ -17,6 +17,6 @@ void EnableDarkMicaForWindow(HWND hwnd) {
     DwmSetWindowAttribute(hwnd, attribute, &attributeValue, sizeof(attributeValue));
 }
 
-} // namespace mica
+} // namespace Utils
 
 #endif
