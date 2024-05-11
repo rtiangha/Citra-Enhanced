@@ -1,4 +1,4 @@
-name: citra-build
+name: citraenhanced-pr-build
 
 on:
   pull_request:
