@@ -719,6 +719,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SwitchSetting(
+                    IntSetting.UPSCALING_HACK,
+                    R.string.upscaling_hack,
+                    R.string.upscaling_hack_description,
+                    IntSetting.UPSCALING_HACK.key,
+                    IntSetting.UPSCALING_HACK.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
                     IntSetting.SHADERS_ACCURATE_MUL,
                     R.string.shaders_accurate_mul,
                     R.string.shaders_accurate_mul_description,

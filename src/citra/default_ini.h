@@ -122,6 +122,10 @@ skip_slow_draw =
 # 0 (default): Off, 1: On
 skip_texture_copy =
 
+# Overrides upscaling for dst_params
+# 0 (default): Off, 1: On
+upscaling_hack =
+
 # Whether to render using GLES or OpenGL
 # 0 (default): OpenGL, 1: GLES
 use_gles =

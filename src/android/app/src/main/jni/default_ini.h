@@ -130,6 +130,10 @@ skip_slow_draw =
 # 0 (default): Off, 1: On
 skip_texture_copy =
 
+# Overrides upscaling for dst_params
+# 0 (default): Off, 1: On
+upscaling_hack =
+
 # Whether to use hardware shaders to emulate 3DS shaders
 # 0: Software, 1 (default): Hardware
 use_hw_shader =

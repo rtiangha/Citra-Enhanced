@@ -223,6 +223,7 @@ bool RasterizerCache<T>::AccelerateTextureCopy(const Pica::DisplayTransferConfig
 
     // some games like pokemon ultra sun have texture ghosting issues if we use
     // more res than 240p. Do not upscale dst_params to fix it as a workaround.
+    // this may improve the performance as well, because we skip upscaling here
     if (Settings::values.upscaling_hack && src_info.res_scale > 1 &&
         (dst_params.height < 400 || dst_params.width < 240)) {
         dst_params.res_scale = 1;

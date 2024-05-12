@@ -43,6 +43,7 @@ private:
     ConfigurationShared::CheckState async_presentation;
     ConfigurationShared::CheckState skip_slow_draw;
     ConfigurationShared::CheckState skip_texture_copy;
+    ConfigurationShared::CheckState upscaling_hack;
     ConfigurationShared::CheckState spirv_shader_gen;
     std::unique_ptr<Ui::ConfigureGraphics> ui;
     QColor bg_color;
