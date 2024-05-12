@@ -239,6 +239,6 @@ void ConfigureAudio::SetupPerGameUI() {
     ConfigurationShared::SetColoredTristate(
         ui->toggle_audio_stretching, Settings::values.enable_audio_stretching, audio_stretching);
 
-    ConfigurationShared::SetColoredTristate(
-        ui->toggle_realtime_audio, Settings::values.enable_realtime_audio, realtime_audio);
+    ConfigurationShared::SetColoredTristate(ui->toggle_realtime_audio,
+                                            Settings::values.enable_realtime_audio, realtime_audio);
 }
