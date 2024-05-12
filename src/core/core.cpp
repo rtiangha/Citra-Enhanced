@@ -278,13 +278,13 @@ static void LoadOverrides(u64 title_id) {
                title_id == 0x0004000000033C00) {
         // Super Street Fighter IV: 3D Edition
         // Fixes FPS drops while using vulkan for some devices
-        Settings::values.raise_cpu_ticks = true;
+        Settings::values.raise_cpu_ticks = !Settings::values.core_downcount_hack;
 #endif
     } else if (title_id == 0x00040000000D0000 || title_id == 0x0004000000076400 ||
                title_id == 0x0004000000055F00 || title_id == 0x0004000000076500) {
         // Luigi's Mansion: Dark Moon
         // Improves the framerate by a lot for many devices
-        Settings::values.raise_cpu_ticks = true;
+        Settings::values.raise_cpu_ticks = !Settings::values.core_downcount_hack;
     } else if (title_id == 0x0004000000068B00 || title_id == 0x0004000000061300 ||
                title_id == 0x000400000004A700 || title_id == 0x000400000005D700) {
         // Tales of the Abyss / Pac Man Party 3D
