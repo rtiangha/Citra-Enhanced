@@ -547,7 +547,6 @@ struct Values {
     SwitchableSetting<bool> skip_texture_copy{false, "skip_texture_copy"};
     SwitchableSetting<bool> core_downcount_hack{false, "core_downcount_hack"};
     SwitchableSetting<bool> priority_boost{true, "priority_boost"};
-    SwitchableSetting<bool> upscaling_hack{true, "upscaling_hack"};
     // OpenGL Hack
     SwitchableSetting<bool> gl_stream_buffer_hack{true, "gl_stream_buffer_hack"};
 
