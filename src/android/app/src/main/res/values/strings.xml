@@ -318,6 +318,7 @@
     <!-- Tweaks Dialog -->
     <string name="tweaks_title">Tweaks</string>
     <string name="priority_boost_tweaks">Priority Boost</string>
+    <string name="upscaling_hack_tweaks">Upscaling Hack</string>
 
     <!-- Add Directory Screen-->
     <string name="select_game_folder">Select Game Folder</string>

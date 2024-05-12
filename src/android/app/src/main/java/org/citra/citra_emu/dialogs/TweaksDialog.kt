@@ -28,6 +28,7 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
         const val SETTING_SKIP_SLOW_DRAW = 1
         const val SETTING_SKIP_TEXTURE_COPY = 2
         const val SETTING_PRIORITY_BOOST = 3
+        const val SETTING_UPSCALING_HACK = 4
 
         // view type
         const val TYPE_SWITCH = 0
@@ -134,6 +135,7 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
             settings.add(SettingsItem(SETTING_SKIP_SLOW_DRAW, context.getString(R.string.skip_slow_draw), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_SKIP_TEXTURE_COPY, context.getString(R.string.skip_texture_copy), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_PRIORITY_BOOST, context.getString(R.string.priority_boost_tweaks), TYPE_SWITCH, tweaks[i++]))
+            settings.add(SettingsItem(SETTING_UPSCALING_HACK, context.getString(R.string.upscaling_hack_tweaks), TYPE_SWITCH, tweaks[i++]))
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingViewHolder {
