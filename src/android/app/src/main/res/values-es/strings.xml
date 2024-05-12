@@ -288,6 +288,7 @@ Se esperan fallos gráficos temporales cuando ésta esté activado.</string>
 
     <!-- Tweaks Dialog -->
     <string name="tweaks_title">Modificaciones</string>
+    <string name="realtime_audio_tweaks">Audio en tiempo real</string>
     <string name="priority_boost_tweaks">Aumento de Prioridad</string>
 
     <!-- Add Directory Screen-->

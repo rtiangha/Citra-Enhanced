@@ -320,6 +320,7 @@
     <!-- Tweaks Dialog -->
     <string name="tweaks_title">Tweaks</string>
     <string name="priority_boost_tweaks">Priority Boost</string>
+    <string name="realtime_audio_tweaks">Real-time Audio</string>
     <string name="upscaling_hack_tweaks">Upscaling Hack</string>
 
     <!-- Add Directory Screen-->
