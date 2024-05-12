@@ -331,7 +331,11 @@ static void LoadOverrides(u64 title_id) {
 System::ResultStatus System::Load(Frontend::EmuWindow& emu_window, const std::string& filepath,
                                   Frontend::EmuWindow* secondary_window) {
     FileUtil::SetCurrentRomPath(filepath);
-    app_loader = Loader::GetLoader(filepath);
+    if (early_app_loader) {
+        app_loader = std::move(early_app_loader);
+    } else {
+        app_loader = Loader::GetLoader(filepath);
+    }
     if (!app_loader) {
         LOG_CRITICAL(Core, "Failed to obtain loader for {}!", filepath);
         return ResultStatus::ErrorGetLoader;
@@ -361,6 +365,8 @@ System::ResultStatus System::Load(Frontend::EmuWindow& emu_window, const std::st
             return ResultStatus::ErrorLoader_ErrorInvalidFormat;
         case Loader::ResultStatus::ErrorGbaTitle:
             return ResultStatus::ErrorLoader_ErrorGbaTitle;
+        case Loader::ResultStatus::ErrorArtic:
+            return ResultStatus::ErrorArticDisconnected;
         default:
             return ResultStatus::ErrorSystemMode;
         }
@@ -415,6 +421,8 @@ System::ResultStatus System::Load(Frontend::EmuWindow& emu_window, const std::st
             return ResultStatus::ErrorLoader_ErrorInvalidFormat;
         case Loader::ResultStatus::ErrorGbaTitle:
             return ResultStatus::ErrorLoader_ErrorGbaTitle;
+        case Loader::ResultStatus::ErrorArtic:
+            return ResultStatus::ErrorArticDisconnected;
         default:
             return ResultStatus::ErrorLoader;
         }
@@ -789,6 +797,10 @@ void System::ApplySettings() {
         plg_ldr->SetEnabled(Settings::values.plugin_loader_enabled.GetValue());
         plg_ldr->SetAllowGameChangeState(Settings::values.allow_plugin_loader.GetValue());
     }
+}
+
+void System::RegisterAppLoaderEarly(std::unique_ptr<Loader::AppLoader>& loader) {
+    early_app_loader = std::move(loader);
 }
 
 template <class Archive>
