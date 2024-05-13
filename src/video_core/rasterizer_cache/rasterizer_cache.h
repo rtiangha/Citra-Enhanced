@@ -33,7 +33,7 @@ RasterizerCache<T>::RasterizerCache(Memory::MemorySystem& memory_,
                                     Pica::RegsInternal& regs_, RendererBase& renderer_)
     : memory{memory_}, custom_tex_manager{custom_tex_manager_}, runtime{runtime_}, regs{regs_},
       renderer{renderer_}, resolution_scale_factor{renderer.GetResolutionScaleFactor()},
-      filter{Settings::values.texture_filter.GetValue()},
+      sample_count{renderer.GetSampleCount()}, filter{Settings::values.texture_filter.GetValue()},
       dump_textures{Settings::values.dump_textures.GetValue()},
       use_custom_textures{Settings::values.custom_textures.GetValue()} {
     using TextureConfig = Pica::TexturingRegs::TextureConfig;
@@ -103,6 +103,8 @@ void RasterizerCache<T>::TickFrame() {
         }
         UnregisterAll();
     }
+
+    sample_count = renderer.GetSampleCount();
 }
 
 template <class T>
