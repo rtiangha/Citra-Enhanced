@@ -665,6 +665,7 @@ void Config::ReadRendererValues() {
     ReadGlobalSetting(Settings::values.use_disk_shader_cache);
     ReadGlobalSetting(Settings::values.use_vsync_new);
     ReadGlobalSetting(Settings::values.resolution_factor);
+    ReadGlobalSetting(Settings::values.sample_count);
     ReadGlobalSetting(Settings::values.frame_limit);
 
     ReadGlobalSetting(Settings::values.bg_red);
@@ -1179,6 +1180,7 @@ void Config::SaveRendererValues() {
     WriteGlobalSetting(Settings::values.use_disk_shader_cache);
     WriteGlobalSetting(Settings::values.use_vsync_new);
     WriteGlobalSetting(Settings::values.resolution_factor);
+    WriteGlobalSetting(Settings::values.sample_count);
     WriteGlobalSetting(Settings::values.frame_limit);
 
     WriteGlobalSetting(Settings::values.bg_red);
