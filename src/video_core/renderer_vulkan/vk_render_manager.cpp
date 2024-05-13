@@ -3,6 +3,7 @@
 // Refer to the license.txt file included.
 
 #include <limits>
+#include <boost/container/static_vector.hpp>
 #include "common/assert.h"
 #include "video_core/rasterizer_cache/pixel_format.h"
 #include "video_core/renderer_vulkan/vk_instance.h"
@@ -38,7 +39,7 @@ void RenderManager::BeginRendering(const Framebuffer* framebuffer,
         .framebuffer = framebuffer->Handle(),
         .render_pass = framebuffer->RenderPass(),
         .render_area = render_area,
-        .clear = {},
+        .clears = {},
         .do_clear = false,
     };
     images = framebuffer->Images();
@@ -58,8 +59,8 @@ void RenderManager::BeginRendering(const RenderPass& new_pass) {
             .renderPass = info.render_pass,
             .framebuffer = info.framebuffer,
             .renderArea = info.render_area,
-            .clearValueCount = info.do_clear ? 1u : 0u,
-            .pClearValues = &info.clear,
+            .clearValueCount = info.do_clear ? 2u : 0u,
+            .pClearValues = info.clears.data(),
         };
         cmdbuf.beginRenderPass(renderpass_begin_info, vk::SubpassContents::eInline);
     });
@@ -131,7 +132,8 @@ void RenderManager::EndRendering() {
 }
 
 vk::RenderPass RenderManager::GetRenderpass(VideoCore::PixelFormat color,
-                                            VideoCore::PixelFormat depth, bool is_clear) {
+                                            VideoCore::PixelFormat depth, bool is_clear,
+                                            u8 sample_count) {
     std::scoped_lock lock{cache_mutex};
 
     const u32 color_index =
@@ -142,22 +144,31 @@ vk::RenderPass RenderManager::GetRenderpass(VideoCore::PixelFormat color,
     ASSERT_MSG(color_index <= NumColorFormats && depth_index <= NumDepthFormats,
                "Invalid color index {} and/or depth_index {}", color_index, depth_index);
 
-    vk::UniqueRenderPass& renderpass = cached_renderpasses[color_index][depth_index][is_clear];
+    ASSERT_MSG(sample_count && std::has_single_bit(sample_count) && sample_count <= NumSamples,
+               "Invalid sample count {}", static_cast<u32>(sample_count));
+
+    const u32 samples_index = static_cast<u32>(std::bit_width(sample_count) - 1);
+
+    vk::UniqueRenderPass& renderpass =
+        cached_renderpasses[color_index][depth_index][samples_index][is_clear];
     if (!renderpass) {
         const vk::Format color_format = instance.GetTraits(color).native;
         const vk::Format depth_format = instance.GetTraits(depth).native;
         const vk::AttachmentLoadOp load_op =
             is_clear ? vk::AttachmentLoadOp::eClear : vk::AttachmentLoadOp::eLoad;
-        renderpass = CreateRenderPass(color_format, depth_format, load_op);
+        renderpass = CreateRenderPass(color_format, depth_format, load_op,
+                                      static_cast<vk::SampleCountFlagBits>(sample_count));
     }
 
     return *renderpass;
 }
 
 vk::UniqueRenderPass RenderManager::CreateRenderPass(vk::Format color, vk::Format depth,
-                                                     vk::AttachmentLoadOp load_op) const {
-    u32 attachment_count = 0;
-    std::array<vk::AttachmentDescription, 2> attachments;
+                                                     vk::AttachmentLoadOp load_op,
+                                                     vk::SampleCountFlagBits sample_count) const {
+
+    boost::container::static_vector<vk::AttachmentDescription, 4> attachments{};
+    boost::container::static_vector<vk::AttachmentReference, 2> resolve_attachments{};
 
     bool use_color = false;
     vk::AttachmentReference color_attachment_ref{};
@@ -165,18 +176,19 @@ vk::UniqueRenderPass RenderManager::CreateRenderPass(vk::Format color, vk::Forma
     vk::AttachmentReference depth_attachment_ref{};
 
     if (color != vk::Format::eUndefined) {
-        attachments[attachment_count] = vk::AttachmentDescription{
+        attachments.emplace_back(vk::AttachmentDescription{
             .format = color,
+            .samples = vk::SampleCountFlagBits::e1,
             .loadOp = load_op,
             .storeOp = vk::AttachmentStoreOp::eStore,
             .stencilLoadOp = vk::AttachmentLoadOp::eDontCare,
             .stencilStoreOp = vk::AttachmentStoreOp::eDontCare,
             .initialLayout = vk::ImageLayout::eGeneral,
             .finalLayout = vk::ImageLayout::eGeneral,
-        };
+        });
 
         color_attachment_ref = vk::AttachmentReference{
-            .attachment = attachment_count++,
+            .attachment = static_cast<u32>(attachments.size() - 1),
             .layout = vk::ImageLayout::eGeneral,
         };
 
@@ -184,22 +196,75 @@ vk::UniqueRenderPass RenderManager::CreateRenderPass(vk::Format color, vk::Forma
     }
 
     if (depth != vk::Format::eUndefined) {
-        attachments[attachment_count] = vk::AttachmentDescription{
+        attachments.emplace_back(vk::AttachmentDescription{
             .format = depth,
+            .samples = vk::SampleCountFlagBits::e1,
             .loadOp = load_op,
             .storeOp = vk::AttachmentStoreOp::eStore,
             .stencilLoadOp = load_op,
             .stencilStoreOp = vk::AttachmentStoreOp::eStore,
             .initialLayout = vk::ImageLayout::eGeneral,
             .finalLayout = vk::ImageLayout::eGeneral,
-        };
+        });
 
         depth_attachment_ref = vk::AttachmentReference{
-            .attachment = attachment_count++,
+            .attachment = static_cast<u32>(attachments.size() - 1),
             .layout = vk::ImageLayout::eGeneral,
         };
 
         use_depth = true;
+    }
+
+    // In the case of MSAA, each attachment gets an additional MSAA attachment that now becomes the
+    // main attachment and the original attachments now get resolved into
+    if (sample_count > vk::SampleCountFlagBits::e1) {
+        if (color != vk::Format::eUndefined) {
+            attachments.emplace_back(vk::AttachmentDescription{
+                .format = color,
+                .samples = sample_count,
+                .loadOp = load_op,
+                .storeOp = vk::AttachmentStoreOp::eStore,
+                .stencilLoadOp = vk::AttachmentLoadOp::eDontCare,
+                .stencilStoreOp = vk::AttachmentStoreOp::eDontCare,
+                .initialLayout = vk::ImageLayout::eGeneral,
+                .finalLayout = vk::ImageLayout::eGeneral,
+            });
+
+            resolve_attachments.emplace_back(color_attachment_ref);
+
+            color_attachment_ref = vk::AttachmentReference{
+                .attachment = static_cast<u32>(attachments.size() - 1),
+                .layout = vk::ImageLayout::eGeneral,
+            };
+        }
+
+        if (depth != vk::Format::eUndefined) {
+            attachments.emplace_back(vk::AttachmentDescription{
+                .format = depth,
+                .samples = sample_count,
+                .loadOp = load_op,
+                .storeOp = vk::AttachmentStoreOp::eStore,
+                .stencilLoadOp = load_op,
+                .stencilStoreOp = vk::AttachmentStoreOp::eStore,
+                .initialLayout = vk::ImageLayout::eGeneral,
+                .finalLayout = vk::ImageLayout::eGeneral,
+            });
+
+            resolve_attachments.emplace_back(depth_attachment_ref);
+
+            depth_attachment_ref = vk::AttachmentReference{
+                .attachment = static_cast<u32>(attachments.size() - 1),
+                .layout = vk::ImageLayout::eGeneral,
+            };
+        }
+    } else {
+        if (color != vk::Format::eUndefined) {
+            resolve_attachments.emplace_back(vk::AttachmentReference{VK_ATTACHMENT_UNUSED});
+        }
+
+        if (depth != vk::Format::eUndefined) {
+            resolve_attachments.emplace_back(vk::AttachmentReference{VK_ATTACHMENT_UNUSED});
+        }
     }
 
     const vk::SubpassDescription subpass = {
@@ -208,12 +273,12 @@ vk::UniqueRenderPass RenderManager::CreateRenderPass(vk::Format color, vk::Forma
         .pInputAttachments = nullptr,
         .colorAttachmentCount = use_color ? 1u : 0u,
         .pColorAttachments = &color_attachment_ref,
-        .pResolveAttachments = 0,
+        .pResolveAttachments = resolve_attachments.data(),
         .pDepthStencilAttachment = use_depth ? &depth_attachment_ref : nullptr,
     };
 
     const vk::RenderPassCreateInfo renderpass_info = {
-        .attachmentCount = attachment_count,
+        .attachmentCount = static_cast<u32>(attachments.size()),
         .pAttachments = attachments.data(),
         .subpassCount = 1,
         .pSubpasses = &subpass,
