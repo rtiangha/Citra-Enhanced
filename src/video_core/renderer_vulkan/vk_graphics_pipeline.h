@@ -123,6 +123,7 @@ struct VertexLayout {
 struct AttachmentInfo {
     VideoCore::PixelFormat color;
     VideoCore::PixelFormat depth;
+    u8 sample_count;
 };
 
 /**
