@@ -215,7 +215,7 @@ public:
         return framebuffer.get();
     }
 
-    [[nodiscard]] std::array<vk::Image, 2> Images() const noexcept {
+    [[nodiscard]] std::array<vk::Image, 4> Images() const noexcept {
         return images;
     }
 
@@ -225,6 +225,10 @@ public:
 
     [[nodiscard]] vk::RenderPass RenderPass() const noexcept {
         return render_pass;
+    }
+
+    u8 Samples() const noexcept {
+        return sample_count;
     }
 
     u32 Scale() const noexcept {
@@ -240,8 +244,8 @@ public:
     }
 
 private:
-    std::array<vk::Image, 2> images{};
-    std::array<vk::ImageView, 2> image_views{};
+    std::array<vk::Image, 4> images{};
+    std::array<vk::ImageView, 4> image_views{};
     vk::UniqueFramebuffer framebuffer;
     vk::RenderPass render_pass;
     std::array<vk::ImageAspectFlags, 2> aspects{};
@@ -250,6 +254,7 @@ private:
     u32 width{};
     u32 height{};
     u32 res_scale{1};
+    u8 sample_count{1};
 };
 
 class Sampler {
