@@ -99,6 +99,9 @@ public:
     virtual bool CacheReady(std::size_t file_offset, std::size_t length) {
         return false;
     }
+
+protected:
+    std::unique_ptr<DelayGenerator> delay_generator;
 };
 
 } // namespace FileSys
