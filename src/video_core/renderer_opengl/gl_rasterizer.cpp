@@ -67,7 +67,7 @@ GLenum MakeAttributeType(Pica::PipelineRegs::VertexAttributeFormat format) {
 
 } // Anonymous namespace
 
-static bool IsVendorMali() {
+static bool IsVendorArm() {
     std::string gpu_vendor{reinterpret_cast<char const*>(glGetString(GL_VENDOR))};
     return gpu_vendor.find("ARM") != std::string::npos;
 }
@@ -83,11 +83,11 @@ RasterizerOpenGL::RasterizerOpenGL(Memory::MemorySystem& memory, Pica::PicaCore&
       uniform_buffer{driver, GL_UNIFORM_BUFFER, UNIFORM_BUFFER_SIZE},
       index_buffer{driver, GL_ELEMENT_ARRAY_BUFFER, INDEX_BUFFER_SIZE},
       texture_buffer{driver, GL_TEXTURE_BUFFER,
-                     IsVendorMali()
+                     IsVendorArm()
                          ? (GL_MAX_TEXTURE_BUFFER_SIZE == 65536 ? 11264 : texture_buffer_size)
                          : texture_buffer_size},
       texture_lf_buffer{driver, GL_TEXTURE_BUFFER,
-                        IsVendorMali()
+                        IsVendorArm()
                             ? (GL_MAX_TEXTURE_BUFFER_SIZE == 65536 ? 525312 : texture_buffer_size)
                             : texture_buffer_size} {
 
