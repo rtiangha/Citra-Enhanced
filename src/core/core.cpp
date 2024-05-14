@@ -813,6 +813,9 @@ void System::serialize(Archive& ar, const unsigned int file_version) {
     ar& num_cores;
 
     if (Archive::is_loading::value) {
+        // Do not shut down the archive manager, as it should not change from
+        // loading a save state
+        auto aux_archive_manager = std::move(archive_manager);
         // When loading, we want to make sure any lingering state gets cleared out before we begin.
         // Shutdown, but persist a few things between loads...
         Shutdown(true);
@@ -822,6 +825,7 @@ void System::serialize(Archive& ar, const unsigned int file_version) {
         auto n3ds_hw_caps = this->app_loader->LoadNew3dsHwCapabilities();
         [[maybe_unused]] const System::ResultStatus result = Init(
             *m_emu_window, m_secondary_window, *memory_mode.first, *n3ds_hw_caps.first, num_cores);
+        archive_manager = std::move(aux_archive_manager);
     }
 
     // Flush on save, don't flush on load
@@ -832,7 +836,6 @@ void System::serialize(Archive& ar, const unsigned int file_version) {
         ar&* cpu_cores[i].get();
     }
     ar&* service_manager.get();
-    ar&* archive_manager.get();
 
     // NOTE: DSP doesn't like being destroyed and recreated. So instead we do an inline
     // serialization; this means that the DSP Settings need to match for loading to work.
