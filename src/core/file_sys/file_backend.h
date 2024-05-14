@@ -99,15 +99,6 @@ public:
     virtual bool CacheReady(std::size_t file_offset, std::size_t length) {
         return false;
     }
-
-protected:
-    std::unique_ptr<DelayGenerator> delay_generator;
-
-    template <class Archive>
-    void serialize(Archive& ar, const unsigned int) {
-        ar& delay_generator;
-    }
-    friend class boost::serialization::access;
 };
 
 } // namespace FileSys

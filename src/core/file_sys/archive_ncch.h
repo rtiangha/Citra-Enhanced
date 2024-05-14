@@ -71,7 +71,6 @@ private:
 
     template <class Archive>
     void serialize(Archive& ar, const unsigned int) {
-        ar& boost::serialization::base_object<ArchiveBackend>(*this);
         ar& title_id;
         ar& media_type;
     }

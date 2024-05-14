@@ -8,8 +8,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <boost/serialization/string.hpp>
-#include <boost/serialization/vector.hpp>
 #include "common/bit_field.h"
 #include "common/common_types.h"
 #include "common/swap.h"
@@ -238,13 +236,6 @@ public:
 
 protected:
     std::unique_ptr<DelayGenerator> delay_generator;
-
-private:
-    template <class Archive>
-    void serialize(Archive& ar, const unsigned int) {
-        ar& delay_generator;
-    }
-    friend class boost::serialization::access;
 };
 
 class ArchiveFactory : NonCopyable {

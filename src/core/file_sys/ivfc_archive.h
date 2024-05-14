@@ -37,8 +37,6 @@ class IVFCDelayGenerator : public DelayGenerator {
         static constexpr u64 IPCDelayNanoseconds(9438006);
         return IPCDelayNanoseconds;
     }
-
-    SERIALIZE_DELAY_GENERATOR
 };
 
 class RomFSDelayGenerator : public DelayGenerator {
@@ -61,8 +59,6 @@ public:
         static constexpr u64 IPCDelayNanoseconds(9438006);
         return IPCDelayNanoseconds;
     }
-
-    SERIALIZE_DELAY_GENERATOR
 };
 
 class ExeFSDelayGenerator : public DelayGenerator {
@@ -85,8 +81,6 @@ public:
         static constexpr u64 IPCDelayNanoseconds(9438006);
         return IPCDelayNanoseconds;
     }
-
-    SERIALIZE_DELAY_GENERATOR
 };
 
 /**
@@ -198,6 +192,3 @@ private:
 
 BOOST_CLASS_EXPORT_KEY(FileSys::IVFCFile)
 BOOST_CLASS_EXPORT_KEY(FileSys::IVFCFileInMemory)
-BOOST_CLASS_EXPORT_KEY(FileSys::IVFCDelayGenerator)
-BOOST_CLASS_EXPORT_KEY(FileSys::RomFSDelayGenerator)
-BOOST_CLASS_EXPORT_KEY(FileSys::ExeFSDelayGenerator)

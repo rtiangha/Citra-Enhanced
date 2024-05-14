@@ -76,8 +76,6 @@ public:
         static constexpr u64 IPCDelayNanoseconds(3085068);
         return IPCDelayNanoseconds;
     }
-
-    SERIALIZE_DELAY_GENERATOR
 };
 
 /**
@@ -421,6 +419,3 @@ ResultVal<ArchiveFormatInfo> ArchiveFactory_ExtSaveData::GetFormatInfo(const Pat
     }
 }
 } // namespace FileSys
-
-SERIALIZE_EXPORT_IMPL(FileSys::ExtSaveDataDelayGenerator)
-SERIALIZE_EXPORT_IMPL(FileSys::ExtSaveDataArchive)
