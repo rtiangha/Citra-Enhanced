@@ -203,7 +203,6 @@ QMenu::separator {
     margin-right: 10px; /* Right margin for the separator */
 }
 
-
 QMenu::right-arrow {
     image: url(:/TreeView/img dark/TreeViewClose.png); /* Ensure this is appropriate */
     min-width: 40px;
@@ -281,7 +280,6 @@ QLineEdit {
 QAbstractItemView QLineEdit {
     padding: 0;
 }
-
 
 QGroupBox {
     border: 1px solid rgb(68, 68, 68); /* Slightly lighter border for contrast */
@@ -421,7 +419,6 @@ QGroupBox QLabel {
     padding: 2px; /* Optional: Adds some padding around the text */
     border-radius: 0px; /* Optional: Rounds the corners of the label background */
 }
-
 
 QAbstractScrollArea {
     border-radius: 2px;
@@ -657,7 +654,6 @@ QPushButton:disabled {
 QPushButton:pressed {
     background-color: #2a2a2c; /* Even darker gray for pressed state */
 }
-
 
 QPushButton:checked {
     background-color: #76797C;
@@ -914,7 +910,6 @@ QDockWidget::float-button:pressed {
     padding: 1px -1px -1px 1px;
     background: rgba(255, 255, 255, 10);
 }
-
 
 QTreeView {
     background-color: rgb(48, 48, 48); /* Match this with your QGroupBox or desired background color */

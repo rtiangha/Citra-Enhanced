@@ -8,9 +8,6 @@ QWidget {
 
 /*MENU*/
 
-
-
-
 QMenu {
     background-color: transparent;
     padding-left: 1px;
