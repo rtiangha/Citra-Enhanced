@@ -137,7 +137,6 @@ private:
 
     template <class Archive>
     void serialize(Archive& ar, const unsigned int) {
-        ar& boost::serialization::base_object<ArchiveFactory>(*this);
         ar& boost::serialization::base_object<ArticCacheProvider>(*this);
     }
     friend class boost::serialization::access;
@@ -147,4 +146,3 @@ private:
 
 BOOST_CLASS_EXPORT_KEY(FileSys::NCCHArchive)
 BOOST_CLASS_EXPORT_KEY(FileSys::NCCHFile)
-BOOST_CLASS_EXPORT_KEY(FileSys::ArchiveFactory_NCCH)

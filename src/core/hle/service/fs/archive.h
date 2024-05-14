@@ -8,8 +8,6 @@
 #include <span>
 #include <string>
 #include <unordered_map>
-#include <boost/serialization/unique_ptr.hpp>
-#include <boost/serialization/unordered_map.hpp>
 #include "common/common_types.h"
 #include "core/file_sys/archive_backend.h"
 #include "core/file_sys/archive_source_sd_savedata.h"
@@ -328,15 +326,6 @@ private:
      * Savedata source
      */
     std::shared_ptr<FileSys::ArchiveSource_SDSaveData> sd_savedata_source;
-
-    template <class Archive>
-    void serialize(Archive& ar, const unsigned int) {
-        ar& id_code_map;
-        ar& handle_map;
-        ar& next_handle;
-        ar& sd_savedata_source;
-    }
-    friend class boost::serialization::access;
 };
 
 } // namespace Service::FS

@@ -13,8 +13,6 @@
 #include "core/file_sys/ivfc_archive.h"
 #include "core/hle/kernel/process.h"
 
-SERIALIZE_EXPORT_IMPL(FileSys::ArchiveFactory_SelfNCCH)
-
 namespace FileSys {
 
 enum class SelfNCCHFilePathType : u32 {
@@ -236,15 +234,6 @@ private:
     }
 
     NCCHData ncch_data;
-
-    SelfNCCHArchive() = default;
-
-    template <class Archive>
-    void serialize(Archive& ar, const unsigned int) {
-        ar& boost::serialization::base_object<ArchiveBackend>(*this);
-        ar& ncch_data;
-    }
-    friend class boost::serialization::access;
 };
 
 void ArchiveFactory_SelfNCCH::Register(Loader::AppLoader& app_loader) {
@@ -312,4 +301,3 @@ ResultVal<ArchiveFormatInfo> ArchiveFactory_SelfNCCH::GetFormatInfo(const Path&,
 } // namespace FileSys
 
 SERIALIZE_EXPORT_IMPL(FileSys::ExeFSSectionFile)
-SERIALIZE_EXPORT_IMPL(FileSys::SelfNCCHArchive)

@@ -15,8 +15,6 @@
 #include "core/file_sys/savedata_archive.h"
 #include "core/hle/service/fs/archive.h"
 
-SERIALIZE_EXPORT_IMPL(FileSys::ArchiveFactory_SystemSaveData)
-
 namespace FileSys {
 
 std::string GetSystemSaveDataPath(std::string_view mount_point, const Path& path) {

@@ -43,7 +43,6 @@ private:
     template <class Archive>
     void serialize(Archive& ar, const unsigned int) {
         ar& boost::serialization::base_object<ArchiveBackend>(*this);
-        ar& mount_point;
         ar& allow_zero_size_create;
     }
     friend class boost::serialization::access;

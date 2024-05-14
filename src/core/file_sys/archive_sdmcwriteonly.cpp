@@ -11,9 +11,6 @@
 #include "core/file_sys/errors.h"
 #include "core/file_sys/file_backend.h"
 
-SERIALIZE_EXPORT_IMPL(FileSys::SDMCWriteOnlyArchive)
-SERIALIZE_EXPORT_IMPL(FileSys::ArchiveFactory_SDMCWriteOnly)
-
 namespace FileSys {
 
 class SDMCWriteOnlyDelayGenerator : public DelayGenerator {

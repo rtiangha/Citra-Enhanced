@@ -8,8 +8,6 @@
 #include "core/file_sys/archive_savedata.h"
 #include "core/hle/kernel/process.h"
 
-SERIALIZE_EXPORT_IMPL(FileSys::ArchiveFactory_SaveData)
-
 namespace FileSys {
 
 ArchiveFactory_SaveData::ArchiveFactory_SaveData(

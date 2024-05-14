@@ -51,11 +51,8 @@ private:
     template <class Archive>
     void serialize(Archive& ar, const unsigned int) {
         ar& boost::serialization::base_object<ArticCacheProvider>(*this);
-        ar& mount_point;
     }
     friend class boost::serialization::access;
 };
 
 } // namespace FileSys
-
-BOOST_CLASS_EXPORT_KEY(FileSys::ArchiveSource_SDSaveData)

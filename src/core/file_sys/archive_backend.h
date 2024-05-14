@@ -285,10 +285,6 @@ public:
     virtual bool IsSlow() {
         return false;
     }
-
-    template <class Archive>
-    void serialize(Archive& ar, const unsigned int) {}
-    friend class boost::serialization::access;
 };
 
 } // namespace FileSys

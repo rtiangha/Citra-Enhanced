@@ -14,9 +14,6 @@
 #include "core/file_sys/errors.h"
 #include "core/file_sys/path_parser.h"
 
-SERIALIZE_EXPORT_IMPL(FileSys::SDMCArchive)
-SERIALIZE_EXPORT_IMPL(FileSys::ArchiveFactory_SDMC)
-
 namespace FileSys {
 
 class SDMCDelayGenerator : public DelayGenerator {

@@ -18,8 +18,6 @@
 #include "core/file_sys/savedata_archive.h"
 #include "core/hle/service/fs/archive.h"
 
-SERIALIZE_EXPORT_IMPL(FileSys::ArchiveFactory_ExtSaveData)
-
 namespace FileSys {
 
 /**

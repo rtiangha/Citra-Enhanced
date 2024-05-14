@@ -10,9 +10,6 @@
 #include "core/hle/kernel/process.h"
 #include "core/hle/service/fs/archive.h"
 
-SERIALIZE_EXPORT_IMPL(FileSys::ArchiveFactory_OtherSaveDataPermitted)
-SERIALIZE_EXPORT_IMPL(FileSys::ArchiveFactory_OtherSaveDataGeneral)
-
 namespace FileSys {
 
 // TODO(wwylele): The storage info in exheader should be checked before accessing these archives

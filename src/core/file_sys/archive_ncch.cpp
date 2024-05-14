@@ -29,7 +29,6 @@
 
 SERIALIZE_EXPORT_IMPL(FileSys::NCCHArchive)
 SERIALIZE_EXPORT_IMPL(FileSys::NCCHFile)
-SERIALIZE_EXPORT_IMPL(FileSys::ArchiveFactory_NCCH)
 
 namespace FileSys {
 
