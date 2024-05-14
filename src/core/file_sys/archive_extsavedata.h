@@ -8,6 +8,8 @@
 #include <optional>
 #include <span>
 #include <string>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/string.hpp>
 #include "common/common_types.h"
 #include "core/file_sys/archive_backend.h"
 #include "core/file_sys/artic_cache.h"
