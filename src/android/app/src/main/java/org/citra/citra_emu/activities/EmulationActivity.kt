@@ -67,7 +67,8 @@ class EmulationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // reduce mhz, helps for throttling reduction
-        if (IntSetting.ENABLE_SUSTAINED_PERF.int == 1) {
+        // at the cost of performance
+        if (IntSetting.SUSTAINED_PERFORMANCE.int == 1) {
             window.setSustainedPerformanceMode(true)
         }
 

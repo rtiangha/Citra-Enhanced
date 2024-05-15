@@ -67,6 +67,7 @@ enum class IntSetting(
 
     companion object {
         private val NOT_RUNTIME_EDITABLE = listOf(
+            SUSTAINED_PERFORMANCE,
             EMULATED_REGION,
             INIT_CLOCK,
             NEW_3DS,
