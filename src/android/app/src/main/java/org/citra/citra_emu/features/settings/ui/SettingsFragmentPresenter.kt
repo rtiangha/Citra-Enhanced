@@ -712,7 +712,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 SingleChoiceSetting(
                     IntSetting.ASPECT_RATIO,
                     R.string.aspect_ratio,
-                    R.string.aspect_ratio_description,
+                    0,
                     R.array.aspectRatioNames,
                     R.array.aspectRatioValues,
                     IntSetting.ASPECT_RATIO.key,
