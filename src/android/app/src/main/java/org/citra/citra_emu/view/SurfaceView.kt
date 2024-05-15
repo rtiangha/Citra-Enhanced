@@ -11,38 +11,52 @@ class SurfaceView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : SurfaceView(context, attrs, defStyleAttr) {
 
-    private var aspectRatio: Rational? = null // Default is no specific aspect ratio
+    private var aspectRatio: Float = 0f // Default is no specific aspect ratio
     /**
      * Set the aspect ratio for this view using a nullable Rational.
      *
      * @param aspectRatio The aspect ratio to set (width / height), or null to stretch to fit.
      */
-    fun setAspectRatio(aspectRatio: Rational?) {
-        this.aspectRatio = aspectRatio
+    fun setAspectRatio(ratio: Rational?) {
+        aspectRatio = ratio?.toFloat() ?: 0f
         requestLayout()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val originalWidth = MeasureSpec.getSize(widthMeasureSpec)
-        val originalHeight = MeasureSpec.getSize(heightMeasureSpec)
-
-        var calculatedWidth = originalWidth
-        var calculatedHeight = originalHeight
-
-        aspectRatio?.let { ratio ->
-            // Calculate the desired height based on the width and the aspect ratio
-            val desiredHeight = (originalWidth / ratio.toFloat()).toInt()
-
-            if (desiredHeight > originalHeight) {
-                // If the desired height is greater than the available height, adjust the width
-                calculatedWidth = (originalHeight * ratio.toFloat()).toInt()
+        val displayWidth: Float = MeasureSpec.getSize(widthMeasureSpec).toFloat()
+        val displayHeight: Float = MeasureSpec.getSize(heightMeasureSpec).toFloat()
+        if (aspectRatio != 0f) {
+            val displayAspect = displayWidth / displayHeight
+            if (displayAspect < aspectRatio) {
+                // Max out width
+                val halfHeight = displayHeight / 2
+                val surfaceHeight = displayWidth / aspectRatio
+                val newTop: Float = halfHeight - (surfaceHeight / 2)
+                val newBottom: Float = halfHeight + (surfaceHeight / 2)
+                super.onMeasure(
+                    widthMeasureSpec,
+                    MeasureSpec.makeMeasureSpec(
+                        newBottom.toInt() - newTop.toInt(),
+                        MeasureSpec.EXACTLY
+                    )
+                )
+                return
             } else {
-                // Otherwise, use the desired height
-                calculatedHeight = desiredHeight
+                // Max out height
+                val halfWidth = displayWidth / 2
+                val surfaceWidth = displayHeight * aspectRatio
+                val newLeft: Float = halfWidth - (surfaceWidth / 2)
+                val newRight: Float = halfWidth + (surfaceWidth / 2)
+                super.onMeasure(
+                    MeasureSpec.makeMeasureSpec(
+                        newRight.toInt() - newLeft.toInt(),
+                        MeasureSpec.EXACTLY
+                    ),
+                    heightMeasureSpec
+                )
+                return
             }
         }
-
-        // Call setMeasuredDimension to set the measured width and height
-        setMeasuredDimension(calculatedWidth, calculatedHeight)
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 }
