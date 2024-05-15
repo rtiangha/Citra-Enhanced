@@ -67,7 +67,7 @@ class EmulationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // reduce mhz, helps for throttling reduction
-        if (IntSetting.ENABLE_SUSTAINED_PERF.int == 1) {
+        if (IntSetting.SUSTAINED_PERFORMANCE.int == 1) {
             window.setSustainedPerformanceMode(true)
         }
 
@@ -104,11 +104,19 @@ class EmulationActivity : AppCompatActivity() {
     // onWindowFocusChanged to prevent the unwanted status bar state.
     override fun onResume() {
         super.onResume()
+        // update setting when running
+        if (IntSetting.SUSTAINED_PERFORMANCE.int == 1) {
+            window.setSustainedPerformanceMode(true)
+        }
         enableFullscreenImmersive()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
+        // update setting when running
+        if (IntSetting.SUSTAINED_PERFORMANCE.int == 1) {
+            window.setSustainedPerformanceMode(true)
+        }
         enableFullscreenImmersive()
     }
 
@@ -121,6 +129,16 @@ class EmulationActivity : AppCompatActivity() {
         EmulationLifecycleUtil.clear()
         stopForegroundService(this)
         super.onDestroy()
+        if (IntSetting.SUSTAINED_PERFORMANCE.int == 1) {
+            window.setSustainedPerformanceMode(false)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (IntSetting.SUSTAINED_PERFORMANCE.int == 1) {
+            window.setSustainedPerformanceMode(false)
+        }
     }
 
     override fun onRequestPermissionsResult(
