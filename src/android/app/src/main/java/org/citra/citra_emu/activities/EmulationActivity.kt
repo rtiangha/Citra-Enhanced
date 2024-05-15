@@ -65,6 +65,8 @@ class EmulationActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
+        window.setSustainedPerformanceMode(true)
+
         binding = ActivityEmulationBinding.inflate(layoutInflater)
         screenAdjustmentUtil = ScreenAdjustmentUtil(windowManager, settingsViewModel.settings)
         hotkeyUtility = HotkeyUtility(screenAdjustmentUtil)
@@ -98,6 +100,7 @@ class EmulationActivity : AppCompatActivity() {
     // onWindowFocusChanged to prevent the unwanted status bar state.
     override fun onResume() {
         super.onResume()
+        window.setSustainedPerformanceMode(true)
         enableFullscreenImmersive()
     }
 
@@ -115,6 +118,7 @@ class EmulationActivity : AppCompatActivity() {
         EmulationLifecycleUtil.clear()
         stopForegroundService(this)
         super.onDestroy()
+        window.setSustainedPerformanceMode(false)
     }
 
     override fun onRequestPermissionsResult(
