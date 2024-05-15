@@ -24,6 +24,7 @@ import android.content.res.Configuration
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import android.util.Rational
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.Insets
@@ -56,6 +57,7 @@ import org.citra.citra_emu.databinding.FragmentEmulationBinding
 import org.citra.citra_emu.display.ScreenAdjustmentUtil
 import org.citra.citra_emu.display.ScreenLayout
 import org.citra.citra_emu.features.settings.model.SettingsViewModel
+import org.citra.citra_emu.features.settings.model.IntSetting
 import org.citra.citra_emu.features.settings.ui.SettingsActivity
 import org.citra.citra_emu.features.settings.utils.SettingsFile
 import org.citra.citra_emu.model.Game
@@ -172,6 +174,16 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             binding.doneControlConfig.visibility = View.GONE
             binding.surfaceInputOverlay.setIsInEditMode(false)
         }
+
+        val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
+            0 -> Rational(16, 9)
+            1 -> Rational(4, 3)
+            2 -> Rational(21, 9)
+            3 -> Rational(16, 10)
+            else -> null // Stretch to fit window
+        }
+
+        binding.surfaceEmulation.setAspectRatio(aspectRatio)
 
         // Show/hide the "Show FPS" overlay
         updateShowFpsOverlay()
