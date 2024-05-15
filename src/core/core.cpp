@@ -308,6 +308,8 @@ static void LoadOverrides(u64 title_id) {
     }
 
     // This gamelist requires accurate multiplication to render properly
+    // Seems to be fine for PC platform, so enable for android only
+#ifdef ANDROID
     const std::array<u64, 10> accurate_mul_ids = {
         0x0004000000033400, // The Legend of Zelda: Ocarina of Time 3D
         0x0004000000033500, // The Legend of Zelda: Ocarina of Time 3D
@@ -326,6 +328,7 @@ static void LoadOverrides(u64 title_id) {
             break;
         }
     }
+#endif
 }
 
 System::ResultStatus System::Load(Frontend::EmuWindow& emu_window, const std::string& filepath,
