@@ -34,6 +34,7 @@ import org.citra.citra_emu.databinding.ActivityEmulationBinding
 import org.citra.citra_emu.dialogs.TweaksDialog
 import org.citra.citra_emu.display.ScreenAdjustmentUtil
 import org.citra.citra_emu.features.hotkeys.HotkeyUtility
+import org.citra.citra_emu.features.settings.model.IntSetting
 import org.citra.citra_emu.features.settings.model.SettingsViewModel
 import org.citra.citra_emu.features.settings.model.view.InputBindingSetting
 import org.citra.citra_emu.fragments.MessageDialogFragment
@@ -65,7 +66,10 @@ class EmulationActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
-        window.setSustainedPerformanceMode(true)
+        // reduce mhz, helps for throttling reduction
+        if (IntSetting.ENABLE_SUSTAINED_PERF.int == 1) {
+            window.setSustainedPerformanceMode(true)
+        }
 
         binding = ActivityEmulationBinding.inflate(layoutInflater)
         screenAdjustmentUtil = ScreenAdjustmentUtil(windowManager, settingsViewModel.settings)
@@ -100,18 +104,11 @@ class EmulationActivity : AppCompatActivity() {
     // onWindowFocusChanged to prevent the unwanted status bar state.
     override fun onResume() {
         super.onResume()
-        window.setSustainedPerformanceMode(true)
         enableFullscreenImmersive()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        window.setSustainedPerformanceMode(false)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        window.setSustainedPerformanceMode(true)
         enableFullscreenImmersive()
     }
 
@@ -124,7 +121,6 @@ class EmulationActivity : AppCompatActivity() {
         EmulationLifecycleUtil.clear()
         stopForegroundService(this)
         super.onDestroy()
-        window.setSustainedPerformanceMode(false)
     }
 
     override fun onRequestPermissionsResult(

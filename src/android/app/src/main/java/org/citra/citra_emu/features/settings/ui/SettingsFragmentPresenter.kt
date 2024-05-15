@@ -175,6 +175,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
         sl.apply {
             add(
                 SwitchSetting(
+                    IntSetting.SUSTAINED_PERFORMANCE,
+                    R.string.sustained_performance,
+                    R.string.sustained_performance_description,
+                    IntSetting.SUSTAINED_PERFORMANCE.key,
+                    IntSetting.SUSTAINED_PERFORMANCE.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
                     IntSetting.USE_FRAME_LIMIT,
                     R.string.frame_limit_enable,
                     R.string.frame_limit_enable_description,

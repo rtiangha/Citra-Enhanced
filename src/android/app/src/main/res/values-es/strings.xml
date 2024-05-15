@@ -216,6 +216,8 @@ Se esperan fallos gráficos temporales cuando ésta esté activado.</string>
     <string name="shaders_accurate_mul_description">Usa multiplicaciones más precisas en los sombreados de hardware, que podrían arreglar ciertos bugs gráficos. Cuando se active, el rendimiento se reducirá.</string>
     <string name="asynchronous_gpu">Activar Emulación Asíncrona de la GPU</string>
     <string name="asynchronous_gpu_description">Usa un hilo separado para emular la GPU de manera asíncrona. Cuando se active, el rendimiento mejorará.</string>
+    <string name="sustained_performance">Activar Rendimiento Sostenido</string>
+    <string name="sustained_performance_description">Puede reducir el frenado térmico al reducir ligeramente la velocidad de reloj.</string>
     <string name="frame_limit_enable">Límite de velocidad</string>
     <string name="frame_limit_enable_description">Cuando se active, la velocidad de emulación estará limitada a un porcentaje determinado de la velocidad normal.</string>
     <string name="frame_limit_slider">Limitar porcentaje de velocidad</string>
