@@ -31,17 +31,17 @@ import org.citra.citra_emu.R
 import org.citra.citra_emu.camera.StillImageCameraHelper.OnFilePickerResult
 import org.citra.citra_emu.contracts.OpenFileResultContract
 import org.citra.citra_emu.databinding.ActivityEmulationBinding
+import org.citra.citra_emu.dialogs.TweaksDialog
 import org.citra.citra_emu.display.ScreenAdjustmentUtil
 import org.citra.citra_emu.features.hotkeys.HotkeyUtility
 import org.citra.citra_emu.features.settings.model.SettingsViewModel
 import org.citra.citra_emu.features.settings.model.view.InputBindingSetting
 import org.citra.citra_emu.fragments.MessageDialogFragment
-import org.citra.citra_emu.dialogs.TweaksDialog
 import org.citra.citra_emu.utils.ControllerMappingHelper
-import org.citra.citra_emu.utils.FileBrowserHelper
-import org.citra.citra_emu.utils.ForegroundService
 import org.citra.citra_emu.utils.EmulationLifecycleUtil
 import org.citra.citra_emu.utils.EmulationMenuSettings
+import org.citra.citra_emu.utils.FileBrowserHelper
+import org.citra.citra_emu.utils.ForegroundService
 import org.citra.citra_emu.utils.ThemeUtil
 import org.citra.citra_emu.viewmodel.EmulationViewModel
 
@@ -104,8 +104,14 @@ class EmulationActivity : AppCompatActivity() {
         enableFullscreenImmersive()
     }
 
+    override fun onPause() {
+        super.onPause()
+        window.setSustainedPerformanceMode(false)
+    }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
+        window.setSustainedPerformanceMode(true)
         enableFullscreenImmersive()
     }
 
