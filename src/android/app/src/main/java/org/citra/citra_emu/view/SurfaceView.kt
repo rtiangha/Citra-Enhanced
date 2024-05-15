@@ -18,9 +18,6 @@ class SurfaceView @JvmOverloads constructor(
      * @param aspectRatio The aspect ratio to set (width / height), or null to stretch to fit.
      */
     fun setAspectRatio(aspectRatio: Rational?) {
-        if (aspectRatio != null && !aspectRatio.isPositive) {
-            throw IllegalArgumentException("Aspect ratio must be positive")
-        }
         this.aspectRatio = aspectRatio
         requestLayout()
     }
