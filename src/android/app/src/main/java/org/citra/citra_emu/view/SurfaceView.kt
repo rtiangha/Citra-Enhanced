@@ -27,21 +27,6 @@ class SurfaceView @JvmOverloads constructor(
         val displayHeight: Float = MeasureSpec.getSize(heightMeasureSpec).toFloat()
         if (aspectRatio != 0f) {
             val displayAspect = displayWidth / displayHeight
-            if (displayAspect < aspectRatio) {
-                // Max out width
-                val halfHeight = displayHeight / 2
-                val surfaceHeight = displayWidth / aspectRatio
-                val newTop: Float = halfHeight - (surfaceHeight / 2)
-                val newBottom: Float = halfHeight + (surfaceHeight / 2)
-                super.onMeasure(
-                    widthMeasureSpec,
-                    MeasureSpec.makeMeasureSpec(
-                        newBottom.toInt() - newTop.toInt(),
-                        MeasureSpec.EXACTLY
-                    )
-                )
-                return
-            } else {
                 // Max out height
                 val halfWidth = displayWidth / 2
                 val surfaceWidth = displayHeight * aspectRatio
@@ -55,7 +40,6 @@ class SurfaceView @JvmOverloads constructor(
                     heightMeasureSpec
                 )
                 return
-            }
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
