@@ -9,7 +9,6 @@ import android.net.Uri
 import org.citra.citra_emu.CitraApplication
 import org.citra.citra_emu.NativeLibrary
 import org.citra.citra_emu.utils.PermissionsHandler.hasWriteAccess
-import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -82,10 +81,6 @@ object DirectoryInitialization {
             return true
         }
         return false
-    }
-
-    fun getShadersDirectory(): String {
-        return userPath + File.separator + "shaders"
     }
 
     enum class DirectoryInitializationState {
