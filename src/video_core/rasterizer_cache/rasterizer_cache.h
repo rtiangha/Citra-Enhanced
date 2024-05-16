@@ -1316,7 +1316,7 @@ void RasterizerCache<T>::InvalidateRegion(PAddr addr, u32 size, SurfaceId region
         // to (likely) mark the memory pages as uncached
         if (!region_owner_id && size <= 8) {
             if (Settings::values.skip_cpu_write) {
-                continue;
+                return;
             }
             FlushRegion(surface.addr, surface.size, surface_id);
             remove_surfaces.push_back(surface_id);
