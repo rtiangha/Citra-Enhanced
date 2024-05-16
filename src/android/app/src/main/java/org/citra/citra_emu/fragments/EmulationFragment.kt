@@ -93,13 +93,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     private val emulationViewModel: EmulationViewModel by activityViewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
-    private var displayMetrics: DisplayMetrics? = null
-    private var screenWidth: Int? = null
-    private var screenHeight: Int? = null
-
     private val activityOrientation = resources.configuration
-
-    private var aspectRatio: Pair<Int, Int>? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -183,11 +177,11 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             binding.surfaceInputOverlay.setIsInEditMode(false)
         }
 
-        displayMetrics = requireContext().resources.displayMetrics
-        screenWidth = displayMetrics.widthPixels
-        screenHeight = displayMetrics.heightPixels
+        val displayMetrics = requireContext().resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
 
-        aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
+        val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
             0 -> Pair(1280, 720) // 16:9
             1 -> Pair(1280, 960) // 4:3
             2 -> Pair(1280, 548) // 21:9
@@ -445,6 +439,19 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         } else {
             (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
+
+        val displayMetrics = requireContext().resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+
+        val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
+            0 -> Pair(1280, 720) // 16:9
+            1 -> Pair(1280, 960) // 4:3
+            2 -> Pair(1280, 548) // 21:9
+            3 -> Pair(1280, 800) // 16:10
+            else -> Pair(screenWidth, screenHeight) // Stretch to fit window
+        }
+        
         binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
     }
 
@@ -464,6 +471,18 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             emulationState.run(emulationActivity.isActivityRecreated)
         } else {
             setupCitraDirectoriesThenStartEmulation()
+        }
+
+        val displayMetrics = requireContext().resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+
+        val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
+            0 -> Pair(1280, 720) // 16:9
+            1 -> Pair(1280, 960) // 4:3
+            2 -> Pair(1280, 548) // 21:9
+            3 -> Pair(1280, 800) // 16:10
+            else -> Pair(screenWidth, screenHeight) // Stretch to fit window
         }
         
         binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
