@@ -15,6 +15,12 @@ Check the releases page for the changelog of each build
 
 Pull requests are welcome, and they usually will be accepted as long as it works properly and doesn't break the GPL.
 
+Pls try to keep the proper code formatting for PR's as well, clang-format will help you on that. But in case you don't know how to fix clang-format on a PR, I'll merge and do it myself.
+
+## Organization
+
+For now there are no plans about making an organization, due to reasons of the past.
+
 ## Download
 
 ### "Stable" build
@@ -22,6 +28,7 @@ Pull requests are welcome, and they usually will be accepted as long as it works
 [![Download - Latest Release](https://img.shields.io/badge/Download-Latest_Release-2ea44f?logo=github&logoColor=e)](https://github.com/Gamer64ytb/Citra-Enhanced/releases/latest)
 
 ### Dev Builds (Untested and buggy)
+
 |Platform|Status|Download|
 |--------|------------|--------|
 |Windows build|[![Qt Build](https://github.com/Gamer64ytb/Citra-Enhanced/actions/workflows/build.yml/badge.svg)](https://github.com/Gamer64ytb/Citra-Enhanced/actions/workflows/Qt_Build.yml)|[Windows MSVC](https://nightly.link/Gamer64ytb/Citra-Enhanced/workflows/build/master/windows-msvc.zip)|
