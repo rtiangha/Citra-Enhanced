@@ -85,7 +85,7 @@ object DirectoryInitialization {
     }
 
     fun getShadersDirectory(): String {
-        return userDirectory + File.separator + "shaders"
+        return userPath + File.separator + "shaders"
     }
 
     enum class DirectoryInitializationState {
