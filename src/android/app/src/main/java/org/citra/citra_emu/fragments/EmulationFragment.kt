@@ -176,14 +176,14 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         }
 
         val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
-            0 -> Rational(16, 9)
-            1 -> Rational(4, 3)
-            2 -> Rational(21, 9)
-            3 -> Rational(16, 10)
-            else -> null // Stretch to fit window
+            0 -> Pair(1280, 720)
+            1 -> Pair(640, 480)
+            2 -> Pair(2560, 1080)
+            3 -> Pair(1280, 800)
+            else -> Pair(1280, 720) // Stretch to fit window
         }
 
-        binding.surfaceEmulation.setAspectRatio(aspectRatio)
+        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second)
 
         // Show/hide the "Show FPS" overlay
         updateShowFpsOverlay()
