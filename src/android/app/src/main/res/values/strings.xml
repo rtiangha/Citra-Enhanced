@@ -231,6 +231,8 @@
     <string name="skip_slow_draw_description">Skips the slow drawing event from PICA core. Can improve performance or rarely fix issues, but may cause graphical bugs.</string>
     <string name="skip_texture_copy">Skip Texture Copy</string>
     <string name="skip_texture_copy_description">Skips the texture copy event from rasterizer cache. Can improve performance or rarely fix issues, but may cause graphical bugs.</string>
+    <string name="skip_cpu_write">Skip CPU Write</string>
+    <string name="skip_cpu_write_description">Skips the CPU write event from rasterizer cache invalidation. May improve performance or rarely fix issues, but may cause graphical bugs.</string>
     <string name="upscaling_hack">Enable Upscaling Hack</string>
     <string name="upscaling_hack_description">Overrides upscaling for dst_params. May fix texture ghosting for some games, but may crash for another games as well.</string>
     <string name="shaders_accurate_mul">Accurate Multiplication</string>

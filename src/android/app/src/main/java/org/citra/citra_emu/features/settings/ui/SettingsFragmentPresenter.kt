@@ -728,6 +728,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SwitchSetting(
+                    IntSetting.SKIP_CPU_WRITE,
+                    R.string.skip_cpu_write,
+                    R.string.skip_cpu_write_description,
+                    IntSetting.SKIP_CPU_WRITE.key,
+                    IntSetting.SKIP_CPU_WRITE.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
                     IntSetting.UPSCALING_HACK,
                     R.string.upscaling_hack,
                     R.string.upscaling_hack_description,

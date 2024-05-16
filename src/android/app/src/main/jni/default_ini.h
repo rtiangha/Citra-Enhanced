@@ -134,6 +134,10 @@ skip_slow_draw =
 # 0 (default): Off, 1: On
 skip_texture_copy =
 
+# Skips the CPU write event from rasterizer cache invalidation.
+# 0 (default): Off, 1: On
+skip_cpu_write =
+
 # Overrides upscaling for dst_params
 # 0 (default): Off, 1: On
 upscaling_hack =

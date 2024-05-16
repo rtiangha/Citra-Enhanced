@@ -119,6 +119,7 @@ void ConfigureGraphics::SetConfiguration() {
     ui->toggle_async_present->setChecked(Settings::values.async_presentation.GetValue());
     ui->toggle_skip_slow_draw->setChecked(Settings::values.skip_slow_draw.GetValue());
     ui->toggle_skip_texture_copy->setChecked(Settings::values.skip_texture_copy.GetValue());
+    ui->toggle_skip_cpu_write->setChecked(Settings::values.skip_cpu_write.GetValue());
     ui->toggle_upscaling_hack->setChecked(Settings::values.upscaling_hack.GetValue());
 
     if (Settings::IsConfiguringGlobal()) {
@@ -139,6 +140,8 @@ void ConfigureGraphics::ApplyConfiguration() {
                                              ui->toggle_skip_slow_draw, skip_slow_draw);
     ConfigurationShared::ApplyPerGameSetting(&Settings::values.skip_texture_copy,
                                              ui->toggle_skip_texture_copy, skip_texture_copy);
+    ConfigurationShared::ApplyPerGameSetting(&Settings::values.skip_cpu_write,
+                                             ui->toggle_skip_cpu_write, skip_cpu_write);
     ConfigurationShared::ApplyPerGameSetting(&Settings::values.upscaling_hack,
                                              ui->toggle_upscaling_hack, upscaling_hack);
     ConfigurationShared::ApplyPerGameSetting(&Settings::values.spirv_shader_gen,
@@ -214,6 +217,8 @@ void ConfigureGraphics::SetupPerGameUI() {
                                             Settings::values.skip_slow_draw, skip_slow_draw);
     ConfigurationShared::SetColoredTristate(ui->toggle_skip_texture_copy,
                                             Settings::values.skip_texture_copy, skip_texture_copy);
+    ConfigurationShared::SetColoredTristate(ui->toggle_skip_cpu_write,
+                                            Settings::values.skip_cpu_write, skip_cpu_write);
     ConfigurationShared::SetColoredTristate(ui->toggle_upscaling_hack,
                                             Settings::values.upscaling_hack, upscaling_hack);
     ConfigurationShared::SetColoredTristate(ui->spirv_shader_gen, Settings::values.spirv_shader_gen,

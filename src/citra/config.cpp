@@ -142,6 +142,7 @@ void Config::ReadValues() {
     ReadSetting("Renderer", Settings::values.async_presentation);
     ReadSetting("Renderer", Settings::values.skip_slow_draw);
     ReadSetting("Renderer", Settings::values.skip_texture_copy);
+    ReadSetting("Renderer", Settings::values.skip_cpu_write);
     ReadSetting("Renderer", Settings::values.upscaling_hack);
     ReadSetting("Renderer", Settings::values.use_gles);
     ReadSetting("Renderer", Settings::values.use_hw_shader);

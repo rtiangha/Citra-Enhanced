@@ -31,6 +31,7 @@ enum class IntSetting(
     LINEAR_FILTERING("filter_mode", Settings.SECTION_RENDERER, 1),
     SKIP_SLOW_DRAW("skip_slow_draw", Settings.SECTION_RENDERER, 0),
     SKIP_TEXTURE_COPY("skip_texture_copy", Settings.SECTION_RENDERER, 0),
+    SKIP_CPU_WRITE("skip_cpu_write", Settings.SECTION_RENDERER, 0),
     UPSCALING_HACK("upscaling_hack", Settings.SECTION_RENDERER, 0),
     SHADERS_ACCURATE_MUL("shaders_accurate_mul", Settings.SECTION_RENDERER, 0),
     DISK_SHADER_CACHE("use_disk_shader_cache", Settings.SECTION_RENDERER, 1),

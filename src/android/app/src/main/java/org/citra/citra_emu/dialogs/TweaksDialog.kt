@@ -27,9 +27,10 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
         const val SETTING_RAISE_CPU_TICKS = 0
         const val SETTING_SKIP_SLOW_DRAW = 1
         const val SETTING_SKIP_TEXTURE_COPY = 2
-        const val SETTING_PRIORITY_BOOST = 3
-        const val SETTING_REALTIME_AUDIO = 4
-        const val SETTING_UPSCALING_HACK = 5
+        const val SETTING_SKIP_CPU_WRITE = 3
+        const val SETTING_PRIORITY_BOOST = 4
+        const val SETTING_REALTIME_AUDIO = 5
+        const val SETTING_UPSCALING_HACK = 6
 
         // view type
         const val TYPE_SWITCH = 0
@@ -135,6 +136,7 @@ class TweaksDialog(context: Context) : BaseSheetDialog(context) {
             settings.add(SettingsItem(SETTING_RAISE_CPU_TICKS, context.getString(R.string.raise_cpu_ticks), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_SKIP_SLOW_DRAW, context.getString(R.string.skip_slow_draw), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_SKIP_TEXTURE_COPY, context.getString(R.string.skip_texture_copy), TYPE_SWITCH, tweaks[i++]))
+            settings.add(SettingsItem(SETTING_SKIP_CPU_WRITE, context.getString(R.string.skip_cpu_write), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_PRIORITY_BOOST, context.getString(R.string.priority_boost_tweaks), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_REALTIME_AUDIO, context.getString(R.string.realtime_audio_tweaks), TYPE_SWITCH, tweaks[i++]))
             settings.add(SettingsItem(SETTING_UPSCALING_HACK, context.getString(R.string.upscaling_hack_tweaks), TYPE_SWITCH, tweaks[i++]))

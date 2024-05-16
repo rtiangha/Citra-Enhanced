@@ -212,6 +212,8 @@ Se esperan fallos gráficos temporales cuando ésta esté activado.</string>
     <string name="skip_slow_draw_description">Omite el evento de dibujo lento del núcleo PICA. Puede mejorar el rendimiento o, raramente, solucionar problemas, pero puede causar errores gráficos.</string>
     <string name="skip_texture_copy">Omitir Copia de Textura</string>
     <string name="skip_texture_copy_description">Omite el evento de copia de textura de la caché de rasterizador. Puede mejorar el rendimiento o, raramente, solucionar problemas, pero puede causar errores gráficos.</string>
+    <string name="skip_cpu_write">Omitir escritura de CPU</string>
+    <string name="skip_cpu_write_description">Omite el evento de escritura de la CPU en la invalidación de la caché del rasterizador. Puede mejorar el rendimiento o, raramente, solucionar problemas, pero puede causar errores gráficos.</string>
     <string name="shaders_accurate_mul">Multiplicación Precisa</string>
     <string name="shaders_accurate_mul_description">Usa multiplicaciones más precisas en los sombreados de hardware, que podrían arreglar ciertos bugs gráficos. Cuando se active, el rendimiento se reducirá.</string>
     <string name="asynchronous_gpu">Activar Emulación Asíncrona de la GPU</string>
