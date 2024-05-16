@@ -97,6 +97,8 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     private val screenWidth = displayMetrics.widthPixels
     private val screenHeight = displayMetrics.heightPixels
 
+    private val activityOrientation = resources.configuration
+
     private val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
             0 -> Pair(1280, 720) // 16:9
             1 -> Pair(1280, 960) // 4:3
@@ -187,9 +189,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             binding.surfaceInputOverlay.setIsInEditMode(false)
         }
         
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
-        }
+        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
 
         // Show/hide the "Show FPS" overlay
         updateShowFpsOverlay()
@@ -460,9 +460,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             setupCitraDirectoriesThenStartEmulation()
         }
         
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second)
-        }
+        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
     }
 
     override fun onPause() {
