@@ -1,6 +1,7 @@
 package org.citra.citra_emu.view
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.AttributeSet
 import android.util.Rational
 import android.view.SurfaceView
