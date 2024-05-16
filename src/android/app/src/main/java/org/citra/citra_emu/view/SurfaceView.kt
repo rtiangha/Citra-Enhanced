@@ -14,11 +14,13 @@ class SurfaceView @JvmOverloads constructor(
     private var desiredWidth = 1280
     private var desiredHeight = 720
     
-    fun setDimensions(width: Int, height: Int) {
-        desiredWidth = width
-        desiredHeight = height
-        requestLayout()
-        holder.setFixedSize(width, height)
+    fun setDimensions(width: Int, height: Int, configuration: Configuration) {
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            desiredWidth = width
+            desiredHeight = height
+            requestLayout()
+            holder.setFixedSize(width, height)
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
