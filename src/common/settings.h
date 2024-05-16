@@ -546,6 +546,7 @@ struct Values {
     SwitchableSetting<bool> raise_cpu_ticks{false, "raise_cpu_ticks"};
     SwitchableSetting<bool> skip_slow_draw{false, "skip_slow_draw"};
     SwitchableSetting<bool> skip_texture_copy{false, "skip_texture_copy"};
+    SwitchableSetting<bool> skip_cpu_write{false, "skip_cpu_write"};
     SwitchableSetting<bool> core_downcount_hack{false, "core_downcount_hack"};
     SwitchableSetting<bool> priority_boost{true, "priority_boost"};
     SwitchableSetting<bool> upscaling_hack{false, "upscaling_hack"};
