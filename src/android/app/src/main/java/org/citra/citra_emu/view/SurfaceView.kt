@@ -18,6 +18,7 @@ class SurfaceView @JvmOverloads constructor(
         desiredWidth = width
         desiredHeight = height
         requestLayout()
+        holder.setFixedSize(width, height)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
