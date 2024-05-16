@@ -181,8 +181,8 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
 
         val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
             0 -> Pair(1280, 720) // 16:9
-            1 -> Pair(640, 480) // 4:3
-            2 -> Pair(2560, 1080) // 21:9
+            1 -> Pair(1280, 960) // 4:3
+            2 -> Pair(1280, 548) // 21:9
             3 -> Pair(1280, 800) // 16:10
             else -> Pair(screenWidth, screenHeight) // Stretch to fit window
         }
