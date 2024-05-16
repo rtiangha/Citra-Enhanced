@@ -24,7 +24,7 @@ import android.content.res.Configuration
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import android.util.Rational
+import android.util.DisplayMetrics
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.Insets
@@ -174,16 +174,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             binding.doneControlConfig.visibility = View.GONE
             binding.surfaceInputOverlay.setIsInEditMode(false)
         }
-
-        val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
-            0 -> Pair(1280, 720)
-            1 -> Pair(640, 480)
-            2 -> Pair(2560, 1080)
-            3 -> Pair(1280, 800)
-            else -> Pair(1280, 720) // Stretch to fit window
-        }
-
-        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second)
 
         // Show/hide the "Show FPS" overlay
         updateShowFpsOverlay()
@@ -452,6 +442,20 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         } else {
             setupCitraDirectoriesThenStartEmulation()
         }
+
+        val displayMetrics = context.resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+
+        val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
+            0 -> Pair(1280, 720)
+            1 -> Pair(640, 480)
+            2 -> Pair(2560, 1080)
+            3 -> Pair(1280, 800)
+            else -> Pair(screenWidth, screenHeight) // Stretch to fit window
+        }
+
+        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second)
     }
 
     override fun onPause() {
