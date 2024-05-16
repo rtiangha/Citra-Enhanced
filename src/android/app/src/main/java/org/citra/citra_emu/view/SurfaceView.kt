@@ -11,36 +11,24 @@ class SurfaceView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : SurfaceView(context, attrs, defStyleAttr) {
 
-    private var aspectRatio: Float = 0f // Default is no specific aspect ratio
-    /**
-     * Set the aspect ratio for this view using a nullable Rational.
-     *
-     * @param aspectRatio The aspect ratio to set (width / height), or null to stretch to fit.
-     */
-    fun setAspectRatio(ratio: Rational?) {
-        aspectRatio = ratio?.toFloat() ?: 0f
+    private var desiredWidth = 1280
+    private var desiredHeight = 720
+    
+    fun setDimensions(width: Int, height: Int) {
+        desiredWidth = width
+        desiredHeight = height
         requestLayout()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val displayWidth: Float = MeasureSpec.getSize(widthMeasureSpec).toFloat()
-        val displayHeight: Float = MeasureSpec.getSize(heightMeasureSpec).toFloat()
-        if (aspectRatio != 0f) {
-            val displayAspect = displayWidth / displayHeight
-                // Max out height
-                val halfWidth = displayWidth / 2
-                val surfaceWidth = displayHeight * aspectRatio
-                val newLeft: Float = halfWidth - (surfaceWidth / 2)
-                val newRight: Float = halfWidth + (surfaceWidth / 2)
-                super.onMeasure(
-                    MeasureSpec.makeMeasureSpec(
-                        newRight.toInt() - newLeft.toInt(),
-                        MeasureSpec.EXACTLY
-                    ),
-                    heightMeasureSpec
-                )
-                return
-        }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        // Calculate width and height based on desired width and height, and the mode
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+
+        val finalWidth = resolveSize(desiredWidth, widthMeasureSpec)
+        val finalHeight = resolveSize(desiredHeight, heightMeasureSpec)
+
+        // Set the measured dimensions
+        setMeasuredDimension(finalWidth, finalHeight)
     }
 }
