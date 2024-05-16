@@ -93,13 +93,13 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     private val emulationViewModel: EmulationViewModel by activityViewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
-    private val displayMetrics = null
-    private val screenWidth = null
-    private val screenHeight = null
+    private var displayMetrics = null
+    private var screenWidth = null
+    private var screenHeight = null
 
     private val activityOrientation = resources.configuration
 
-    private val aspectRatio = null
+    private var aspectRatio = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
