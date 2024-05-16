@@ -93,8 +93,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     private val emulationViewModel: EmulationViewModel by activityViewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
-    private val activityOrientation = resources.configuration
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is EmulationActivity) {
@@ -177,6 +175,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             binding.surfaceInputOverlay.setIsInEditMode(false)
         }
 
+        val activityOrientation = resources.configuration
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
@@ -440,6 +439,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
+        val activityOrientation = resources.configuration
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
@@ -473,6 +473,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             setupCitraDirectoriesThenStartEmulation()
         }
 
+        val activityOrientation = resources.configuration
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
