@@ -432,7 +432,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     }
 
     private fun rotateScreen() {
-        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         } else if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -440,6 +439,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         } else {
             (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
+        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
     }
 
     private fun togglePause() {
