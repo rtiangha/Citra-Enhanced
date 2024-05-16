@@ -443,7 +443,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             setupCitraDirectoriesThenStartEmulation()
         }
 
-        val displayMetrics = context.resources.displayMetrics
+        val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
 
