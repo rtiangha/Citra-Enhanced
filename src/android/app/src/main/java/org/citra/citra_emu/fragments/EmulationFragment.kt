@@ -93,6 +93,18 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     private val emulationViewModel: EmulationViewModel by activityViewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
+    private val displayMetrics = requireContext().resources.displayMetrics
+    private val screenWidth = displayMetrics.widthPixels
+    private val screenHeight = displayMetrics.heightPixels
+
+    private val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
+            0 -> Pair(1280, 720) // 16:9
+            1 -> Pair(1280, 960) // 4:3
+            2 -> Pair(1280, 548) // 21:9
+            3 -> Pair(1280, 800) // 16:10
+            else -> Pair(screenWidth, screenHeight) // Stretch to fit window
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is EmulationActivity) {
@@ -174,20 +186,10 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             binding.doneControlConfig.visibility = View.GONE
             binding.surfaceInputOverlay.setIsInEditMode(false)
         }
-
-        val displayMetrics = requireContext().resources.displayMetrics
-        val screenWidth = displayMetrics.widthPixels
-        val screenHeight = displayMetrics.heightPixels
-
-        val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
-            0 -> Pair(1280, 720) // 16:9
-            1 -> Pair(1280, 960) // 4:3
-            2 -> Pair(1280, 548) // 21:9
-            3 -> Pair(1280, 800) // 16:10
-            else -> Pair(screenWidth, screenHeight) // Stretch to fit window
+        
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
         }
-
-        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second)
 
         // Show/hide the "Show FPS" overlay
         updateShowFpsOverlay()
@@ -430,6 +432,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
     }
 
     private fun rotateScreen() {
+        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         } else if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -455,6 +458,10 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             emulationState.run(emulationActivity.isActivityRecreated)
         } else {
             setupCitraDirectoriesThenStartEmulation()
+        }
+        
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second)
         }
     }
 
