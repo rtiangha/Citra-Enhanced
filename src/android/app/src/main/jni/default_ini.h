@@ -87,6 +87,10 @@ udp_input_port=
 udp_pad_index=
 
 [Core]
+# May reduce thermal throttling by reducing clock speed slightly.
+# 0 (default): Off, 1: On
+sustained_performance =
+
 # Whether to use the Just-In-Time (JIT) compiler for CPU emulation
 # 0: Interpreter (slow), 1 (default): JIT (fast)
 use_cpu_jit =
