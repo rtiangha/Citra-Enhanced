@@ -1530,51 +1530,76 @@ Would you like to ignore the error and continue?</source>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="240"/>
+        <source>Tweaks</source>
+        <translation>Modificaciones</translation>
+    </message>
+    <message>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="246"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Skips the slow drawing event from PICA core. Can improve performance or rarely fix issues, but may cause graphical bugs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Omite el evento de dibujo lento del núcleo PICA. Puede mejorar el rendimiento o, raramente, solucionar problemas, pero puede causar errores gráficos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="249"/>
+        <source>Skip Slow Draw</source>
+        <translation>Omitir Dibujos Lentos</translation>
+    </message>
+    <message>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="256"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Skips the texture copy event from rasterizer cache. Can improve performance or rarely fix issues, but may cause graphical bugs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Omite el evento de copia de textura de la caché de rasterizador. Puede mejorar el rendimiento o, raramente, solucionar problemas, pero puede causar errores gráficos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="259"/>
+        <source>Skip Texture Copy</source>
+        <translation>Omitir Copia de Textura</translation>
+    </message>
+    <message>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="279"/>
         <source>Advanced</source>
         <translation>Avanzado</translation>
     </message>
     <message>
-        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="261"/>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="300"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overrides the sampling filter used by games. This can be useful in certain cases with poorly behaved games when upscaling. If unsure set this to Game Controlled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sobreescribe el filtro de muestreo usado en juegos. Puede ser útil en ciertos casos con juegos con bajo rendimiento al subir la resolución. Si no estás seguro, pónlo en Controlado por Juego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="264"/>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="303"/>
         <source>Texture Sampling</source>
         <translation>Muestreo de Texturas</translation>
     </message>
     <message>
-        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="272"/>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="311"/>
         <source>Game Controlled</source>
         <translation>Controlado por Juego</translation>
     </message>
     <message>
-        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="277"/>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="316"/>
         <source>Nearest Neighbor</source>
         <translation>Nearest Neighbor</translation>
     </message>
     <message>
-        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="282"/>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="321"/>
         <source>Linear</source>
         <translation>Linear</translation>
     </message>
     <message>
-        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="293"/>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="332"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reduce stuttering by storing and loading generated shaders to disk.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reduce los parones al almacenar y cargar los sombreados generados que se almacenan.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="296"/>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="335"/>
         <source>Use Disk Shader Cache</source>
         <translation>Usar Caché Almacenada de Sombreadores</translation>
     </message>
     <message>
-        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="303"/>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="342"/>
         <source>VSync prevents the screen from tearing, but some graphics cards have lower performance with VSync enabled. Keep it enabled if you don&apos;t notice a performance difference.</source>
         <translation>La Sincronización Vertical impide el tearing de la imagen, pero algunas tarjetas gráficas tienen peor rendimiento cuando éste está activado. Manténlo activado si no notas ninguna diferencia en el rendimiento.</translation>
     </message>
     <message>
-        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="306"/>
+        <location filename="../../src/citra_qt/configuration/configure_graphics.ui" line="345"/>
         <source>Enable VSync</source>
         <translation>Activar Sincronización Vertical</translation>
     </message>
