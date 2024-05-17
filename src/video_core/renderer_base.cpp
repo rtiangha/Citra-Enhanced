@@ -30,6 +30,11 @@ u32 RendererBase::GetResolutionScaleFactor() {
     }
 
     u32 scale_factor = Settings::values.resolution_factor.GetValue();
+
+    if (scale_factor < 10) {
+        scale_factor *= 100;
+    }
+
     if (scale_factor == 0) {
         scale_factor = render_window.GetFramebufferLayout().GetScalingRatio();
     }
