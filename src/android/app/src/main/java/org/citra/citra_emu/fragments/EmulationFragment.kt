@@ -1193,8 +1193,8 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
 
         @Synchronized
         fun updateSurface() {
-            if (surface != null) {
-                NativeLibrary.surfaceChanged(surface)
+            surface?.let {
+                NativeLibrary.surfaceChanged(it)
             }
         }
 
