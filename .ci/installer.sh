@@ -10,7 +10,6 @@ cd dist/installer
 
 # Generate Image Data
 
-
 python imagedata.py
 
 # Check if the file was made

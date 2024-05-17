@@ -8,6 +8,7 @@ class Style:
             font-family: "Segoe UI Variable Small", serif;
             font-weight: 400;
         }
+
         /*PUSHBUTTON*/
         QPushButton {
             background-color: #323234;
@@ -136,6 +137,7 @@ class Style:
             border: 2px solid #646464;
             background-color: rgb(255, 255, 255, 0);
         }
+
         /*PROGRESSBAR*/
         QProgressBar {
             background-color: qlineargradient(spread:reflect, x1:0.5, y1:0.5, x2:0.5, y2:1, stop:0.119403 rgba(255, 255, 255, 250), stop:0.273632 rgba(0, 0, 0, 0));
@@ -148,6 +150,7 @@ class Style:
             background-color: #0078D4;;
             border-radius: 2px;
         }
+
         /*MENU*/
         QMenu {
             background-color: transparent;
@@ -187,6 +190,7 @@ class Style:
             color: rgb(150, 150, 150);
             background-color: transparent;
         }
+
         /*LINEEDIT*/
         QLineEdit {
             background-color: #323234;

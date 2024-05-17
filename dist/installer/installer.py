@@ -81,7 +81,6 @@ class QtUi(QMainWindow, Style):
         ## Add the welcome page to the layout
         self.layout.addWidget(self.welcomePage)
 
-
         # Install page
         self.installPage = QWidget()
         ## Layout and gorup
@@ -118,7 +117,6 @@ class QtUi(QMainWindow, Style):
         ## Add the install page to the layout
         self.layout.addWidget(self.installPage)
 
-
         # Progress bar page
         self.progressBarPage = QWidget()
         ## Layout and groups
@@ -140,7 +138,6 @@ class QtUi(QMainWindow, Style):
         # Add the progress bar page to the layout
         self.layout.addWidget(self.progressBarPage)
 
-
         # Finish page
         self.finishPage = QWidget()
         ## Layout and groups
@@ -160,7 +157,6 @@ class QtUi(QMainWindow, Style):
         
     def load_stylesheet(app):
             app.setStyleSheet(Style.dark_stylesheet)
-            
 
 class Logic:
     def __init__(self):
@@ -457,6 +453,3 @@ if __name__ == "__main__":
     self = Logic()
     exec, Logic.disableButtons(self)
     sys.exit(app.exec())
-
-
-
