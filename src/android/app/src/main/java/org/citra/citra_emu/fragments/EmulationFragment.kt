@@ -445,15 +445,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
 
         if (NativeLibrary.isRunning()) {
             binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
-        }
-
-        val holder = binding.surfaceEmulation.holder
-        val format = PixelFormat.OPAQUE 
-        val width = binding.surfaceEmulation.width
-        val height = binding.surfaceEmulation.height
-        
-        if (NativeLibrary.isRunning()) {
-            surfaceChanged(holder, format, width, height)
+            emulationState.updateSurface()
         }
     }
 
@@ -1196,6 +1188,13 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             this.surface = surface
             if (this.surface != null) {
                 runWithValidSurface()
+            }
+        }
+
+        @Synchronized
+        fun updateSurface() {
+            if (surface != null) {
+                NativeLibrary.surfaceChanged(surface)
             }
         }
 
