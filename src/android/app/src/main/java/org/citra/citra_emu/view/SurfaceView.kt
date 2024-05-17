@@ -21,6 +21,8 @@ class SurfaceView @JvmOverloads constructor(
             desiredHeight = height
             requestLayout()
             holder.setFixedSize(width, height)
+        } else {
+            holder.setSizeFromLayout() // Default layout aspect ratio 
         }
     }
 
