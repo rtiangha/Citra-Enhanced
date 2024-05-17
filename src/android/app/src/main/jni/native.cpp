@@ -497,9 +497,11 @@ jboolean JNICALL Java_org_citra_citra_1emu_utils_GpuDriverHelper_supportsCustomD
 #endif
 }
 
-// TODO(xperia64): ensure these cannot be called in an invalid state (e.g. after StopEmulation)
 void Java_org_citra_citra_1emu_NativeLibrary_unPauseEmulation([[maybe_unused]] JNIEnv* env,
                                                               [[maybe_unused]] jobject obj) {
+    if (!pause_emulation.load() || stop_run.load()) {
+        return; // Exit if already Unpaused or if the emulation has been stopped
+    }
     pause_emulation = false;
     running_cv.notify_all();
     InputManager::NDKMotionHandler()->EnableSensors();
@@ -507,12 +509,18 @@ void Java_org_citra_citra_1emu_NativeLibrary_unPauseEmulation([[maybe_unused]] J
 
 void Java_org_citra_citra_1emu_NativeLibrary_pauseEmulation([[maybe_unused]] JNIEnv* env,
                                                             [[maybe_unused]] jobject obj) {
+    if (pause_emulation.load() || stop_run.load()) {
+        return; // Exit if already paused or if the emulation has been stopped
+    }
     pause_emulation = true;
     InputManager::NDKMotionHandler()->DisableSensors();
 }
 
 void Java_org_citra_citra_1emu_NativeLibrary_stopEmulation([[maybe_unused]] JNIEnv* env,
                                                            [[maybe_unused]] jobject obj) {
+    if (stop_run.load()) {
+        return; // Exit if already stopped
+    }
     stop_run = true;
     pause_emulation = false;
     window->StopPresenting();
