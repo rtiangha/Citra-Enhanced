@@ -26,23 +26,18 @@ u32 RendererBase::GetResolutionScaleFactor() {
     const auto graphics_api = Settings::values.graphics_api.GetValue();
     if (graphics_api == Settings::GraphicsAPI::Software) {
         // Software renderer always renders at native resolution
-        return 1;
+        return 100;
     }
 
-    u32 scale_factor = Settings::values.resolution_factor.GetValue();
+    u32 scale_factor = Settings::values.resolution_factor.GetValue() * 100;
 
+    // if value is less than 10, rescale to 240p (1x)
     if (scale_factor < 10) {
         scale_factor *= 100;
     }
 
-    if (scale_factor == 0) {
-        scale_factor = render_window.GetFramebufferLayout().GetScalingRatio();
-    }
-
-    // Apply the percentage scaling to the scale factor
-    u32 scaled_factor = (scale_factor * 100) / 100;
-
-    return scaled_factor;
+    return scale_factor != 0 ? scale_factor
+                             : static_cast<u32>(render_window.GetFramebufferLayout().GetScalingRatio() * 100);
 }
 
 void RendererBase::UpdateCurrentFramebufferLayout(bool is_portrait_mode) {

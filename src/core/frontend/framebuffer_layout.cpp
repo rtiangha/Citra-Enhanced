@@ -21,17 +21,11 @@ static constexpr float BOT_SCREEN_UPRIGHT_ASPECT_RATIO =
     static_cast<float>(Core::kScreenBottomWidth) / Core::kScreenBottomHeight;
 
 u32 FramebufferLayout::GetScalingRatio() const {
-    u32 base_ratio;
     if (is_rotated) {
-        base_ratio = static_cast<u32>(((top_screen.GetWidth() - 1) / Core::kScreenTopWidth) + 1);
+        return static_cast<u32>(((top_screen.GetWidth() - 1) / Core::kScreenTopWidth) + 1);
     } else {
-        base_ratio = static_cast<u32>(((top_screen.GetWidth() - 1) / Core::kScreenTopHeight) + 1);
+        return static_cast<u32>(((top_screen.GetWidth() - 1) / Core::kScreenTopHeight) + 1);
     }
-
-    // Apply the percentage scaling to the base ratio
-    u32 scaled_ratio = (base_ratio * 100) / 100;
-
-    return scaled_ratio;
 }
 
 // Finds the largest size subrectangle contained in window area that is confined to the aspect ratio
