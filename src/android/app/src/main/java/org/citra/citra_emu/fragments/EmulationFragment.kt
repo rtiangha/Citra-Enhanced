@@ -426,7 +426,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
-        updateAspectRatio()
+        // updateAspectRatio()
     }
 
     private fun updateAspectRatio() {
