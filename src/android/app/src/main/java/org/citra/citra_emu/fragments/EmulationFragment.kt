@@ -453,6 +453,9 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         }
         
         binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
+
+        val surface = binding.surfaceEmulation.holder.surface
+        emulationState.newSurface(surface)
     }
 
     private fun togglePause() {
@@ -487,6 +490,9 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
         }
         
         binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
+        
+        val surface = binding.surfaceEmulation.holder.surface
+        emulationState.newSurface(surface)
     }
 
     override fun onPause() {
