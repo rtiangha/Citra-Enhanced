@@ -9,10 +9,8 @@ import android.content.SharedPreferences
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
-import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
-import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceManager
 import org.citra.citra_emu.CitraApplication
 import org.citra.citra_emu.R
@@ -38,16 +36,11 @@ import org.citra.citra_emu.features.settings.model.view.StringSingleChoiceSettin
 import org.citra.citra_emu.features.settings.model.view.SubmenuSetting
 import org.citra.citra_emu.features.settings.model.view.SwitchSetting
 import org.citra.citra_emu.features.settings.utils.SettingsFile
-import org.citra.citra_emu.utils.DirectoryInitialization
-import org.citra.citra_emu.utils.FileUtil
 import org.citra.citra_emu.fragments.ResetSettingsDialogFragment
 import org.citra.citra_emu.utils.BirthdayMonth
 import org.citra.citra_emu.utils.Log
 import org.citra.citra_emu.utils.SystemSaveGame
 import org.citra.citra_emu.utils.ThemeUtil
-
-import java.util.Locale
-import java.io.File
 
 class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) {
     private var menuTag: String? = null
@@ -781,21 +774,6 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 )
             )
 
-            // post processing shaders
-            val stringValues = getShaderValues()
-            val stringEntries = getSettingEntries(stringValues)
-            add(
-                StringSingleChoiceSetting(
-                    StringSetting.PP_SHADER,
-                    R.string.pp_shader,
-                    0,
-                    stringEntries,
-                    stringValues,
-                    StringSetting.PP_SHADER.key,
-                    StringSetting.PP_SHADER.defaultValue
-                )
-            )
-
             add(HeaderSetting(R.string.stereoscopy))
             add(
                 SingleChoiceSetting(
@@ -1153,38 +1131,5 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 )
             )
         }
-    }
-
-    private val ppShadersPath: DocumentFile
-        get() {
-            // Bypass directory initialization checks
-            val root = DocumentFile.fromTreeUri(
-                CitraApplication.appContext,
-                Uri.parse(DirectoryInitialization.userPath)
-            )!!
-            var driverDirectory = root.findFile("shaders")
-            if (driverDirectory == null) {
-                driverDirectory = FileUtil.createDir(root.uri.toString(), "shaders")
-            }
-            return driverDirectory!!
-        }
-
-    private fun String.capitalizeWords(): String {
-        return replace("_", " ").split(" ").joinToString(" ") { it.replaceFirstChar { char ->
-            if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
-        } }
-    }
-
-    private fun getSettingEntries(values: Array<String>): Array<String> {
-        return values.map { if (it.isEmpty()) settingsActivity.getString(R.string.off) else it.capitalizeWords() }.toTypedArray()
-    }
-
-    private fun getShaderValues(): Array<String> {
-        val path = ppShadersPath.toString()
-        return listFilesWithExtension(path, ".glsl").toTypedArray()
-    }
-
-    private fun listFilesWithExtension(path: String, ext: String): List<String> {
-        return File(path).listFiles()?.filter { it.name.endsWith(ext) }?.map { it.name.removeSuffix(ext) } ?: emptyList()
     }
 }
