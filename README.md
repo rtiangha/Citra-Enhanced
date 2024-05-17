@@ -27,7 +27,7 @@ For now there are no plans about making an organization, due to reasons of the p
 
 [![Download - Latest Release](https://img.shields.io/badge/Download-Latest_Release-2ea44f?logo=github&logoColor=e)](https://github.com/Gamer64ytb/Citra-Enhanced/releases/latest)
 
-### Dev Builds (Untested and buggy)
+### Dev Builds (Untested stuff, and may be buggy)
 
 |Platform|Status|Download|
 |--------|------------|--------|
