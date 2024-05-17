@@ -175,20 +175,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             binding.surfaceInputOverlay.setIsInEditMode(false)
         }
 
-        val activityOrientation = resources.configuration
-        val displayMetrics = requireContext().resources.displayMetrics
-        val screenWidth = displayMetrics.widthPixels
-        val screenHeight = displayMetrics.heightPixels
-
-        val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
-            0 -> Pair(1280, 720) // 16:9
-            1 -> Pair(1280, 960) // 4:3
-            2 -> Pair(1280, 548) // 21:9
-            3 -> Pair(1280, 800) // 16:10
-            else -> Pair(screenWidth, screenHeight) // Stretch to fit window
-        }
-        
-        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
+        updateAspectRatio()
 
         // Show/hide the "Show FPS" overlay
         updateShowFpsOverlay()
@@ -439,6 +426,10 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             (context as? EmulationActivity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
+        updateAspectRatio()
+    }
+
+    private fun updateAspectRatio() {
         val activityOrientation = resources.configuration
         val displayMetrics = requireContext().resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
@@ -451,11 +442,19 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             3 -> Pair(1280, 800) // 16:10
             else -> Pair(screenWidth, screenHeight) // Stretch to fit window
         }
-        
-        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
 
-        val surface = binding.surfaceEmulation.holder.surface
-        emulationState.newSurface(surface)
+        if (NativeLibrary.isRunning()) {
+            binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
+        }
+
+        val holder = binding.surfaceEmulation.holder
+        val format = PixelFormat.OPAQUE 
+        val width = binding.surfaceEmulation.width
+        val height = binding.surfaceEmulation.height
+        
+        if (NativeLibrary.isRunning()) {
+            surfaceChanged(holder, format, width, height)
+        }
     }
 
     private fun togglePause() {
@@ -476,23 +475,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
             setupCitraDirectoriesThenStartEmulation()
         }
 
-        val activityOrientation = resources.configuration
-        val displayMetrics = requireContext().resources.displayMetrics
-        val screenWidth = displayMetrics.widthPixels
-        val screenHeight = displayMetrics.heightPixels
-
-        val aspectRatio = when (IntSetting.ASPECT_RATIO.int) {
-            0 -> Pair(1280, 720) // 16:9
-            1 -> Pair(1280, 960) // 4:3
-            2 -> Pair(1280, 548) // 21:9
-            3 -> Pair(1280, 800) // 16:10
-            else -> Pair(screenWidth, screenHeight) // Stretch to fit window
-        }
-        
-        binding.surfaceEmulation.setDimensions(aspectRatio.first, aspectRatio.second, activityOrientation)
-        
-        val surface = binding.surfaceEmulation.holder.surface
-        emulationState.newSurface(surface)
+        updateAspectRatio()
     }
 
     override fun onPause() {
