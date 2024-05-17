@@ -32,6 +32,9 @@ bool EmuWindow_Android::OnSurfaceChanged(ANativeWindow* surface) {
         return false;
     }
 
+    window_width = ANativeWindow_getWidth(surface);
+    window_height = ANativeWindow_getHeight(surface);
+
     render_window = surface;
     window_info.type = Frontend::WindowSystemType::Android;
     window_info.render_surface = surface;
@@ -75,8 +78,7 @@ EmuWindow_Android::EmuWindow_Android(ANativeWindow* surface) : host_window{surfa
         return;
     }
 
-    window_width = ANativeWindow_getWidth(surface);
-    window_height = ANativeWindow_getHeight(surface);
+    OnSurfaceChanged(surface);
 
     Network::Init();
 }
