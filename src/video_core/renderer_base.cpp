@@ -29,9 +29,15 @@ u32 RendererBase::GetResolutionScaleFactor() {
         return 1;
     }
 
-    const u32 scale_factor = Settings::values.resolution_factor.GetValue();
-    return scale_factor != 0 ? scale_factor
-                             : render_window.GetFramebufferLayout().GetScalingRatio();
+    u32 scale_factor = Settings::values.resolution_factor.GetValue();
+    if (scale_factor == 0) {
+        scale_factor = render_window.GetFramebufferLayout().GetScalingRatio();
+    }
+
+    // Apply the percentage scaling to the scale factor
+    u32 scaled_factor = (scale_factor * 100) / 100;
+
+    return scaled_factor;
 }
 
 void RendererBase::UpdateCurrentFramebufferLayout(bool is_portrait_mode) {
