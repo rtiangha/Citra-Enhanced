@@ -78,8 +78,9 @@ EmuWindow_Android::EmuWindow_Android(ANativeWindow* surface) : host_window{surfa
         return;
     }
 
-    OnSurfaceChanged(surface);
-
+    window_width = ANativeWindow_getWidth(surface);
+    window_height = ANativeWindow_getHeight(surface);
+    
     Network::Init();
 }
 
