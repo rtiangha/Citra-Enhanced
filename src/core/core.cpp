@@ -254,7 +254,7 @@ System::ResultStatus System::SingleStep() {
 }
 
 static void LoadOverrides(u64 title_id) {
-        // This gamelist may improve performance or rarely fix issues using this
+    // This gamelist may improve performance or rarely fix issues using this
 #ifdef ENABLE_VULKAN
     if (title_id == 0x0004000000030500 || title_id == 0x0004000000032D00 ||
         title_id == 0x0004000000033C00) {

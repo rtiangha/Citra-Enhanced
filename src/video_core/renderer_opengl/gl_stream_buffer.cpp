@@ -24,9 +24,11 @@ OGLStreamBuffer::OGLStreamBuffer(Driver& driver, GLenum target, GLsizeiptr size,
     if (GLAD_GL_ARB_buffer_storage) {
         persistent = true;
         coherent = prefer_coherent;
-        GLbitfield flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | (coherent ? GL_MAP_COHERENT_BIT : GL_MAP_FLUSH_EXPLICIT_BIT);
+        GLbitfield flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT |
+                           (coherent ? GL_MAP_COHERENT_BIT : GL_MAP_FLUSH_EXPLICIT_BIT);
         glBufferStorage(gl_target, allocate_size, nullptr, flags);
-        mapped_ptr = static_cast<u8*>(glMapBufferRange(gl_target, 0, buffer_size, flags));
+        mapped_ptr = static_cast<u8*>(
+            glMapBufferRange(gl_target, 0, buffer_size, flags));
     } else {
         // prefer `glBufferData` than `glMapBufferRange` on mobile device
         glBufferData(gl_target, allocate_size, nullptr, GL_STREAM_DRAW);
