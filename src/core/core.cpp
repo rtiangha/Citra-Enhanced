@@ -254,28 +254,10 @@ System::ResultStatus System::SingleStep() {
 }
 
 static void LoadOverrides(u64 title_id) {
-    // This gamelist have problems with stream buffer hack from opengl
-    if (title_id == 0x000400000019E700 || title_id == 0x00040000001A5600) {
-        // Armed Blue Gunvolt
-        Settings::values.gl_stream_buffer_hack = false;
-    } else if (title_id == 0x000400000019B200 || title_id == 0x0004000000196A00 ||
-               title_id == 0x00040000001A6E00) {
-        // Armed Blue Gunvolt 2
-        Settings::values.gl_stream_buffer_hack = false;
-    } else if (title_id == 0x0004000000149100) {
-        // Gravity Falls - Legend of the Gnome Gemulets
-        Settings::values.gl_stream_buffer_hack = false;
-    } else if (title_id == 0x0004000000196900 || title_id == 0x0004000000119A00 ||
-               title_id == 0x000400000017C900 || title_id == 0x000400000017E100) {
-        // Shovel Knight
-        Settings::values.gl_stream_buffer_hack = false;
-    } else if (title_id == 0x000400000008FE00) {
-        // 1001 Spikes
-        Settings::values.gl_stream_buffer_hack = false;
         // This gamelist may improve performance or rarely fix issues using this
 #ifdef ENABLE_VULKAN
-    } else if (title_id == 0x0004000000030500 || title_id == 0x0004000000032D00 ||
-               title_id == 0x0004000000033C00) {
+    if (title_id == 0x0004000000030500 || title_id == 0x0004000000032D00 ||
+        title_id == 0x0004000000033C00) {
         // Super Street Fighter IV: 3D Edition
         // Fixes FPS drops while using vulkan for some devices
         Settings::values.raise_cpu_ticks = true;

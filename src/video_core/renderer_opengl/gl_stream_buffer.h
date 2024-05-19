@@ -17,8 +17,8 @@ public:
                              bool prefer_coherent = false);
     ~OGLStreamBuffer();
 
-    GLuint GetHandle() const;
-    GLsizeiptr GetSize() const;
+    inline GLuint GetHandle() const;
+    inline GLsizeiptr GetSize() const;
 
     /*
      * Allocates a linear chunk of memory in the GPU buffer with at least "size" bytes
@@ -35,7 +35,6 @@ public:
 private:
     OGLBuffer gl_buffer;
     GLenum gl_target;
-    GLenum gl_target_invalidate_hack;
 
     bool coherent = false;
     bool persistent = false;
