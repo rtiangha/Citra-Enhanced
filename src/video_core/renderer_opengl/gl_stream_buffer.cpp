@@ -43,11 +43,11 @@ OGLStreamBuffer::~OGLStreamBuffer() {
     gl_buffer.Release();
 }
 
-inline GLuint OGLStreamBuffer::GetHandle() const {
+GLuint OGLStreamBuffer::GetHandle() const {
     return gl_buffer.handle;
 }
 
-inline GLsizeiptr OGLStreamBuffer::GetSize() const {
+GLsizeiptr OGLStreamBuffer::GetSize() const {
     return buffer_size;
 }
 

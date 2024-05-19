@@ -17,8 +17,8 @@ public:
                              bool prefer_coherent = false);
     ~OGLStreamBuffer();
 
-    inline GLuint GetHandle() const;
-    inline GLsizeiptr GetSize() const;
+    GLuint GetHandle() const;
+    GLsizeiptr GetSize() const;
 
     /*
      * Allocates a linear chunk of memory in the GPU buffer with at least "size" bytes
