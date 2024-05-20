@@ -197,7 +197,7 @@ Se esperan fallos gráficos temporales cuando ésta esté activado.</string>
     <string name="vsync">Activar Sincronización Vertical</string>
     <string name="vsync_description">Sincroniza los cuadros por segundo del juego con la tasa de refresco de tu dispositivo.</string>
     <string name="raise_cpu_ticks">Incrementar Ticks CPU</string>
-    <string name="raise_cpu_ticks_description">Agrega 16000 CPU ticks. Puede mejorar o disminuir el rendimiento, dependiendo del juego o si es un dispositivo de gama baja</string>
+    <string name="raise_cpu_ticks_description">Establece 16000 CPU ticks. Puede mejorar o disminuir el rendimiento, dependiendo del juego o si es un dispositivo de gama baja</string>
     <string name="core_downcount_hack">Activar Hack de Recuento Descendente del Núcleo</string>
     <string name="core_downcount_hack_description">Cuando está activado, el recuento descendente del núcleo se limitará a una porción de tiempo más pequeña, reduciendo el uso de la CPU. Puede disminuir el rendimiento o tal vez ayudar en dispositivos de gama baja o juegos exigentes para la GPU.</string>
     <string name="priority_boost">Habilitar Aumento de Prioridad</string>
