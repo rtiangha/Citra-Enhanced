@@ -262,7 +262,7 @@ static void LoadOverrides(u64 title_id) {
         Settings::values.raise_cpu_ticks = true;
 #ifdef ENABLE_VULKAN
     } else if (title_id == 0x0004000000030500 || title_id == 0x0004000000032D00 ||
-        title_id == 0x0004000000033C00) {
+               title_id == 0x0004000000033C00) {
         // Super Street Fighter IV: 3D Edition
         // Fixes FPS drops while using vulkan for some devices
         Settings::values.raise_cpu_ticks = true;
