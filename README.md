@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://github.com/CitraEnhanced/Citra-Enhanced/blob/2fb4b5e4f3f3c7bcb06c1eac97181f845fe72b57/branding/Citra-Enhanced-256.png" alt="Citra-Enhanced" width="188"/>
+  <img src="https://github.com/CitraEnhanced/citra/blob/2fb4b5e4f3f3c7bcb06c1eac97181f845fe72b57/branding/Citra-Enhanced-256.png" alt="citra" width="188"/>
 </p>
 <p align="center" style="font-size:144px;">
   <strong>Citra-Enhanced</strong>
@@ -12,8 +12,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/downloads/CitraEnhanced/Citra-Enhanced/total" alt="GitHub all releases"/>
-  <a href="https://github.com/CitraEnhanced/Citra-Enhanced/releases/latest">
+  <img src="https://img.shields.io/github/downloads/CitraEnhanced/citra/total" alt="GitHub all releases"/>
+  <a href="https://github.com/CitraEnhanced/citra/releases/latest">
     <img src="https://img.shields.io/badge/Download-Latest_Release-2ea44f?logo=github&logoColor=white" alt="Download - Latest Release"/>
   </a>
   <br>
@@ -32,24 +32,24 @@
 ### 🪟 Windows
 
 #### For Windows we made an installer to simplify updating the builds to the latest version
-- Get it [here](https://nightly.link/CitraEnhanced/Citra-Enhanced/workflows/build/master/Enhanced-Installer.zip)
+- Get it [here](https://nightly.link/CitraEnhanced/citra/workflows/build/master/Enhanced-Installer.zip)
 
 ### Other platforms
 
 |Platform|Link|
 |--------|--------|
-| 📱 Android|[APK](https://github.com/CitraEnhanced/Citra-Enhanced/releases/latest/download/Android-APK.zip)|
-| 🐧 Linux|[AppImage](https://github.com/CitraEnhanced/Citra-Enhanced/releases/latest/download/linux-appimage.zip)|
-| 🍎 Mac OS|[Universal](https://github.com/CitraEnhanced/Citra-Enhanced/releases/latest/download/macos-universal.zip)|
+| 📱 Android|[APK](https://github.com/CitraEnhanced/citra/releases/latest/download/Android-APK.zip)|
+| 🐧 Linux|[AppImage](https://github.com/CitraEnhanced/citra/releases/latest/download/linux-appimage.zip)|
+| 🍎 Mac OS|[Universal](https://github.com/CitraEnhanced/citra/releases/latest/download/macos-universal.zip)|
 
 ## ⚠️ Dev Builds (Pre-release software, may be buggy)
 
 |Platform|Status|Download|
 |--------|------------|--------|
-| 🪟 Windows|[![Qt Build](https://github.com/CitraEnhanced/Citra-Enhanced/actions/workflows/build.yml/badge.svg)](https://github.com/CitraEnhanced/Citra-Enhanced/actions/workflows/Qt_Build.yml)|[Windows MSVC](https://nightly.link/CitraEnhanced/Citra-Enhanced/workflows/build/master/windows-msvc.zip)|
-| 📱 Android|[![Qt Build](https://github.com/CitraEnhanced/Citra-Enhanced/actions/workflows/build.yml/badge.svg)](https://github.com/CitraEnhanced/Citra-Enhanced/actions/workflows/Qt_Build.yml)|[Android-APK](https://nightly.link/CitraEnhanced/Citra-Enhanced/workflows/build/master/Android-APK.zip)|
-| 🐧 Linux|[![Qt Build](https://github.com/CitraEnhanced/Citra-Enhanced/actions/workflows/build.yml/badge.svg)](https://github.com/CitraEnhanced/Citra-Enhanced/actions/workflows/Qt_Build.yml)|[Linux AppImage](https://nightly.link/CitraEnhanced/Citra-Enhanced/workflows/build/master/linux-appimage.zip)|
-| 🍎 Mac OS|[![Qt Build](https://github.com/CitraEnhanced/Citra-Enhanced/actions/workflows/build.yml/badge.svg)](https://github.com/CitraEnhanced/Citra-Enhanced/actions/workflows/Qt_Build.yml)|[Mac OS Universal](https://nightly.link/CitraEnhanced/Citra-Enhanced/workflows/build/master/macos-universal.zip)|
+| 🪟 Windows|[![Qt Build](https://github.com/CitraEnhanced/citra/actions/workflows/build.yml/badge.svg)](https://github.com/CitraEnhanced/citra/actions/workflows/Qt_Build.yml)|[Windows MSVC](https://nightly.link/CitraEnhanced/citra/workflows/build/master/windows-msvc.zip)|
+| 📱 Android|[![Qt Build](https://github.com/CitraEnhanced/citra/actions/workflows/build.yml/badge.svg)](https://github.com/CitraEnhanced/citra/actions/workflows/Qt_Build.yml)|[Android-APK](https://nightly.link/CitraEnhanced/citra/workflows/build/master/Android-APK.zip)|
+| 🐧 Linux|[![Qt Build](https://github.com/CitraEnhanced/citra/actions/workflows/build.yml/badge.svg)](https://github.com/CitraEnhanced/citra/actions/workflows/Qt_Build.yml)|[Linux AppImage](https://nightly.link/CitraEnhanced/citra/workflows/build/master/linux-appimage.zip)|
+| 🍎 Mac OS|[![Qt Build](https://github.com/CitraEnhanced/citra/actions/workflows/build.yml/badge.svg)](https://github.com/CitraEnhanced/citra/actions/workflows/Qt_Build.yml)|[Mac OS Universal](https://nightly.link/CitraEnhanced/citra/workflows/build/master/macos-universal.zip)|
 
 ## Contribution
 
