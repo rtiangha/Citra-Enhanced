@@ -214,12 +214,12 @@ class Logic:
         else:
             selection = qtui.installationSourceComboBox.currentText()
         if selection == "Latest Nightly":
-            self.url = "https://nightly.link/Gamer64ytb/Citra-Enhanced/workflows/build/master/windows-msvc.zip"
+            self.url = "https://nightly.link/CitraEnhanced/Citra-Enhanced/workflows/build/master/windows-msvc.zip"
             response = requests.get(self.url, stream=True)
             self.DownloadCitraEnhanced()
             return self.url
         elif selection == "Latest Release":
-            api_url = "https://api.github.com/repos/Gamer64ytb/Citra-Enhanced/releases/latest"
+            api_url = "https://api.github.com/repos/CitraEnhanced/Citra-Enhanced/releases/latest"
             response = requests.get(api_url)
             release = response.json()
             assets = release.get('assets', [])

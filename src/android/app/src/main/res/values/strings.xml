@@ -57,8 +57,8 @@
     <string name="build">Build</string>
     <string name="licenses">Licenses</string>
     <string name="support_link" translatable="false">https://discord.gg/8xjMHWEuf6</string>
-    <string name="website_link" translatable="false">https://github.com/Gamer64ytb</string>
-    <string name="github_link" translatable="false">https://github.com/Gamer64ytb/Citra-Enhanced</string>
+    <string name="website_link" translatable="false">https://github.com/CitraEnhanced</string>
+    <string name="github_link" translatable="false">https://github.com/CitraEnhanced/Citra-Enhanced</string>
 
     <!-- Setup strings -->
     <string name="welcome">Welcome!</string>
