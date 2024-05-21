@@ -56,7 +56,3 @@
 Pull requests are welcome, and they usually will be accepted as long as it works properly and doesn't break the GPL.
 
 Pls try to keep the proper code formatting for PRs as well, clang-format will help you on that. But in case you don't know how to fix clang-format on a PR, I'll merge and do it myself.
-
-## Organization
-
-For now there are no plans about making an organization, due to reasons of the past.
