@@ -254,11 +254,10 @@ System::ResultStatus System::SingleStep() {
 }
 
 static void LoadOverrides(u64 title_id) {
-    // This gamelist may improve performance or rarely fix issues using this
+    // This gamelist gets better performance with these hacks
     if (title_id == 0x00040000000D0000 || title_id == 0x0004000000076400 ||
         title_id == 0x0004000000055F00 || title_id == 0x0004000000076500) {
         // Luigi's Mansion: Dark Moon
-        // Improves the framerate by a lot for many devices
         Settings::values.raise_cpu_ticks = true;
 #ifdef ENABLE_VULKAN
     } else if (title_id == 0x0004000000030500 || title_id == 0x0004000000032D00 ||
@@ -267,26 +266,28 @@ static void LoadOverrides(u64 title_id) {
         // Fixes FPS drops while using vulkan for some devices
         Settings::values.raise_cpu_ticks = true;
 #endif
-    } else if (title_id == 0x0004000000068B00 || title_id == 0x0004000000061300 ||
-               title_id == 0x000400000004A700 || title_id == 0x000400000005D700) {
-        // Tales of the Abyss / Pac Man Party 3D
-        Settings::values.skip_slow_draw = true;
-    } else if (title_id == 0x000400000015CB00) {
-        // New Atelier Rorona
-        Settings::values.skip_slow_draw = true;
-    } else if (title_id == 0x000400000018E900) {
-        // My Hero Academia
-        Settings::values.skip_slow_draw = true;
-    } else if (title_id == 0x000400000016AD00) {
-        // Dragon Quest Monsters Joker 3
-        Settings::values.skip_slow_draw = true;
-    } else if (title_id == 0x00040000001ACB00) {
-        // Dragon Quest Monsters Joker 3 Professional
-        Settings::values.skip_slow_draw = true;
     } else if (title_id == 0x000400000008B400 || title_id == 0x0004000000030600 ||
                title_id == 0x0004000000030800 || title_id == 0x0004000000030700) {
         // Mario Kart 7
         Settings::values.skip_texture_copy = true;
+    }
+
+    // This gamelist may improve performance or rarely fix issues using this
+    const std::array<u64, 8> no_slow_draw_ids = {
+        0x0004000000068B00, // Tales of the Abyss / Pac Man Party 3D
+        0x0004000000061300, // Tales of the Abyss / Pac Man Party 3D
+        0x000400000004A700, // Tales of the Abyss / Pac Man Party 3D
+        0x000400000005D700, // Tales of the Abyss / Pac Man Party 3D
+        0x000400000015CB00, // New Atelier Rorona
+        0x000400000018E900, // My Hero Academia
+        0x000400000016AD00, // Dragon Quest Monsters Joker 3
+        0x00040000001ACB00  // Dragon Quest Monsters Joker 3 Professional
+    };
+    for (auto id : no_slow_draw_ids) {
+        if (title_id == id) {
+            Settings::values.skip_slow_draw = true;
+            break;
+        }
     }
 
     // This gamelist requires accurate multiplication to render properly
@@ -302,7 +303,7 @@ static void LoadOverrides(u64 title_id) {
         0x00040000001B9000, // Mario & Luigi: Superstar Saga + Bowsers Minions
         0x0004000000194B00, // Mario & Luigi: Superstar Saga + Bowsers Minions
         0x00040000001D1400, // Mario & Luigi: Bowsers Inside Story + Bowser Jrs Journey
-        0x00040000001D1500, // Mario & Luigi: Bowsers Inside Story + Bowser Jrs Journey
+        0x00040000001D1500  // Mario & Luigi: Bowsers Inside Story + Bowser Jrs Journey
     };
     for (auto id : accurate_mul_ids) {
         if (title_id == id) {
