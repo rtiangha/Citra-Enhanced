@@ -126,17 +126,16 @@ jobject ToJavaValidationError(Frontend::ValidationError error) {
 
 extern "C" {
 
-jobject Java_org_citra_citra_1emu_applets_SoftwareKeyboard_ValidateFilters(JNIEnv* env,
-                                                                           [[maybe_unused]] jobject obj,
-                                                                           jstring text) {
+jobject Java_org_citra_citra_1emu_applets_SoftwareKeyboard_ValidateFilters(
+    JNIEnv* env, [[maybe_unused]] jobject obj, jstring text) {
 
     const auto ret =
         Core::System::GetInstance().GetSoftwareKeyboard()->ValidateFilters(GetJString(env, text));
     return ToJavaValidationError(ret);
 }
 
-jobject Java_org_citra_citra_1emu_applets_SoftwareKeyboard_ValidateInput(JNIEnv* env, [[maybe_unused]] jobject obj,
-                                                                         jstring text) {
+jobject Java_org_citra_citra_1emu_applets_SoftwareKeyboard_ValidateInput(
+    JNIEnv* env, [[maybe_unused]] jobject obj, jstring text) {
 
     const auto ret =
         Core::System::GetInstance().GetSoftwareKeyboard()->ValidateInput(GetJString(env, text));
