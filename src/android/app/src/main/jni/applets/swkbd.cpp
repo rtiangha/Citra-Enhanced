@@ -124,22 +124,19 @@ jobject ToJavaValidationError(Frontend::ValidationError error) {
                               "Lorg/citra/citra_emu/applets/SoftwareKeyboard$ValidationError;"));
 }
 
-extern "C" {
-
-jobject Java_org_citra_citra_1emu_applets_SoftwareKeyboard_ValidateFilters(
-    JNIEnv* env, [[maybe_unused]] jobject obj, jstring text) {
+jobject Java_org_citra_citra_1emu_applets_SoftwareKeyboard_ValidateFilters(JNIEnv* env,
+                                                                           jclass clazz,
+                                                                           jstring text) {
 
     const auto ret =
         Core::System::GetInstance().GetSoftwareKeyboard()->ValidateFilters(GetJString(env, text));
     return ToJavaValidationError(ret);
 }
 
-jobject Java_org_citra_citra_1emu_applets_SoftwareKeyboard_ValidateInput(
-    JNIEnv* env, [[maybe_unused]] jobject obj, jstring text) {
+jobject Java_org_citra_citra_1emu_applets_SoftwareKeyboard_ValidateInput(JNIEnv* env, jclass clazz,
+                                                                         jstring text) {
 
     const auto ret =
         Core::System::GetInstance().GetSoftwareKeyboard()->ValidateInput(GetJString(env, text));
     return ToJavaValidationError(ret);
 }
-
-} // extern "C"
