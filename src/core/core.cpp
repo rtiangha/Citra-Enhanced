@@ -272,6 +272,30 @@ static void LoadOverrides(u64 title_id) {
         Settings::values.skip_texture_copy = true;
     }
 
+#ifdef ENABLE_OPENGL
+    // This gamelist have problems with stream buffer hack from opengl
+    const std::array<u64, 11> no_gl_sb_hack_ids = {
+        0x000400000019E700, // Armed Blue Gunvolt
+        0x00040000001A5600, // Armed Blue Gunvolt
+        0x000400000019B200, // Armed Blue Gunvolt 2
+        0x0004000000196A00, // Armed Blue Gunvolt 2
+        0x00040000001A6E00, // Armed Blue Gunvolt 2
+        0x0004000000149100, // Gravity Falls - Legend of the Gnome Gemulets
+        0x0004000000196900, // Shovel Knight
+        0x0004000000119A00, // Shovel Knight
+        0x000400000017C900, // Shovel Knight
+        0x000400000017E100, // Shovel Knight
+        0x000400000008FE00  // 1001 Spikes
+
+    };
+    for (auto id : no_gl_sb_hack_ids) {
+        if (title_id == id) {
+            Settings::values.gl_stream_buffer_hack = false;
+            break;
+        }
+    }
+#endif
+
     // This gamelist may improve performance or rarely fix issues using this
     const std::array<u64, 8> no_slow_draw_ids = {
         0x0004000000068B00, // Tales of the Abyss / Pac Man Party 3D
