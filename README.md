@@ -20,7 +20,7 @@
   <a href="https://discord.gg/8xjMHWEuf6">
     <img src="https://dcbadge.limes.pink/api/server/8xjMHWEuf6" alt="Discord"/>
   </a>
-  <a href="https://t.me/yourtelegram">
+  <a href="https://t.me/+lTkg6yC6pQAxNzM0">
     <img src="https://patrolavia.github.io/telegram-badge/chat.png" alt="Telegram"/>
   </a>
 </p>
