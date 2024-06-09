@@ -78,9 +78,8 @@ StreamBuffer::StreamBuffer(const Instance& instance_, Scheduler& scheduler_,
 
 StreamBuffer::~StreamBuffer() {
     device.unmapMemory(memory);
-    // skip destroy buffer and free memory
-    // device.destroyBuffer(buffer);
-    // device.freeMemory(memory);
+    device.destroyBuffer(buffer);
+    device.freeMemory(memory);
 }
 
 std::tuple<u8*, u32, bool> StreamBuffer::Map(u32 size, u64 alignment) {
@@ -152,7 +151,7 @@ void StreamBuffer::CreateBuffers(u64 prefered_size) {
             // reuse existing memory allocation
             device.unmapMemory(memory);
             device.destroyBuffer(buffer);
-            // device.freeMemory(memory);
+            device.freeMemory(memory);
         }
         AllocateMemory(prefered_size);
     } else {
@@ -196,9 +195,9 @@ void StreamBuffer::AllocateMemory(u64 prefered_size) {
     is_coherent =
         static_cast<bool>(mem_type.propertyFlags & vk::MemoryPropertyFlagBits::eHostCoherent);
 
-    // substract from the preferred heap size some bytes to avoid getting out of memory.
+    // Subtract from the preferred heap size some bytes to avoid getting out of memory.
     const vk::DeviceSize heap_size = memory_properties.memoryHeaps[preferred_heap].size;
-    // as per DXVK's example, using `heap_size / 2`
+    // As per DXVK's example, using `heap_size / 2`
     const vk::DeviceSize allocable_size = heap_size / 2;
     if (prefered_size > allocable_size) {
         LOG_ERROR(Render_Vulkan, "Requested buffer size exceeds allocable memory size");

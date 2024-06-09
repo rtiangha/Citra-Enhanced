@@ -147,6 +147,7 @@ void Config::ReadValues() {
     ReadSetting("Renderer", Settings::values.upscaling_hack);
     ReadSetting("Renderer", Settings::values.async_shader_compilation);
     ReadSetting("Renderer", Settings::values.spirv_shader_gen);
+    ReadSetting("Renderer", Settings::values.relaxed_precision_decorators);
     ReadSetting("Renderer", Settings::values.use_hw_shader);
     ReadSetting("Renderer", Settings::values.use_shader_jit);
     ReadSetting("Renderer", Settings::values.resolution_factor);
@@ -181,14 +182,14 @@ void Config::ReadValues() {
     Settings::values.layout_option = static_cast<Settings::LayoutOption>(sdl2_config->GetInteger(
         "Layout", "layout_option", static_cast<int>(Settings::LayoutOption::MobileLandscape)));
     ReadSetting("Layout", Settings::values.custom_layout);
-    ReadSetting("Layout", Settings::values.custom_top_left);
-    ReadSetting("Layout", Settings::values.custom_top_top);
-    ReadSetting("Layout", Settings::values.custom_top_right);
-    ReadSetting("Layout", Settings::values.custom_top_bottom);
-    ReadSetting("Layout", Settings::values.custom_bottom_left);
-    ReadSetting("Layout", Settings::values.custom_bottom_top);
-    ReadSetting("Layout", Settings::values.custom_bottom_right);
-    ReadSetting("Layout", Settings::values.custom_bottom_bottom);
+    ReadSetting("Layout", Settings::values.custom_top_x);
+    ReadSetting("Layout", Settings::values.custom_top_y);
+    ReadSetting("Layout", Settings::values.custom_top_width);
+    ReadSetting("Layout", Settings::values.custom_top_height);
+    ReadSetting("Layout", Settings::values.custom_bottom_x);
+    ReadSetting("Layout", Settings::values.custom_bottom_y);
+    ReadSetting("Layout", Settings::values.custom_bottom_width);
+    ReadSetting("Layout", Settings::values.custom_bottom_height);
     ReadSetting("Layout", Settings::values.cardboard_screen_size);
     ReadSetting("Layout", Settings::values.cardboard_x_shift);
     ReadSetting("Layout", Settings::values.cardboard_y_shift);

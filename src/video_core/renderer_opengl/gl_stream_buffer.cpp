@@ -35,8 +35,7 @@ OGLStreamBuffer::OGLStreamBuffer(Driver& driver, GLenum target, GLsizeiptr size,
         glBufferData(gl_target, allocate_size, nullptr, GL_STREAM_DRAW);
     }
 
-    gl_target_invalidate_hack =
-        Settings::values.gl_stream_buffer_hack.GetValue() ? GL_TEXTURE_BUFFER : 0;
+    gl_target_invalidate_hack = Settings::values.gl_stream_buffer_hack ? GL_TEXTURE_BUFFER : 0;
 }
 
 OGLStreamBuffer::~OGLStreamBuffer() {

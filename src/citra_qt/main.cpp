@@ -476,9 +476,10 @@ void GMainWindow::InitializeWidgets() {
     actionGroup_ScreenLayouts->addAction(ui->action_Screen_Layout_Default);
     actionGroup_ScreenLayouts->addAction(ui->action_Screen_Layout_Single_Screen);
     actionGroup_ScreenLayouts->addAction(ui->action_Screen_Layout_Large_Screen);
-    actionGroup_ScreenLayouts->addAction(ui->action_Screen_Layout_Hybrid_Screen);
     actionGroup_ScreenLayouts->addAction(ui->action_Screen_Layout_Side_by_Side);
     actionGroup_ScreenLayouts->addAction(ui->action_Screen_Layout_Separate_Windows);
+    actionGroup_ScreenLayouts->addAction(ui->action_Screen_Layout_Hybrid_Screen);
+    actionGroup_ScreenLayouts->addAction(ui->action_Screen_Layout_Custom_Layout);
 }
 
 void GMainWindow::InitializeDebugWidgets() {
@@ -929,6 +930,7 @@ void GMainWindow::ConnectMenuEvents() {
     connect_menu(ui->action_Screen_Layout_Hybrid_Screen, &GMainWindow::ChangeScreenLayout);
     connect_menu(ui->action_Screen_Layout_Side_by_Side, &GMainWindow::ChangeScreenLayout);
     connect_menu(ui->action_Screen_Layout_Separate_Windows, &GMainWindow::ChangeScreenLayout);
+    connect_menu(ui->action_Screen_Layout_Custom_Layout, &GMainWindow::ChangeScreenLayout);
     connect_menu(ui->action_Screen_Layout_Swap_Screens, &GMainWindow::OnSwapScreens);
     connect_menu(ui->action_Screen_Layout_Upright_Screens, &GMainWindow::OnRotateScreens);
 
@@ -987,7 +989,7 @@ void GMainWindow::UpdateMenuState() {
         action->setEnabled(emulation_running);
     }
 
-    ui->action_Capture_Screenshot->setEnabled(emulation_running && !is_paused);
+    ui->action_Capture_Screenshot->setEnabled(emulation_running);
 
     if (emulation_running && is_paused) {
         ui->action_Pause->setText(tr("&Continue"));
@@ -2408,6 +2410,8 @@ void GMainWindow::ChangeScreenLayout() {
         new_layout = Settings::LayoutOption::SideScreen;
     } else if (ui->action_Screen_Layout_Separate_Windows->isChecked()) {
         new_layout = Settings::LayoutOption::SeparateWindows;
+    } else if (ui->action_Screen_Layout_Custom_Layout->isChecked()) {
+        new_layout = Settings::LayoutOption::CustomLayout;
     }
 
     Settings::values.layout_option = new_layout;
@@ -2429,6 +2433,8 @@ void GMainWindow::ToggleScreenLayout() {
         case Settings::LayoutOption::SideScreen:
             return Settings::LayoutOption::SeparateWindows;
         case Settings::LayoutOption::SeparateWindows:
+            return Settings::LayoutOption::CustomLayout;
+        case Settings::LayoutOption::CustomLayout:
             return Settings::LayoutOption::Default;
         default:
             LOG_ERROR(Frontend, "Unknown layout option {}",
@@ -2707,33 +2713,47 @@ void GMainWindow::OnSaveMovie() {
 }
 
 void GMainWindow::OnCaptureScreenshot() {
-    if (!emu_thread || !emu_thread->IsRunning()) [[unlikely]] {
+    if (!emu_thread) [[unlikely]] {
         return;
     }
 
-    OnPauseGame();
-    std::string path = UISettings::values.screenshot_path.GetValue();
-    if (!FileUtil::IsDirectory(path)) {
-        if (!FileUtil::CreateFullPath(path)) {
-            QMessageBox::information(this, tr("Invalid Screenshot Directory"),
-                                     tr("Cannot create specified screenshot directory. Screenshot "
-                                        "path is set back to its default value."));
-            path = FileUtil::GetUserPath(FileUtil::UserPath::UserDir);
-            path.append("screenshots/");
-            UISettings::values.screenshot_path = path;
-        };
+    const bool was_running = emu_thread->IsRunning();
+
+    if (was_running ||
+        (QMessageBox::question(
+             this, tr("Game will unpause"),
+             tr("The game will be unpaused, and the next frame will be captured. Is this okay?"),
+             QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)) {
+        if (was_running) {
+            OnPauseGame();
+        }
+        std::string path = UISettings::values.screenshot_path.GetValue();
+        if (!FileUtil::IsDirectory(path)) {
+            if (!FileUtil::CreateFullPath(path)) {
+                QMessageBox::information(
+                    this, tr("Invalid Screenshot Directory"),
+                    tr("Cannot create specified screenshot directory. Screenshot "
+                       "path is set back to its default value."));
+                path = FileUtil::GetUserPath(FileUtil::UserPath::UserDir);
+                path.append("screenshots/");
+                UISettings::values.screenshot_path = path;
+            };
+        }
+
+        static QRegularExpression expr(QStringLiteral("[\\/:?\"<>|]"));
+        const std::string filename = game_title.remove(expr).toStdString();
+        const std::string timestamp = QDateTime::currentDateTime()
+                                          .toString(QStringLiteral("dd.MM.yy_hh.mm.ss.z"))
+                                          .toStdString();
+        path.append(fmt::format("/{}_{}.png", filename, timestamp));
+
+        auto* const screenshot_window =
+            secondary_window->HasFocus() ? secondary_window : render_window;
+        screenshot_window->CaptureScreenshot(
+            UISettings::values.screenshot_resolution_factor.GetValue(),
+            QString::fromStdString(path));
+        OnStartGame();
     }
-
-    static QRegularExpression expr(QStringLiteral("[\\/:?\"<>|]"));
-    const std::string filename = game_title.remove(expr).toStdString();
-    const std::string timestamp =
-        QDateTime::currentDateTime().toString(QStringLiteral("dd.MM.yy_hh.mm.ss.z")).toStdString();
-    path.append(fmt::format("/{}_{}.png", filename, timestamp));
-
-    auto* const screenshot_window = secondary_window->HasFocus() ? secondary_window : render_window;
-    screenshot_window->CaptureScreenshot(UISettings::values.screenshot_resolution_factor.GetValue(),
-                                         QString::fromStdString(path));
-    OnStartGame();
 }
 
 void GMainWindow::OnDumpVideo() {
@@ -3470,6 +3490,8 @@ void GMainWindow::SyncMenuUISettings() {
                                                       Settings::LayoutOption::SideScreen);
     ui->action_Screen_Layout_Separate_Windows->setChecked(
         Settings::values.layout_option.GetValue() == Settings::LayoutOption::SeparateWindows);
+    ui->action_Screen_Layout_Custom_Layout->setChecked(Settings::values.layout_option.GetValue() ==
+                                                       Settings::LayoutOption::CustomLayout);
     ui->action_Screen_Layout_Swap_Screens->setChecked(Settings::values.swap_screen.GetValue());
     ui->action_Screen_Layout_Upright_Screens->setChecked(
         Settings::values.upright_screen.GetValue());

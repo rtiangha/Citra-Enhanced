@@ -9,10 +9,8 @@ import android.content.SharedPreferences
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
-import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
-import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceManager
 import org.citra.citra_emu.CitraApplication
 import org.citra.citra_emu.R
@@ -38,16 +36,11 @@ import org.citra.citra_emu.features.settings.model.view.StringSingleChoiceSettin
 import org.citra.citra_emu.features.settings.model.view.SubmenuSetting
 import org.citra.citra_emu.features.settings.model.view.SwitchSetting
 import org.citra.citra_emu.features.settings.utils.SettingsFile
-import org.citra.citra_emu.utils.DirectoryInitialization
-import org.citra.citra_emu.utils.FileUtil
 import org.citra.citra_emu.fragments.ResetSettingsDialogFragment
 import org.citra.citra_emu.utils.BirthdayMonth
 import org.citra.citra_emu.utils.Log
 import org.citra.citra_emu.utils.SystemSaveGame
 import org.citra.citra_emu.utils.ThemeUtil
-
-import java.util.Locale
-import java.io.File
 
 class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) {
     private var menuTag: String? = null
@@ -115,57 +108,65 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             add(
                 SubmenuSetting(
                     R.string.preferences_general,
-                    0,
+                    R.string.preferences_general_description,
+                    R.drawable.ic_general_settings,
                     Settings.SECTION_CORE
                 )
             )
             add(
                 SubmenuSetting(
                     R.string.preferences_system,
-                    0,
+                    R.string.preferences_system_description,
+                    R.drawable.ic_system_settings,
                     Settings.SECTION_SYSTEM
                 )
             )
             add(
                 SubmenuSetting(
                     R.string.preferences_camera,
-                    0,
+                    R.string.preferences_camera_description,
+                    R.drawable.ic_camera_settings,
                     Settings.SECTION_CAMERA
                 )
             )
             add(
                 SubmenuSetting(
                     R.string.preferences_controls,
-                    0,
+                    R.string.preferences_controls_description,
+                    R.drawable.ic_controls_settings,
                     Settings.SECTION_CONTROLS
                 )
             )
             add(
                 SubmenuSetting(
                     R.string.preferences_graphics,
-                    0,
+                    R.string.preferences_graphics_description,
+                    R.drawable.ic_graphics,
                     Settings.SECTION_RENDERER
                 )
             )
             add(
                 SubmenuSetting(
                     R.string.preferences_audio,
-                    0,
+                    R.string.preferences_audio_description,
+                    R.drawable.ic_audio,
                     Settings.SECTION_AUDIO
                 )
             )
             add(
                 SubmenuSetting(
                     R.string.preferences_debug,
-                    0,
+                    R.string.preferences_debug_description,
+                    R.drawable.ic_code,
                     Settings.SECTION_DEBUG
                 )
             )
             add(
                 RunnableSetting(
                     R.string.reset_to_default,
-                    0,
+                    R.string.reset_to_default_description,
                     false,
+                    R.drawable.ic_restore,
                     {
                         ResetSettingsDialogFragment().show(
                             settingsActivity.supportFragmentManager,
@@ -319,6 +320,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.console_id,
                     0,
                     false,
+                    0,
                     { settingsAdapter.onClickRegenerateConsoleId() },
                     { "0x${SystemSaveGame.getConsoleId().toHexString().uppercase()}" }
                 )
@@ -688,6 +690,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
             )
             add(
                 SwitchSetting(
+                    BooleanSetting.RELAXED_PRECISION_DECORATORS,
+                    R.string.relaxed_precision_decorators,
+                    R.string.relaxed_precision_decorators_desc,
+                    BooleanSetting.RELAXED_PRECISION_DECORATORS.key,
+                    BooleanSetting.RELAXED_PRECISION_DECORATORS.defaultValue,
+                )    
+            )
+            add(
+                SwitchSetting(
                     BooleanSetting.ASYNC_SHADERS,
                     R.string.async_shaders,
                     R.string.async_shaders_description,
@@ -770,6 +781,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 )
             )
             add(
+                SwitchSetting(
+                    BooleanSetting.FORCE_MAX_GPU_CLOCKS,
+                    R.string.force_max_gpu_clocks,
+                    R.string.force_max_gpu_clocks_description,
+                    BooleanSetting.FORCE_MAX_GPU_CLOCKS.key,
+                    BooleanSetting.FORCE_MAX_GPU_CLOCKS.defaultValue
+                )
+            )
+            add(
                 SingleChoiceSetting(
                     IntSetting.TEXTURE_FILTER,
                     R.string.texture_filter_name,
@@ -778,21 +798,6 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.array.textureFilterValues,
                     IntSetting.TEXTURE_FILTER.key,
                     IntSetting.TEXTURE_FILTER.defaultValue
-                )
-            )
-
-            // post processing shaders
-            val stringValues = getShaderValues()
-            val stringEntries = getSettingEntries(stringValues)
-            add(
-                StringSingleChoiceSetting(
-                    StringSetting.PP_SHADER,
-                    R.string.pp_shader,
-                    0,
-                    stringEntries,
-                    stringValues,
-                    StringSetting.PP_SHADER.key,
-                    StringSetting.PP_SHADER.defaultValue
                 )
             )
 
@@ -1153,38 +1158,5 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                 )
             )
         }
-    }
-
-    private val ppShadersPath: DocumentFile
-        get() {
-            // Bypass directory initialization checks
-            val root = DocumentFile.fromTreeUri(
-                CitraApplication.appContext,
-                Uri.parse(DirectoryInitialization.userPath)
-            )!!
-            var driverDirectory = root.findFile("shaders")
-            if (driverDirectory == null) {
-                driverDirectory = FileUtil.createDir(root.uri.toString(), "shaders")
-            }
-            return driverDirectory!!
-        }
-
-    private fun String.capitalizeWords(): String {
-        return replace("_", " ").split(" ").joinToString(" ") { it.replaceFirstChar { char ->
-            if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
-        } }
-    }
-
-    private fun getSettingEntries(values: Array<String>): Array<String> {
-        return values.map { if (it.isEmpty()) settingsActivity.getString(R.string.off) else it.capitalizeWords() }.toTypedArray()
-    }
-
-    private fun getShaderValues(): Array<String> {
-        val path = ppShadersPath.toString()
-        return listFilesWithExtension(path, ".glsl").toTypedArray()
-    }
-
-    private fun listFilesWithExtension(path: String, ext: String): List<String> {
-        return File(path).listFiles()?.filter { it.name.endsWith(ext) }?.map { it.name.removeSuffix(ext) } ?: emptyList()
     }
 }
