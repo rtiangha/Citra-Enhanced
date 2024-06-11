@@ -2,10 +2,10 @@
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
+#include "common/settings.h"
 #include "video_core/pica/regs_rasterizer.h"
 #include "video_core/shader/generator/shader_gen.h"
 #include "video_core/shader/generator/spv_shader_gen.h"
-#include "common/settings.h"
 
 using VSOutputAttributes = Pica::RasterizerRegs::VSOutputAttributes;
 
@@ -30,7 +30,7 @@ void VertexModule::DefineArithmeticTypes() {
     ids.u32 = Name(TypeUInt(32), "u32_id");
     if (Settings::values.relaxed_precision_decorators) {
         Decorate(ids.f32, spv::Decoration::RelaxedPrecision);
-    } 
+    }
     for (u32 size = 2; size <= 4; size++) {
         const u32 i = size - 2;
         ids.bvec.ids[i] = Name(TypeVector(ids.bool_, size), fmt::format("bvec{}_id", size));
